@@ -12,11 +12,10 @@ allprojects {
 
 
 subprojects {
-    groovyVersion = '1.8.0'
 
     repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
     dependencies {
-        groovy  "org.codehaus.groovy:groovy-all:$groovyVersion"
+        groovy  'org.codehaus.groovy:groovy-all:1.8.0'
         compile 'jetbrains:teamcity-openapi:6.5',
                 'org.springframework:spring-webmvc:3.0.5.RELEASE',
                 'javax:javaee-api:6.0',
