@@ -1,0 +1,38 @@
+allprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.6
+    group               = 'com.goldin.teamcity'
+    version             = '0.0.1-SNAPSHOT'
+    groovyVersion       = '1.8.0'
+
+
+    defaultTasks 'clean', 'build', 'install'
+
+
+    repositories {
+        mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'
+    }
+
+
+    dependencies {
+        groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+    }
+
+
+    ideaProject.javaVersion = '1.6.0_25'
+    ideaModule {
+        javaVersion     = ideaProject.javaVersion
+        downloadSources = true
+        downloadJavadoc = false
+        outputDir       = new File( project.buildDir, 'idea' )
+        testOutputDir   = new File( project.buildDir, 'idea/test' )
+    }
+
+
+    test {
+        test.testReportDir    = new File(( File ) project.buildDir, 'test/reports' )
+        test.testResultsDir   = new File(( File ) project.buildDir, 'test/results' )
+    }
+}
