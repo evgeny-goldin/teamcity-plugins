@@ -1,24 +1,21 @@
 allprojects {
-    apply plugin: 'groovy'
     apply plugin: 'idea'
+    apply plugin: 'groovy'
+    apply plugin: 'maven'
 
-    sourceCompatibility = 1.6
     group               = 'com.goldin.teamcity'
     version             = '0.0.1-SNAPSHOT'
-    groovyVersion       = '1.8.0'
-
+    sourceCompatibility = 1.6
 
     defaultTasks 'clean', 'build', 'install'
+}
 
 
-    repositories {
-        mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'
-    }
+subprojects {
+    groovyVersion = '1.8.0'
 
-
-    dependencies {
-        groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
-    }
+    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'}
+    dependencies { groovy "org.codehaus.groovy:groovy-all:$groovyVersion"      }
 
 
     ideaProject.javaVersion = '1.6.0_25'
@@ -29,7 +26,6 @@ allprojects {
         outputDir       = new File( project.buildDir, 'idea' )
         testOutputDir   = new File( project.buildDir, 'idea/test' )
     }
-
 
     test {
         test.testReportDir    = new File(( File ) project.buildDir, 'test/reports' )
