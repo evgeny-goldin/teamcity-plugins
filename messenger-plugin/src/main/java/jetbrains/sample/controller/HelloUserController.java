@@ -40,7 +40,7 @@ public class HelloUserController extends BaseController {
         HashMap params = new HashMap();
         params.put("userName", user.getDescriptiveName());
         params.put("messages", myLoggingListener.getMessages());
-        return new ModelAndView("/plugins/samplePlugin/hello.jsp", params);
+        return new ModelAndView("/plugins/messenger-plugin/hello.jsp", params);
     }
 
     public void register() {

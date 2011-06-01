@@ -1,11 +1,5 @@
 package jetbrains.sample.permissions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import jetbrains.buildServer.controllers.BaseController;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.auth.Permission;
@@ -13,6 +7,13 @@ import jetbrains.buildServer.web.openapi.WebControllerManager;
 import jetbrains.buildServer.web.util.SessionUser;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Adds to model all proviects available for the current user, lists of global and project permissions.
@@ -50,6 +51,6 @@ public class ShowPermissionsController extends BaseController {
         params.put("globalPermissions", globalPermissionList);
         params.put("userName", SessionUser.getUser(request).getDescriptiveName());
 
-        return new ModelAndView("/plugins/samplePlugin/viewPermissions.jsp", params);
+        return new ModelAndView("/plugins/messenger-plugin/viewPermissions.jsp", params);
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="constructor">
+  <bean id="sampleExtension" class="jetbrains.sample.extensions.pageExtension.PageExtension"/>
+
+  <bean id="sampleConfigTab"
+        class="jetbrains.buildServer.web.openapi.SimpleCustomTab"
+        init-method="register">
+    <property name="placeId" value="BUILD_RESULTS_TAB"/>
+    <property name="tabTitle" value="Sample Build Result Tab"/>
+    <property name="pluginName" value="samplePlugin"/>
+    <property name="includeUrl" value="simplePage.jsp"/>
+  </bean>
+
+  <bean id="sampleBuildFragment"
+        class="jetbrains.buildServer.web.openapi.SimplePageExtension"
+        init-method="register">
+    <property name="placeId" value="BUILD_RESULTS_FRAGMENT"/>
+    <property name="pluginName" value="samplePlugin"/>
+    <property name="includeUrl" value="simplePage.jsp"/>
+  </bean>
+
+  <bean id="sampleExtensionForMySettingsAndTools"
+        class="jetbrains.buildServer.web.openapi.SimplePageExtension"
+        init-method="register">
+    <property name="placeId" value="MY_TOOLS_SECTION"/>
+    <property name="pluginName" value="samplePlugin"/>
+    <property name="includeUrl" value="viewPermissionsButton.jsp"/>
+  </bean>
+
+  <bean id="sampleConfigTabFragment" class="jetbrains.sample.extension.ConfigurationTabExtension">
+    <property name="includeUrl" value="configurationTab.jsp"/>
+  </bean>
+
+  <bean id="helloController" class="jetbrains.sample.controller.HelloUserController" init-method="register"/>
+  <bean id="permissionsController" class="jetbrains.sample.permissions.ShowPermissionsController" init-method="register"/>
+  <bean id="sampleStatistics"
+        class="jetbrains.sample.statistics.SampleStatisticsValue"
+        init-method="register"/>
+
+  <bean id="sampleListener" class="jetbrains.sample.serverListener.TeamCityLoggingListener" init-method="register"/>
+  <bean id="templatePatternProcessor" class="jetbrains.sample.patternProcessor.SampleTemplateProcessor"/>
+
+  <bean id="startBuildPrecondition" class="jetbrains.sample.extensions.buildQueuePause.StartBuildPrecondition"/>
+  <bean id="buildQueueStateController" class="jetbrains.sample.extensions.buildQueuePause.BuildQueueStateController"/>
+  <bean id="buildQueuePauseButton" class="jetbrains.sample.extensions.buildQueuePause.BuildQueuePauseButton"
+        init-method="register">
+    <property name="placeId" value="ALL_PAGES_FOOTER"/>
+    <property name="pluginName" value="samplePlugin"/>
+    <property name="includeUrl" value="buildQueuePause/buildQueuePause.jsp"/>
+    <property name="startBuildPrecondition" ref="startBuildPrecondition"/>
+  </bean>
+</beans>

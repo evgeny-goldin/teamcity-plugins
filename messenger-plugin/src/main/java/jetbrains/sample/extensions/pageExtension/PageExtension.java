@@ -1,11 +1,12 @@
 package jetbrains.sample.extensions.pageExtension;
 
-import javax.servlet.http.HttpServletRequest;
 import jetbrains.buildServer.web.openapi.PagePlaces;
 import jetbrains.buildServer.web.openapi.PlaceId;
 import jetbrains.buildServer.web.openapi.SimplePageExtension;
 import jetbrains.buildServer.web.util.WebUtil;
 import org.jetbrains.annotations.NotNull;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Yegor.Yarko
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PageExtension extends SimplePageExtension {
   public PageExtension(PagePlaces pagePlaces) {
-    super(pagePlaces, PlaceId.ALL_PAGES_FOOTER, "samplePlugin", "input.jsp");
+    super(pagePlaces, PlaceId.ALL_PAGES_FOOTER, "messenger-plugin", "input.jsp");
     register();
   }
 

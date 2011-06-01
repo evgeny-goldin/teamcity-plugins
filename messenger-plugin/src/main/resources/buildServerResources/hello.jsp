@@ -1,7 +1,7 @@
 <%@ include file="/include.jsp" %>
 <bs:page>
     <jsp:attribute name="body_include">
-        <h4>Hello ${userName}!</h4>
+        <h4>Hello-Hello ${userName}!</h4>
         Demonstrated extensions:
         <ul>
             <li>"Click me!" button on Overview page</li>
