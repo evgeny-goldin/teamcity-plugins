@@ -2,12 +2,20 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'groovy'
 
-    group               = 'com.goldin.teamcity'
-    version             = '0.0.1-SNAPSHOT'
-    sourceCompatibility = 1.6
-    teamCityDir         = 'T:/'
-
     defaultTasks 'clean', 'build'
+
+    group                  = 'com.goldin.teamcity'
+    version                = '0.0.1-SNAPSHOT'
+    sourceCompatibility    = 1.6
+    teamCityDir            = 'T:/'
+
+    /**
+     * CodeNarc
+     * http://codenarc.sourceforge.net/
+     */
+
+    codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
+    codenarcReportsDir = new File( rootProject.buildDir, 'codenarc' )
 }
 
 
@@ -17,15 +25,18 @@ subprojects {
     destinationZip = new File( destinationDir, "${project.name}.zip" )
     teamCityZip    = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
 
-    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
-    dependencies {
-        groovy  'org.codehaus.groovy:groovy-all:1.8.0'
-        compile 'jetbrains:teamcity-openapi:6.5',
-                'org.springframework:spring-webmvc:3.0.5.RELEASE',
-                'javax:javaee-api:6.0',
-                'com.intellij:annotations:7.0.3',
-                'com.intellij:openapi:7.0.3',
-                'jdom:jdom:1.0'
+    repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
+    configurations { codenarc }
+    dependencies   {
+        groovy   'org.codehaus.groovy:groovy-all:1.8.0'
+        codenarc 'org.codenarc:CodeNarc:0.13',
+                 files( rootProject.file( 'codenarc/log4j-xml.jar' ))
+        compile  'jetbrains:teamcity-openapi:6.5',
+                 'org.springframework:spring-webmvc:3.0.5.RELEASE',
+                 'javax:javaee-api:6.0',
+                 'com.intellij:annotations:7.0.3',
+                 'com.intellij:openapi:7.0.3',
+                 'jdom:jdom:1.0'
     }
 
     tasks.withType( Compile ) {
@@ -55,6 +66,28 @@ subprojects {
         assert new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ).deleteDir()
         ant.copy( file : destinationZip, tofile : teamCityZip )
     }
+
+    
+    /**
+     * http://codenarc.sourceforge.net/codenarc-ant-task.html
+     */
+    task codenarc << {
+        assert codenarcConfigFile.isFile()
+        assert codenarcReportsDir.isDirectory() || codenarcReportsDir.mkdirs()
+        
+        ant.taskdef( name     : 'codenarc',
+                     classname: 'org.codenarc.ant.CodeNarcTask',
+                     classpath: configurations.codenarc.asPath )
+        
+        ant.codenarc ( ruleSetFiles          : "file:$codenarcConfigFile",
+                       maxPriority1Violations: 0,
+                       maxPriority2Violations: 0,
+                       maxPriority3Violations: 0 ) {
+             report  ( type: 'html' ) { option name: 'outputFile', value: ( codenarcReportsDir.path + '/main.html' ) }
+             fileset ( dir : 'src/main/groovy' )
+        }
+    }
+
 
     ideaProject.javaVersion = '1.6.0_25'
     ideaModule {

@@ -2,6 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="constructor">
+  <bean id="messengerExtension" class="com.goldin.plugins.teamcity.messenger.MessengerExtension"/>
   <bean id="sampleExtension" class="jetbrains.sample.extensions.pageExtension.PageExtension"/>
 
   <bean id="sampleConfigTab"
