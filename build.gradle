@@ -53,9 +53,9 @@ subprojects {
                             replaceAll( '@version@', version ))
 
             ant.zip( destfile: destinationZip ) {
-                zipfileset( file: archivePath,                  fullpath: "server/${project.name}.jar"  )
-                zipfileset( file: configurations.groovy.asPath, prefix:   "server"  )
-                zipfileset( file: tempFile,                     fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: archivePath,                      fullpath: "server/${project.name}.jar"  )
+                zipfileset( file: configurations.groovy.singleFile, prefix:   "server"  )
+                zipfileset( file: tempFile,                         fullpath: 'teamcity-plugin.xml' )
             }
             tempFile.delete()
         }
