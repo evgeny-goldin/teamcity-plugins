@@ -8,14 +8,8 @@ allprojects {
     version                = '0.0.1-SNAPSHOT'
     sourceCompatibility    = 1.6
     teamCityDir            = 'T:/'
-
-    /**
-     * CodeNarc
-     * http://codenarc.sourceforge.net/
-     */
-
-    codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
-    codenarcReportsDir = new File( rootProject.buildDir, 'codenarc' )
+    codenarcConfigFile     = rootProject.file( 'codenarc/codenarc.txt'  )
+    codenarcReportsDir     = new File( rootProject.buildDir, 'codenarc' )
 }
 
 
@@ -39,11 +33,17 @@ subprojects {
                  'jdom:jdom:1.0'
     }
 
+    /**
+     * Compilation options
+     */
     tasks.withType( Compile ) {
         options.debug        =  true
         options.compilerArgs << '-Xlint:all'
     }
 
+    /**
+     * Creating plugin Zip file
+     */
     tasks.withType( Jar ) {
         excludes << 'teamcity-plugin.xml'
         doLast {
@@ -52,23 +52,33 @@ subprojects {
                             replaceAll( '@name@', project.name ).replaceAll( '@version@', version ))
 
             ant.zip( destfile: destinationZip ) {
-                zipfileset( file: archivePath, fullpath: "server/${project.name}.jar"  )
-                zipfileset( file: tempFile,    fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: archivePath,                  fullpath: "server/${project.name}.jar"  )
+                zipfileset( file: configurations.groovy.asPath, prefix:   "server"  )
+                zipfileset( file: tempFile,                     fullpath: 'teamcity-plugin.xml' )
             }
             tempFile.delete()
         }
     }
 
+    /**
+     * Copying plugin Zip file to TeamCity instance
+     */
     task deploy << {
-        assert teamCityZip.delete()
-        assert new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ).deleteDir()
-        assert new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ).deleteDir()
-        assert new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ).deleteDir()
+        teamCityZip.delete()
+        new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ).deleteDir()
+        new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ).deleteDir()
+        
+        for ( dirName in [ 'temp', 'logs', 'work' ] )
+        {
+            def d = new File( teamCityDir, dirName )
+            assert d.deleteDir() && d.mkdirs()
+        }
+
         ant.copy( file : destinationZip, tofile : teamCityZip )
     }
 
-    
     /**
+     * Running CodeNarc
      * http://codenarc.sourceforge.net/codenarc-ant-task.html
      */
     task codenarc << {
@@ -88,7 +98,9 @@ subprojects {
         }
     }
 
-
+    /**
+     * Creating IDEA project files
+     */
     ideaProject.javaVersion = '1.6.0_25'
     ideaModule {
         javaVersion     = ideaProject.javaVersion
@@ -98,8 +110,11 @@ subprojects {
         testOutputDir   = new File( project.buildDir, 'idea/test' )
     }
 
+    /**
+     * Configuring tests
+     */
     test {
-        test.testReportDir    = new File(( File ) project.buildDir, 'test/reports' )
-        test.testResultsDir   = new File(( File ) project.buildDir, 'test/results' )
+        test.testReportDir  = new File(( File ) project.buildDir, 'test/reports' )
+        test.testResultsDir = new File(( File ) project.buildDir, 'test/results' )
     }
 }
