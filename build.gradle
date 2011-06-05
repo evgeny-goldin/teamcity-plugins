@@ -48,8 +48,9 @@ subprojects {
         excludes << 'teamcity-plugin.xml'
         doLast {
             def tempFile = File.createTempFile( project.name, null )
-            tempFile.write( new File( projectDir, 'src/main/resources/teamcity-plugin.xml' ).text.
-                            replaceAll( '@name@', project.name ).replaceAll( '@version@', version ))
+            tempFile.write( file( 'src/main/resources/teamcity-plugin.xml' ).text.
+                            replaceAll( '@name@',    project.name ).
+                            replaceAll( '@version@', version ))
 
             ant.zip( destfile: destinationZip ) {
                 zipfileset( file: archivePath,                  fullpath: "server/${project.name}.jar"  )
@@ -106,8 +107,8 @@ subprojects {
         javaVersion     = ideaProject.javaVersion
         downloadSources = true
         downloadJavadoc = true
-        outputDir       = new File( project.buildDir, 'idea' )
-        testOutputDir   = new File( project.buildDir, 'idea/test' )
+        outputDir       = new File(( File ) project.buildDir, 'idea' )
+        testOutputDir   = new File(( File ) project.buildDir, 'idea/test' )
     }
 
     /**
