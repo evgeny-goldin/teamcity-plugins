@@ -4,19 +4,18 @@ allprojects {
 
     defaultTasks 'clean', 'build'
 
-    group                  = 'com.goldin.teamcity'
-    version                = '0.0.1-SNAPSHOT'
-    sourceCompatibility    = 1.6
-    codenarcConfigFile     = rootProject.file( 'codenarc/codenarc.txt'  )
-    codenarcReportsDir     = new File( rootProject.buildDir, 'codenarc' )
+    group               = 'com.goldin.teamcity'
+    version             = '0.0.1-SNAPSHOT'
+    sourceCompatibility = 1.6
+    codenarcConfigFile  = rootProject.file( 'codenarc/codenarc.txt'  )
+    codenarcReportsDir  = new File( rootProject.buildDir, 'codenarc' )
 }
 
 
 subprojects {
 
-    destinationDir = tasks[ 'jar' ].destinationDir
-    destinationZip = new File( destinationDir, "${project.name}.zip" )
-
+    File teamCityDir    = new File( 'T:/' )
+    File destinationZip = new File( tasks[ 'jar' ].destinationDir, "${project.name}.zip" )
 
     repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
     configurations { codenarc }
@@ -61,17 +60,35 @@ subprojects {
     }
 
     /**
-     * Copying plugin Zip file to TeamCity instance
+     * Deploying plugin Zip to TeamCity instance
      */
     task deploy << {
-        def teamCityDir = 'T:/'
+        assert destinationZip.isFile()
+        assert teamCityDir.isDirectory()
+
         def teamCityZip = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
+        def logsDir     = new File( teamCityDir, "logs" )
         delete( teamCityZip,
                 new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
-                new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ))
-        [ 'temp', 'logs', 'work' ].each{ new File( teamCityDir, it ).with{ deleteDir(); mkdirs() }}
-        copy { from destinationZip; into teamCityZip.parent; rename { teamCityZip.name }}
+                new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ),
+                new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ),
+                logsDir )
+        mkdir( logsDir )
+        ant.copy( file: destinationZip, tofile: teamCityZip )
     }
+
+    /**
+     * Copying resources to TeamCity instance
+     */
+    task copy ( type: Copy ) {
+        from 'src/main/resources/buildServerResources'
+        into "${teamCityDir}/webapps/ROOT/plugins/messenger-plugin"
+    }
+
+    /**
+     * "clean", "build", "deploy" shortcut
+     */
+    task cbd ( dependsOn: [ clean, build, deploy ] )
 
     /**
      * Running CodeNarc
