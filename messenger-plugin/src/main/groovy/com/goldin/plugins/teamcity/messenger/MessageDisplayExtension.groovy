@@ -12,11 +12,11 @@ import jetbrains.buildServer.web.openapi.PositionConstraint
 /**
  * Messenger extension
  */
-class MessengerExtension extends SimplePageExtension
+class MessageDisplayExtension extends SimplePageExtension
 {
-    MessengerExtension ( PagePlaces pagePlaces )
+    MessageDisplayExtension ( PagePlaces pagePlaces )
     {
-        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, 'messenger-plugin', 'message.jsp' )
+        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, Constants.PluginName, 'messageDisplay.jsp' )
         position = PositionConstraint.first()
         register()
     }
