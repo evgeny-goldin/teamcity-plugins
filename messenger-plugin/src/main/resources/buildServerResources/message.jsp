@@ -1,1 +1,4 @@
-<h1>MESSAGE</h1>
+<script type="text/javascript">
+jQuery( function() {
+})
+</script>
