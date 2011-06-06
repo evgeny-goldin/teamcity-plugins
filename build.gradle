@@ -112,11 +112,19 @@ subprojects {
     /**
      * Copies static resources to TeamCity instance
      */
-    task copy ( type: Copy ) {
+    task copy () {
         description = 'Copies static resources to TeamCity instance.'
-        
-        from 'src/main/resources/buildServerResources'
-        into "${teamCityDir}/webapps/ROOT/plugins/messenger-plugin"
+
+        doFirst {
+            ant {
+                copy( todir  : "${teamCityDir}/webapps/ROOT/plugins/messenger-plugin" ) {
+                    fileset( dir : 'src/main/resources/buildServerResources' )
+                }
+                touch () {
+                    fileset( dir : 'src/main/resources/buildServerResources' )
+                }
+            }
+        }
     }
 
     /**
