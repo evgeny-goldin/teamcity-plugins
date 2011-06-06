@@ -52,11 +52,20 @@ subprojects {
                             replaceAll( '@version@', project.version ))
 
             ant.zip( destfile: destinationZip ) {
-                zipfileset( file: archivePath,                      fullpath: "server/${project.name}.jar"  )
-                zipfileset( file: tempFile,                         fullpath: 'teamcity-plugin.xml' )
-                zipfileset( file: configurations.groovy.singleFile, prefix:   "server"  )
+                zipfileset( file: archivePath, fullpath: "server/${project.name}.jar"  )
+                zipfileset( file: tempFile,    fullpath: 'teamcity-plugin.xml' )
             }
             assert tempFile.delete()
+
+            /**
+             * Adding Groovy jar unless "-PnoGroovy" is specified when running Gradle
+             */
+            if ( ! project.properties.containsKey( 'noGroovy' ))
+            {
+                ant.zip( destfile: destinationZip, update: true ) {
+                    zipfileset( file: configurations.groovy.singleFile, prefix: 'server' )
+                }
+            }
         }
     }
 
