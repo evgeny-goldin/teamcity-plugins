@@ -49,15 +49,15 @@ subprojects {
         doLast {
             def tempFile = File.createTempFile( project.name, null )
             tempFile.write( file( 'src/main/resources/teamcity-plugin.xml' ).text.
-                            replaceAll( '@name@',    project.name ).
-                            replaceAll( '@version@', version ))
+                            replaceAll( '@name@',    project.name    ).
+                            replaceAll( '@version@', project.version ))
 
             ant.zip( destfile: destinationZip ) {
                 zipfileset( file: archivePath,                      fullpath: "server/${project.name}.jar"  )
-                zipfileset( file: configurations.groovy.singleFile, prefix:   "server"  )
                 zipfileset( file: tempFile,                         fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: configurations.groovy.singleFile, prefix:   "server"  )
             }
-            tempFile.delete()
+            assert tempFile.delete()
         }
     }
 
@@ -65,17 +65,11 @@ subprojects {
      * Copying plugin Zip file to TeamCity instance
      */
     task deploy << {
-        teamCityZip.delete()
-        new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ).deleteDir()
-        new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ).deleteDir()
-        
-        for ( dirName in [ 'temp', 'logs', 'work' ] )
-        {
-            def d = new File( teamCityDir, dirName )
-            assert d.deleteDir() && d.mkdirs()
-        }
-
-        ant.copy( file : destinationZip, tofile : teamCityZip )
+        delete( teamCityZip,
+                new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
+                new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ))
+        [ 'temp', 'logs', 'work' ].each{ new File( teamCityDir, it ).with{ deleteDir(); mkdirs() }}
+        copy { from destinationZip; into teamCityZip.parent; rename { teamCityZip.name }}
     }
 
     /**

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <teamcity-plugin xmlns:xsi                     = "http://www.w3.org/2001/XMLSchema-instance"
                  xsi:noNamespaceSchemaLocation = "urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
-  <info>
-    <name>@name@</name>
-    <display-name>Messenger Plugin</display-name>
-    <version>@version@</version>
-    <description>Displays user messages</description>
-    <vendor>
-      <name>Evgeny Goldin</name>
-      <url>http://evgeny-goldin.com/</url>
-    </vendor>
-  </info>
+    <info>
+        <name>@name@</name>
+        <display-name>Messenger Plugin</display-name>
+        <version>@version@</version>
+        <description>Displays user messages</description>
+        <vendor>
+            <name>Evgeny Goldin</name>
+            <url>http://evgeny-goldin.com/</url>
+        </vendor>
+    </info>
 </teamcity-plugin>
