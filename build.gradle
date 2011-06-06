@@ -7,8 +7,6 @@ allprojects {
     group               = 'com.goldin.teamcity'
     version             = '0.0.1-SNAPSHOT'
     sourceCompatibility = 1.6
-    codenarcConfigFile  = rootProject.file( 'codenarc/codenarc.txt'  )
-    codenarcReportsDir  = new File( rootProject.buildDir, 'codenarc' )
 
     /**
      * Creating IDEA project files
@@ -130,6 +128,9 @@ subprojects {
         description = 'Runs CodeNarc inspections on Groovy sources.'
 
         doFirst {
+            File codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
+            File codenarcReportsDir = new File(( File ) rootProject.buildDir, 'codenarc' )
+
             assert codenarcConfigFile.isFile()
             assert codenarcReportsDir.isDirectory() || codenarcReportsDir.mkdirs()
 
