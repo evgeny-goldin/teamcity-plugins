@@ -25,6 +25,6 @@ class MessengerExtension extends SimplePageExtension
     boolean isAvailable ( @NotNull final HttpServletRequest request )
     {
         def path = WebUtil.getPathWithoutAuthenticationType( request )
-        path.equals( '/' ) || path.startsWith( '/overview.html' )
+        (( path == '/' ) || path.startsWith( '/overview.html' ))
     }
 }
