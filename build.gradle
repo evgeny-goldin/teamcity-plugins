@@ -23,7 +23,7 @@ subprojects {
         groovy   'org.codehaus.groovy:groovy-all:1.8.0'
         codenarc ( 'org.codenarc:CodeNarc:0.13' ){ exclude group: 'ant', module: 'ant' }
         codenarc 'org.apache.ant:ant:1.8.2',
-                 files( rootProject.file( 'codenarc/log4j-xml.jar' ))
+                 files( rootProject.file( 'codenarc' ))
         compile  'jetbrains:teamcity-openapi:6.5',
                  'org.springframework:spring-webmvc:3.0.5.RELEASE',
                  'javax:javaee-api:6.0',
