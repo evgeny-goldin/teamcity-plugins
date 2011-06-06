@@ -7,7 +7,6 @@ allprojects {
     group                  = 'com.goldin.teamcity'
     version                = '0.0.1-SNAPSHOT'
     sourceCompatibility    = 1.6
-    teamCityDir            = 'T:/'
     codenarcConfigFile     = rootProject.file( 'codenarc/codenarc.txt'  )
     codenarcReportsDir     = new File( rootProject.buildDir, 'codenarc' )
 }
@@ -17,7 +16,7 @@ subprojects {
 
     destinationDir = tasks[ 'jar' ].destinationDir
     destinationZip = new File( destinationDir, "${project.name}.zip" )
-    teamCityZip    = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
+
 
     repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
     configurations { codenarc }
@@ -65,6 +64,8 @@ subprojects {
      * Copying plugin Zip file to TeamCity instance
      */
     task deploy << {
+        def teamCityDir = 'T:/'
+        def teamCityZip = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
         delete( teamCityZip,
                 new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
                 new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ))
