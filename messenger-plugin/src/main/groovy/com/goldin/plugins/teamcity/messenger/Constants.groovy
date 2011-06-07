@@ -1,13 +1,18 @@
 package com.goldin.plugins.teamcity.messenger
 
+import jetbrains.buildServer.web.openapi.PluginDescriptor
 
 /**
  * Various constants
  */
 class Constants
 {
-    /**
-     * Should be equal to plugin module name in the project!
-     */
-    static final String PLUGIN_NAME = 'messenger-plugin'
+    PluginDescriptor descriptor
+
+    Constants ( PluginDescriptor descriptor )
+    {
+        setDescriptor( descriptor )
+    }
+
+    String getPluginName() { descriptor.pluginName }
 }

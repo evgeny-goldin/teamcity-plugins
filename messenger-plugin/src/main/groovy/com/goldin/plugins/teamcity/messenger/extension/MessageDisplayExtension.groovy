@@ -14,9 +14,9 @@ import com.goldin.plugins.teamcity.messenger.Constants
  */
 class MessageDisplayExtension extends SimplePageExtension
 {
-    MessageDisplayExtension ( PagePlaces pagePlaces )
+    MessageDisplayExtension ( PagePlaces pagePlaces, Constants constants )
     {
-        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, Constants.PLUGIN_NAME, 'messagesDisplay.jsp' )
+        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, constants.pluginName, 'messagesDisplay.jsp' )
         position = PositionConstraint.first()
         register()
     }

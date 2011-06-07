@@ -11,19 +11,14 @@ import com.goldin.plugins.teamcity.messenger.Constants
  */
 class MessageSendExtension extends SimplePageExtension implements CustomTab
 {
-    MessageSendExtension ( PagePlaces pagePlaces )
+    MessageSendExtension ( PagePlaces pagePlaces, Constants constants )
     {
-        super( pagePlaces, PlaceId.MY_TOOLS_TABS, Constants.PLUGIN_NAME, 'messagesSend.jsp' )
+        super( pagePlaces, PlaceId.MY_TOOLS_TABS, constants.pluginName, 'messagesSend.jsp' )
         register()
     }
 
 
-    @Override
-    String getTabId    () { this.getClass().name }
-
-    @Override
+    String getTabId    () { 'sendMessage'  }
     String getTabTitle () { 'Send Message' }
-
-    @Override
     boolean isVisible  () { true }
 }

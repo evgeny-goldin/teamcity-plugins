@@ -14,10 +14,14 @@ import com.goldin.plugins.teamcity.messenger.Constants
  */
 class MessagesController extends BaseController
 {
+    Constants constants
+
     MessagesController ( SBuildServer         buildServer,
-                         WebControllerManager manager )
+                         WebControllerManager manager,
+                         Constants            constants )
     {
         super( buildServer )
+        setConstants( constants )
         manager.registerController( '/messagesDisplay.html', this )
     }
 
@@ -26,7 +30,7 @@ class MessagesController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
-        Map model = [ a:'b', c:'d' ]
-        new ModelAndView( "/plugins/${ Constants.PLUGIN_NAME }/messages.jsp", model )
+        new ModelAndView( "/plugins/${ constants.pluginName }/messages.jsp",
+                          [ a:'b', c:'d' ] )
     }
 }
