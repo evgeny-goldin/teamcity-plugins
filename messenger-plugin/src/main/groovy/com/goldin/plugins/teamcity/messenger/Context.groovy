@@ -1,6 +1,7 @@
 package com.goldin.plugins.teamcity.messenger
 
 import com.intellij.openapi.diagnostic.Logger
+import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
@@ -13,14 +14,15 @@ class Context implements InitializingBean
     static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
     static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
 
-    
+    final SBuildServer       server
     final PluginDescriptor   descriptor
     final String             pluginName
     final ApplicationContext springContext
 
 
-    Context ( PluginDescriptor descriptor, ApplicationContext springContext )
+    Context ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
     {
+        this.server        = server
         this.descriptor    = descriptor
         this.pluginName    = descriptor.pluginName
         this.springContext = springContext
@@ -52,9 +54,9 @@ class Context implements InitializingBean
 
             LOG.debug( """
  Plugin loaded:
- Name          = [${ descriptor.pluginName }]
- Version       = [${ descriptor.pluginVersion }]
- Resource path = [${ descriptor.pluginResourcesPath }]
+ Name      = [${ descriptor.pluginName }]
+ Version   = [${ descriptor.pluginVersion }]
+ Resources = [${ new File( server.serverRootPath, descriptor.pluginResourcesPath ).canonicalPath }]
  [$beansCount] Spring beans available:
 $beans"""   )
         }
