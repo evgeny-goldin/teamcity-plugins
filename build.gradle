@@ -98,13 +98,11 @@ subprojects {
             assert teamCityDir.isDirectory()
 
             def teamCityZip = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
-            def logsDir     = new File( teamCityDir, "logs" )
             delete( teamCityZip,
                     new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
                     new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ),
-                    new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ),
-                    logsDir )
-            mkdir( logsDir )
+                    new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ))
+            new File( teamCityDir, "logs" ).eachFile { it.delete() }
             ant.copy( file: destinationZip, tofile: teamCityZip )
         }
     }
