@@ -4,43 +4,35 @@ import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
-
 
 /**
- * Various constants
+ * Spring and TC context-related properties
  */
-class Constants implements ApplicationContextAware, InitializingBean
+class Context implements InitializingBean
 {
     static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
     static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
 
     
-    PluginDescriptor   descriptor
-    String             pluginName
-    ApplicationContext context
+    final PluginDescriptor   descriptor
+    final String             pluginName
+    final ApplicationContext springContext
 
-    
-    Constants ( PluginDescriptor descriptor )
+
+    Context ( PluginDescriptor descriptor, ApplicationContext springContext )
     {
-        setDescriptor( descriptor )
-        setPluginName( descriptor.pluginName )
+        this.descriptor    = descriptor
+        this.pluginName    = descriptor.pluginName
+        this.springContext = springContext
     }
 
 
-    @Override
-    void setApplicationContext ( ApplicationContext context )
-    {
-        setContext ( context )
-    }
-
-    
     @Override
     void afterPropertiesSet ()
     {
         if ( LOG.isDebugEnabled())
         {
-            List<String> beanNames  = [ context, context.parent ]*.beanDefinitionNames.toList().flatten()
+            List<String> beanNames  = [ springContext, springContext.parent ]*.beanDefinitionNames.toList().flatten()
             int          beansCount = beanNames.size()
             assert       beanNames
 
@@ -51,7 +43,7 @@ class Constants implements ApplicationContextAware, InitializingBean
                 StringBuilder b, String beanName ->
 
                 String beanCounter     = '[' + "${ counter++ }".padLeft( digits, '0' ) + ']'
-                Class  beanClass       = context.getBean( beanName ).getClass()
+                Class  beanClass       = springContext.getBean( beanName ).class
                 String beanNameD       = "[$beanName]".padRight( maxLength + 3 )
                 String beanDescription = "[$beanClass.name]${ beanClass.interfaces ? ' implements [' + beanClass.interfaces*.name.join( '][' ) + ']' : '' }"
                 b << " $beanCounter$beanNameD = $beanDescription\n"

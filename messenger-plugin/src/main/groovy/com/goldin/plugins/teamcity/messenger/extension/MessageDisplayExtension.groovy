@@ -7,16 +7,17 @@ import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.util.WebUtil
 import org.jetbrains.annotations.NotNull
 import jetbrains.buildServer.web.openapi.PositionConstraint
-import com.goldin.plugins.teamcity.messenger.Constants
+
+import com.goldin.plugins.teamcity.messenger.Context
 
 /**
  * Messenger extension
  */
 class MessageDisplayExtension extends SimplePageExtension
 {
-    MessageDisplayExtension ( PagePlaces pagePlaces, Constants constants )
+    MessageDisplayExtension ( PagePlaces pagePlaces, Context context )
     {
-        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, constants.pluginName, 'messagesDisplay.jsp' )
+        super( pagePlaces, PlaceId.ALL_PAGES_HEADER, context.pluginName, 'messagesDisplay.jsp' )
         position = PositionConstraint.first()
         register()
     }

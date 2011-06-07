@@ -6,22 +6,22 @@ import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
-import com.goldin.plugins.teamcity.messenger.Constants
 
+import com.goldin.plugins.teamcity.messenger.Context
 
 /**
  * Controller returning messages to be displayed
  */
 class MessagesController extends BaseController
 {
-    Constants constants
+    Context context
 
     MessagesController ( SBuildServer         buildServer,
                          WebControllerManager manager,
-                         Constants            constants )
+                         Context              context )
     {
         super( buildServer )
-        setConstants( constants )
+        setContext( context )
         manager.registerController( '/messagesDisplay.html', this )
     }
 
@@ -30,7 +30,7 @@ class MessagesController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
-        new ModelAndView( "/plugins/${ constants.pluginName }/messages.jsp",
+        new ModelAndView( "/plugins/${ context.pluginName }/messages.jsp",
                           [ a:'b', c:'d' ] )
     }
 }
