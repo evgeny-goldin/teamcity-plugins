@@ -6,5 +6,5 @@ package com.goldin.plugins.teamcity.messenger
  */
 class Constants
 {
-    static final String PluginName = 'messenger-plugin'
+    static final String PLUGIN_NAME = 'messenger-plugin'
 }

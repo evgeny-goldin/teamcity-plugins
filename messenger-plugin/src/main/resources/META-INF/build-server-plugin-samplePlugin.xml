@@ -3,8 +3,9 @@
 
 <beans default-autowire="constructor">
     
-    <bean class="com.goldin.plugins.teamcity.messenger.MessageDisplayExtension"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.MessageSendExtension"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessageDisplayExtension"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessageSendExtension"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesController"/>
 
     <!--
       <bean id="sampleExtension" class="jetbrains.sample.extensions.pageExtension.PageExtension"/>
