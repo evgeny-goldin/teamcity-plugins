@@ -15,11 +15,13 @@ class Constants
     
     PluginDescriptor   descriptor
     ApplicationContext context
+    String             pluginName
 
     Constants ( PluginDescriptor descriptor, ApplicationContext context )
     {
         setDescriptor( descriptor )
-        setContext( context.parent )
+        setContext   ( context.parent )
+        setPluginName( descriptor.pluginName )
 
         if ( LOG.isDebugEnabled())
         {
@@ -40,12 +42,12 @@ class Constants
             }
 
             LOG.debug( """
- Constants loaded:
- Plugin name = [${ descriptor.pluginName }]
+ Plugin loaded:
+ Name          = [${ descriptor.pluginName }]
+ Version       = [${ descriptor.pluginVersion }]
+ Resource path = [${ descriptor.pluginResourcesPath }]
  [$beansCount] Spring beans available:
 $beans"""   )
         }
     }
-
-    String getPluginName() { descriptor.pluginName }
 }
