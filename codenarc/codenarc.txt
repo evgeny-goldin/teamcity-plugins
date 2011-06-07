@@ -110,7 +110,9 @@ ruleset {
     
     // rulesets/dry.xml
     DuplicateNumberLiteral
-    DuplicateStringLiteral
+    DuplicateStringLiteral {
+        ignoreStrings = ']'
+    }
     
     // rulesets/exceptions.xml
     CatchArrayIndexOutOfBoundsException
