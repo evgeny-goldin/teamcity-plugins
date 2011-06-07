@@ -14,14 +14,14 @@ import com.goldin.plugins.teamcity.messenger.Context
  */
 class MessagesController extends BaseController
 {
-    Context context
+    final Context context
 
     MessagesController ( SBuildServer         buildServer,
                          WebControllerManager manager,
                          Context              context )
     {
         super( buildServer )
-        setContext( context )
+        this.context = context
         manager.registerController( '/messagesDisplay.html', this )
     }
 
