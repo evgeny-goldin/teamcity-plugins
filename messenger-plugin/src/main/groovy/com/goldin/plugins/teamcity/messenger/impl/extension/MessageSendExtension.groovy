@@ -1,11 +1,11 @@
-package com.goldin.plugins.teamcity.messenger.extension
+package com.goldin.plugins.teamcity.messenger.impl.extension
 
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.openapi.CustomTab
 
-import com.goldin.plugins.teamcity.messenger.Context
+import com.goldin.plugins.teamcity.messenger.impl.Context
 
 /**
  * Messenger extension

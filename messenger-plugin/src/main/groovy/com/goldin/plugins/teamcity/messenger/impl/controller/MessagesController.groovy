@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.messenger.controller
+package com.goldin.plugins.teamcity.messenger.impl.controller
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -7,7 +7,7 @@ import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
 
-import com.goldin.plugins.teamcity.messenger.Context
+import com.goldin.plugins.teamcity.messenger.impl.Context
 
 /**
  * Controller returning messages to be displayed
@@ -25,7 +25,7 @@ class MessagesController extends BaseController
         manager.registerController( '/messagesDisplay.html', this )
     }
 
-    
+
     @Override
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
