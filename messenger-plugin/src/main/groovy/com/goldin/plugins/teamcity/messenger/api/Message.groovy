@@ -1,11 +1,16 @@
 package com.goldin.plugins.teamcity.messenger.api
 
+import com.goldin.plugins.teamcity.messenger.impl.MessagesUtilImpl
+
+
 /**
  * Message data container
  */
-class Message
+final class Message
 {
     public enum Urgency { INFO, WARNING, CRITICAL }
+
+    static final MessagesUtil UTIL = new MessagesUtilImpl()
 
     final long         id
     final long         timestamp
@@ -13,35 +18,43 @@ class Message
     final Urgency      urgency
     final String       message
     final long         longevity
-    final List<String> sendToUsers
-    final List<String> sendToGroups
     final boolean      sendToAll
+    final List<String> sendToGroups
+    final List<String> sendToUsers
     final List<String> usersDeleted
 
 
     public Message ( String       sender,
                      Urgency      urgency,
                      String       message,
-                     long         longevity,
-                     List<String> sendToUsers,
-                     List<String> sendToGroups,
-                     boolean      sendToAll )
+                     long         longevity    = -1,
+                     boolean      sendToAll    = true,
+                     List<String> sendToGroups = [],
+                     List<String> sendToUsers  = [] )
     {
+        assert sender
+        assert urgency
+        assert message
+
+        this.id           = -1
+        this.timestamp    = System.currentTimeMillis()
         this.sender       = sender
         this.urgency      = urgency
-        this.message      = message
+        this.message      = UTIL.htmlEscape( message )
         this.longevity    = longevity
-        this.sendToUsers  = new ArrayList<String>( sendToUsers ).asImmutable()
-        this.sendToGroups = new ArrayList<String>( sendToGroups ).asImmutable()
         this.sendToAll    = sendToAll
+        this.sendToGroups = new ArrayList<String>( sendToGroups ?: [] ).asImmutable()
+        this.sendToUsers  = new ArrayList<String>( sendToUsers  ?: [] ).asImmutable()
         this.usersDeleted = []
+
+        assert ! this.message.with{ contains( '<' ) || contains( '>' ) }
     }
 
 
     public Message ( long id, Message message )
     {
         this.id           = id
-        this.timestamp    = System.currentTimeMillis()
+        this.timestamp    = message.timestamp
         this.sender       = message.sender
         this.urgency      = message.urgency
         this.message      = message.message
@@ -58,7 +71,6 @@ class Message
 
     @Override
     boolean equals ( Object object ) { ( object instanceof Message ) && (( Message ) object ).id == id }
-
 
 
     @Override

@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.messenger.impl
+package com.goldin.plugins.teamcity.messenger
 
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.serverSide.SBuildServer

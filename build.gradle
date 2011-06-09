@@ -38,16 +38,17 @@ subprojects {
     repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
     configurations { codenarc }
     dependencies   {
-        groovy   'org.codehaus.groovy:groovy-all:1.8.0'
-        codenarc ( 'org.codenarc:CodeNarc:0.13' ){ exclude group: 'ant', module: 'ant' }
-        codenarc 'org.apache.ant:ant:1.8.2',
-                 files( rootProject.file( 'codenarc' ))
-        compile  'jetbrains:teamcity-openapi:6.5',
-                 'org.springframework:spring-webmvc:2.5.6',
-                 'javax.servlet:servlet-api:2.5',
-                 'com.intellij:annotations:7.0.3',
-                 'com.intellij:openapi:7.0.3',
-                 'jdom:jdom:1.0'
+        groovy      'org.codehaus.groovy:groovy-all:1.8.0'
+        codenarc    ( 'org.codenarc:CodeNarc:0.13' ){ exclude group: 'ant', module: 'ant' }
+        codenarc    'org.apache.ant:ant:1.8.2',
+                    files( rootProject.file( 'codenarc' ))
+        compile     'jetbrains:teamcity-openapi:6.5',
+                    'org.springframework:spring-webmvc:2.5.6',
+                    'javax.servlet:servlet-api:2.5',
+                    'com.intellij:annotations:7.0.3',
+                    'com.intellij:openapi:7.0.3',
+                    'jdom:jdom:1.0'
+        testCompile 'org.spockframework:spock-core:0.6-groovy-1.8-SNAPSHOT'
     }
 
     /**

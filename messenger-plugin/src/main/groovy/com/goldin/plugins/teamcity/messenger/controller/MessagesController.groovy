@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.messenger.impl.controller
+package com.goldin.plugins.teamcity.messenger.controller
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -7,7 +7,7 @@ import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
 
-import com.goldin.plugins.teamcity.messenger.impl.Context
+import com.goldin.plugins.teamcity.messenger.Context
 
 /**
  * Controller returning messages to be displayed

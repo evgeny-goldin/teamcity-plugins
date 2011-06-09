@@ -5,10 +5,18 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.Context"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.extension.MessageDisplayExtension"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.extension.MessageSendExtension"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.controller.MessagesController"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.Context"/>
+
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesUtilImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+
+    <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesController"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessagesDisplayExtension"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessagesSendExtension"/>
 
     <!--
       <bean id="sampleExtension" class="jetbrains.sample.extensions.pageExtension.PageExtension"/>
