@@ -5,14 +5,14 @@ import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.openapi.CustomTab
 
-import com.goldin.plugins.teamcity.messenger.Context
+import com.goldin.plugins.teamcity.messenger.MessagesContext
 
 /**
  * Messenger extension
  */
 class MessagesSendExtension extends SimplePageExtension implements CustomTab
 {
-    MessagesSendExtension ( PagePlaces pagePlaces, Context context )
+    MessagesSendExtension ( PagePlaces pagePlaces, MessagesContext context )
     {
         super( pagePlaces, PlaceId.MY_TOOLS_TABS, context.pluginName, 'messagesSend.jsp' )
         register()

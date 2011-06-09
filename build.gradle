@@ -7,6 +7,11 @@ allprojects {
     group               = 'com.goldin.teamcity'
     version             = '0.0.1-SNAPSHOT'
     sourceCompatibility = 1.6
+    groovyVersion       = '1.8.0'
+    springVersion       = '2.5.6'
+    gcontractsVersion   = '1.2.3'
+    spockVersion        = '0.6-groovy-1.8-SNAPSHOT'
+    codenarcVersion     = '0.13'
 
     /**
      * Creating IDEA project files
@@ -33,22 +38,28 @@ allprojects {
 subprojects {
 
     File teamCityDir    = new File( 'T:/' )
-    File destinationZip = new File( tasks[ 'jar' ].destinationDir, "${project.name}.zip" )
+    File destinationZip = new File( project.buildDir, "${project.name}.zip" )
 
     repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
-    configurations { codenarc }
+    
+    configurations {
+        codenarc
+        provided
+        compile { extendsFrom provided }
+    }
     dependencies   {
-        groovy      'org.codehaus.groovy:groovy-all:1.8.0'
-        codenarc    ( 'org.codenarc:CodeNarc:0.13' ){ exclude group: 'ant', module: 'ant' }
+        groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
+        codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant', module: 'ant' }
         codenarc    'org.apache.ant:ant:1.8.2',
                     files( rootProject.file( 'codenarc' ))
-        compile     'jetbrains:teamcity-openapi:6.5',
-                    'org.springframework:spring-webmvc:2.5.6',
+        provided    'jetbrains:teamcity-openapi:6.5',
+                    "org.springframework:spring-webmvc:$springVersion",
                     'javax.servlet:servlet-api:2.5',
                     'com.intellij:annotations:7.0.3',
                     'com.intellij:openapi:7.0.3',
                     'jdom:jdom:1.0'
-        testCompile 'org.spockframework:spock-core:0.6-groovy-1.8-SNAPSHOT'
+        compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit', module: 'junit' }
+        testCompile "org.spockframework:spock-core:$spockVersion"
     }
 
     /**
@@ -60,31 +71,41 @@ subprojects {
     }
 
     /**
-     * Creating plugin Zip file
+     * Creates plugin Zip archive
      */
     tasks.withType( Jar ) {
         excludes << 'teamcity-plugin.xml'
         doLast {
-            def tempFile = File.createTempFile( project.name, null )
+            File tempFile = File.createTempFile( project.name, null )
             tempFile.write( file( 'src/main/resources/teamcity-plugin.xml' ).text.
                             replaceAll( '@name@',    project.name    ).
                             replaceAll( '@version@', project.version ))
 
-            ant.zip( destfile: destinationZip ) {
-                zipfileset( file: archivePath, fullpath: "server/${project.name}.jar"  )
-                zipfileset( file: tempFile,    fullpath: 'teamcity-plugin.xml' )
-            }
-            assert tempFile.delete()
-
             /**
-             * Adding Groovy jar unless "-PnoGroovy" is specified when running Gradle
+             * Copying all required libraries except provided ones by TeamCity server
+             * Groovy jar is not copied if -PnoGroovy is specified
              */
-            if ( ! project.properties.containsKey( 'noGroovy' ))
-            {
-                ant.zip( destfile: destinationZip, update: true ) {
-                    zipfileset( file: configurations.groovy.singleFile, prefix: 'server' )
+            File compileLibs = new File( project.buildDir, 'compile-libs' )
+
+            ( configurations.compile.files - configurations.provided.files ).each {
+                File file ->
+                if (( file.name != "groovy-all-${groovyVersion}.jar" ) ||
+                    ( ! project.properties.containsKey( 'noGroovy' )))
+                {
+                    ant.copy( file: file, todir: compileLibs )
                 }
             }
+
+            /**
+             * Creating plugin Zip archive
+             */
+            ant.zip( destfile: destinationZip ) {
+                zipfileset( file: tempFile,    fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: archivePath, prefix  : 'server' )
+                zipfileset( dir:  compileLibs, prefix  : 'server' )
+            }
+
+            assert tempFile.delete()
         }
     }
 

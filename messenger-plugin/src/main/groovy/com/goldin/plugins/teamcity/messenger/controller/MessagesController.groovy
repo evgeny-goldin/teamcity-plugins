@@ -7,18 +7,18 @@ import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.springframework.web.servlet.ModelAndView
 
-import com.goldin.plugins.teamcity.messenger.Context
+import com.goldin.plugins.teamcity.messenger.MessagesContext
 
 /**
  * Controller returning messages to be displayed
  */
 class MessagesController extends BaseController
 {
-    final Context context
+    final MessagesContext context
 
     MessagesController ( SBuildServer         buildServer,
                          WebControllerManager manager,
-                         Context              context )
+                         MessagesContext      context )
     {
         super( buildServer )
         this.context = context

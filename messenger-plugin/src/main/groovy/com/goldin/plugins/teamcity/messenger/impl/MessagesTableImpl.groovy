@@ -1,14 +1,25 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.goldin.plugins.teamcity.messenger.api.MessagesTable
 import com.goldin.plugins.teamcity.messenger.api.Message
-
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
+import com.goldin.plugins.teamcity.messenger.api.MessagesTable
+import org.gcontracts.annotations.Requires
 
 /**
  * {@link MessagesTable} implementation
  */
 class MessagesTableImpl implements MessagesTable
 {
+    final MessagesConfiguration configuration
+
+
+    @Requires({ configuration })
+    MessagesTableImpl ( MessagesConfiguration configuration )
+    {
+        this.configuration = configuration
+    }
+
+
     @Override
     long addMessage (Message message)
     {

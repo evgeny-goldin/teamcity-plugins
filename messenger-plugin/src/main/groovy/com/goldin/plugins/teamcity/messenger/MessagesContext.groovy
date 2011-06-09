@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext
 /**
  * Spring and TC context-related properties
  */
-class Context implements InitializingBean
+class MessagesContext implements InitializingBean
 {
     static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
     static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
@@ -20,7 +20,7 @@ class Context implements InitializingBean
     final ApplicationContext springContext
 
 
-    Context ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
+    MessagesContext ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
     {
         this.server        = server
         this.descriptor    = descriptor

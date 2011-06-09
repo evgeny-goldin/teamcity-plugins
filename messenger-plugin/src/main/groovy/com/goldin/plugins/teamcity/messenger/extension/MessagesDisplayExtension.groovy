@@ -8,14 +8,14 @@ import jetbrains.buildServer.web.util.WebUtil
 import org.jetbrains.annotations.NotNull
 import jetbrains.buildServer.web.openapi.PositionConstraint
 
-import com.goldin.plugins.teamcity.messenger.Context
+import com.goldin.plugins.teamcity.messenger.MessagesContext
 
 /**
  * Messenger extension
  */
 class MessagesDisplayExtension extends SimplePageExtension
 {
-    MessagesDisplayExtension ( PagePlaces pagePlaces, Context context )
+    MessagesDisplayExtension ( PagePlaces pagePlaces, MessagesContext context )
     {
         super( pagePlaces, PlaceId.ALL_PAGES_HEADER, context.pluginName, 'messagesDisplay.jsp' )
         position = PositionConstraint.first()
