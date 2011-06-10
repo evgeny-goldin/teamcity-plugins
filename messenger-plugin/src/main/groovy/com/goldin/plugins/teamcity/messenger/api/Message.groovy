@@ -1,8 +1,5 @@
 package com.goldin.plugins.teamcity.messenger.api
 
-import com.goldin.plugins.teamcity.messenger.impl.MessagesUtilImpl
-
-
 /**
  * Message data container
  */
@@ -10,7 +7,7 @@ final class Message
 {
     public enum Urgency { INFO, WARNING, CRITICAL }
 
-    static final MessagesUtil UTIL = new MessagesUtilImpl()
+    static final MessagesUtil UTIL = null//new MessagesUtilImpl()
 
     final long         id
     final long         timestamp

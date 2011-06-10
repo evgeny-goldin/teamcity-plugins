@@ -14,4 +14,8 @@ interface MessagesUtil
     * @return original text with all HTML tags escaped
     */
     String htmlEscape( String s )
+
+
+    
+    List<Message> sort( List<Message> messages )
 }

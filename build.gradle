@@ -7,11 +7,13 @@ allprojects {
     group               = 'com.goldin.teamcity'
     version             = '0.0.1-SNAPSHOT'
     sourceCompatibility = 1.6
+    targetCompatibility = 1.6
     groovyVersion       = '1.8.0'
     springVersion       = '2.5.6'
     gcontractsVersion   = '1.2.3'
     spockVersion        = '0.6-groovy-1.8-SNAPSHOT'
     codenarcVersion     = '0.13'
+    repoUrl             = 'http://evgeny-goldin.org/artifactory/repo/'
 
     /**
      * Creating IDEA project files
@@ -37,16 +39,18 @@ allprojects {
 
 subprojects {
 
-    File teamCityDir    = new File( 'T:/' )
-    File destinationZip = new File( project.buildDir, "${project.name}.zip" )
+    File        teamCityDir    = new File( 'T:/' )
+    File        destinationZip = new File( project.buildDir, "${project.name}.zip" )
+    Set<String> apiPatterns    = [ '**/api/**' ]
 
-    repositories   { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
+    repositories   { mavenRepo urls: repoUrl }
     
     configurations {
         codenarc
         provided
         compile { extendsFrom provided }
     }
+
     dependencies   {
         groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
         codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant', module: 'ant' }
@@ -62,8 +66,9 @@ subprojects {
         testCompile "org.spockframework:spock-core:$spockVersion"
     }
 
+    
     /**
-     * Compilation options
+     * Default compilation options
      */
     tasks.withType( Compile ) {
         options.debug        =  true
@@ -71,11 +76,57 @@ subprojects {
     }
 
     /**
+     * Compiles API sources
+     */
+    task compileApi ( type: GroovyCompile ) {
+        description    = 'Compiles API sources.'
+        classpath      = compileGroovy.classpath
+        source         = compileGroovy.source
+        destinationDir = compileGroovy.destinationDir
+        includes       = apiPatterns
+    }
+
+    /**
+     * Compiles implementation sources
+     */
+    task compileImpl ( type: GroovyCompile, dependsOn: compileApi ) {
+        description    = 'Compiles implementation sources.'
+        classpath      = compileGroovy.classpath
+        source         = compileGroovy.source
+        destinationDir = compileGroovy.destinationDir
+        excludes       = apiPatterns
+    }
+
+    /**
+     * Assembles API jar
+     */
+    task assembleApiJar( type: Jar, dependsOn: compileApi ) {
+        description = 'Assembles API jar.'
+        appendix    = 'api'
+        includes    = apiPatterns
+        from compileApi.destinationDir
+    }
+
+    /**
+     * Assembles implementation jar
+     */
+    task assembleImplJar( type: Jar, dependsOn: [ classes, compileImpl ] ) {
+        description = 'Assembles implementation jar.'
+        appendix    = 'impl'
+        excludes    = apiPatterns + [ 'teamcity-plugin.xml', 'teamcity-plugin-descriptor.xsd' ]
+        from compileJava.destinationDir
+        from processResources.destinationDir
+        from compileImpl.destinationDir
+    }
+
+    /**
      * Creates plugin Zip archive
      */
-    tasks.withType( Jar ) {
-        excludes << 'teamcity-plugin.xml'
-        doLast {
+    task assemblePlugin( dependsOn: [ assembleApiJar, assembleImplJar ] ) {
+
+        description = 'Creates plugin Zip archive.'
+
+        doFirst {
             File tempFile = File.createTempFile( project.name, null )
             tempFile.write( file( 'src/main/resources/teamcity-plugin.xml' ).text.
                             replaceAll( '@name@',    project.name    ).
@@ -100,15 +151,21 @@ subprojects {
              * Creating plugin Zip archive
              */
             ant.zip( destfile: destinationZip ) {
-                zipfileset( file: tempFile,    fullpath: 'teamcity-plugin.xml' )
-                zipfileset( file: archivePath, prefix  : 'server' )
-                zipfileset( dir:  compileLibs, prefix  : 'server' )
+                zipfileset( file: tempFile,                    fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: assembleApiJar.archivePath,  prefix  : 'server' )
+                zipfileset( file: assembleImplJar.archivePath, prefix  : 'server' )
+                zipfileset( dir:  compileLibs,                 prefix  : 'server' )
             }
 
             assert tempFile.delete()
         }
     }
 
+    task compileGroovy ( overwrite: true, dependsOn: [ compileApi,     compileImpl     ] )
+    task assemble      ( overwrite: true, dependsOn: [ assembleApiJar, assembleImplJar ] )
+    build.taskDependencies.add( assemblePlugin )
+
+    
     /**
      * Deploys plugin Zip to TeamCity instance
      */
