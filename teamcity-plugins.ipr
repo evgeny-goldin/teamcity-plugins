@@ -40,6 +40,20 @@
         <inspection_tool class="AutowiredDependenciesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
       </profile>
+      <profile version="1.0" is_locked="false">
+        <option name="myName" value="TeamCity" />
+        <option name="myLocal" value="false" />
+        <inspection_tool class="AutowiredDependenciesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+          <option name="processCode" value="true" />
+          <option name="processLiterals" value="true" />
+          <option name="processComments" value="true" />
+        </inspection_tool>
+        <inspection_tool class="SpringModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="XmlHighlighting" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="XmlUnboundNsPrefix" enabled="false" level="WARNING" enabled_by_default="false" />
+      </profile>
     </profiles>
     <option name="PROJECT_PROFILE" value="Project Default" />
     <option name="USE_PROJECT_PROFILE" value="true" />
