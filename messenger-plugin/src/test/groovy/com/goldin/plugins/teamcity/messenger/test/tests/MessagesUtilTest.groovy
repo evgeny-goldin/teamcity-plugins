@@ -56,10 +56,12 @@ class MessagesUtilTest extends BaseSpecification
         def m2 = new Message( 2, context, util, new Message( 'me', Urgency.CRITICAL, 'CRITICAL Message', -1, false, [], [ 'username' ] ))
         def m3 = new Message( 3, context, util, new Message( 'me', Urgency.WARNING,  'WARNING  Message', -1, false, [], [ 'username' ] ))
 
-        then:
         def permutations = [ m1, m2, m3 ].eachPermutation{
             List<Message> messages ->
             assert util.sort( messages, 'username' ) == [ m2, m3, m1 ]
         }
+        
+        then:
+        permutations.total == 6
     }
 }

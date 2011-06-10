@@ -49,7 +49,7 @@ class MessagesUtil
 
             [ m1, m2 ].each{ assert it.forUser( username ), "[$it] wasn't sent to user [$username]" }
 
-            int urgencyCompare = m1.urgency.compareTo( m2.urgency )
+            int urgencyCompare = m1.urgency <=> m2.urgency
             if ( urgencyCompare != 0 ) { return urgencyCompare }
 
             if ( different( m1.sendToAll, m2.sendToAll )){ return ( m1.sendToAll ? 1 : -1 ) }
