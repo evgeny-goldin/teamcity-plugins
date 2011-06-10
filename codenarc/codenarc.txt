@@ -155,7 +155,9 @@ ruleset {
     IllegalRegex
     RequiredRegex
     RequiredString
-    StatelessClass
+    StatelessClass {
+        ignoreFieldNames = 'counter'
+    }
 
     // rulesets/imports.xml
     DuplicateImport
@@ -207,7 +209,7 @@ ruleset {
     FieldName
     InterfaceName
     MethodName {
-       regex = /[a-z][\w\s]*/
+       regex = /[a-z][\w\s']*/
     }
     ObjectOverrideMisspelledMethodName
     PackageName
