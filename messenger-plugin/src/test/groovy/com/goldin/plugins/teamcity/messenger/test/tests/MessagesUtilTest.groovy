@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class MessagesUtilTest extends BaseSpecification
 {
     @Autowired
-    MessagesUtil util
+    final MessagesUtil util
 
 
     void "testing HTML escaping with variables"() {

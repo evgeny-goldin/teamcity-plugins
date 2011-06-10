@@ -11,7 +11,7 @@ import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 class MessagesBeanTest extends BaseSpecification
 {
     @Autowired
-    MessagesBean messagesBean
+    final MessagesBean messagesBean
 
     
 }
