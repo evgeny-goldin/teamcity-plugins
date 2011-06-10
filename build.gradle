@@ -66,7 +66,9 @@ subprojects {
                     'com.intellij:openapi:7.0.3',
                     'jdom:jdom:1.0'
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit', module: 'junit' }
-        testCompile "org.spockframework:spock-core:$spockVersion"
+        testCompile "org.spockframework:spock-core:$spockVersion",
+                    "org.spockframework:spock-spring:$spockVersion",
+                    "org.springframework:spring-test:3.0.5.RELEASE"
     }
 
     

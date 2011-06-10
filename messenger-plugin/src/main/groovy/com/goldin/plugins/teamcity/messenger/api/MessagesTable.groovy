@@ -6,7 +6,7 @@ package com.goldin.plugins.teamcity.messenger.api
  */
 interface MessagesTable
 {
-    long addMessage( Message message )
+    Message addMessage( Message message )
 
     Message deleteMessage( long messageId )
     

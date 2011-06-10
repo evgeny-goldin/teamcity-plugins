@@ -5,9 +5,9 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean class="com.goldin.plugins.teamcity.messenger.MessagesContext"/>
-
     <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
+    
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>

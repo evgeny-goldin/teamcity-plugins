@@ -1,11 +1,14 @@
-package com.goldin.plugins.teamcity.messenger.impl
+package com.goldin.plugins.teamcity.messenger.test.infra
 
-import spock.lang.Specification
 import org.gcontracts.annotations.Ensures
+import org.springframework.test.context.ContextConfiguration
+import spock.lang.Specification
+
 
 /**
  * Super class for all tests
  */
+@ContextConfiguration( locations = 'classpath:/build-server-plugin-messenger-test.xml' )
 class BaseSpecification extends Specification
 {
 

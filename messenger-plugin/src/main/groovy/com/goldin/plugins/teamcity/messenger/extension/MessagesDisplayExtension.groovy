@@ -1,14 +1,13 @@
 package com.goldin.plugins.teamcity.messenger.extension
 
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import javax.servlet.http.HttpServletRequest
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
+import jetbrains.buildServer.web.openapi.PositionConstraint
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.util.WebUtil
 import org.jetbrains.annotations.NotNull
-import jetbrains.buildServer.web.openapi.PositionConstraint
-
-import com.goldin.plugins.teamcity.messenger.MessagesContext
 
 /**
  * Messenger extension

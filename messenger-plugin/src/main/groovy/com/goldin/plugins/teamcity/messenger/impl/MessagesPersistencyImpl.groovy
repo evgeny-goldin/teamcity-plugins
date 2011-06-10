@@ -1,7 +1,7 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.goldin.plugins.teamcity.messenger.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.Message
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesPersistency
 import org.gcontracts.annotations.Requires
 

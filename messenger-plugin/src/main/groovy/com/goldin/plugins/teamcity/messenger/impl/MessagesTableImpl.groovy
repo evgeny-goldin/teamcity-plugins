@@ -21,9 +21,9 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    long addMessage (Message message)
+    Message addMessage (Message message)
     {
-        0
+        null
     }
 
     @Override

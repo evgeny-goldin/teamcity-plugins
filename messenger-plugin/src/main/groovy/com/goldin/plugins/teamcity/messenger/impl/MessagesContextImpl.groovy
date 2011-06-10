@@ -1,15 +1,17 @@
-package com.goldin.plugins.teamcity.messenger
+package com.goldin.plugins.teamcity.messenger.impl
 
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+
 
 /**
- * Spring and TC context-related properties
+ * {@link MessagesContext} implementation
  */
-class MessagesContext implements InitializingBean
+class MessagesContextImpl implements InitializingBean, MessagesContext
 {
     static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
     static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
@@ -20,7 +22,7 @@ class MessagesContext implements InitializingBean
     final ApplicationContext springContext
 
 
-    MessagesContext ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
+    MessagesContextImpl ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
     {
         this.server        = server
         this.descriptor    = descriptor

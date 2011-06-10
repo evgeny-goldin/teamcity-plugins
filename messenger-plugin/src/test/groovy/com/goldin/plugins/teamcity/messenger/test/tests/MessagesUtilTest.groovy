@@ -1,6 +1,8 @@
-package com.goldin.plugins.teamcity.messenger.impl
+package com.goldin.plugins.teamcity.messenger.test.tests
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
+import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
+import org.springframework.beans.factory.annotation.Autowired
 
 
 /**
@@ -8,10 +10,11 @@ import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
  */
 class MessagesUtilTest extends BaseSpecification
 {
-    final MessagesUtil util = new MessagesUtil()
+    @Autowired
+    MessagesUtil util
 
 
-    def "testing HTML escaping with variables"() {
+    void "testing HTML escaping with variables"() {
 
         expect:
         util.htmlEscape( input ) == output
@@ -29,7 +32,7 @@ class MessagesUtilTest extends BaseSpecification
     }
 
 
-    def "testing HTML escaping with files"() {
+    void "testing HTML escaping with files"() {
 
         expect:
         util.htmlEscape( text( input )) == text( output )

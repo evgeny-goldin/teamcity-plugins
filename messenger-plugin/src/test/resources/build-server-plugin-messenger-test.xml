@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns              = "http://www.springframework.org/schema/beans"
+       default-autowire   = "constructor"
+       xmlns:xsi          = "http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans
+                             http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
+
+    <bean class="com.goldin.plugins.teamcity.messenger.test.infra.MessagesContextImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+</beans>
