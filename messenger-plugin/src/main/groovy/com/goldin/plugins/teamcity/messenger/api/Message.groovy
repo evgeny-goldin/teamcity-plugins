@@ -1,31 +1,38 @@
 package com.goldin.plugins.teamcity.messenger.api
 
+import groovy.transform.ToString
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
+
 
 /**
  * Message data container
  */
+@ToString
 final class Message
 {
-    public enum Urgency { INFO, WARNING, CRITICAL }
+   /**
+    * Urgency levels should be specified from most to least critical!
+    */
+    public enum Urgency { CRITICAL, WARNING, INFO }
 
-    static final MessagesUtil UTIL = new MessagesUtil()
+    final long            id
+    final MessagesContext context
+    final MessagesUtil    util
 
-    final long         id
-    final long         timestamp
-    final String       sender
-    final Urgency      urgency
-    final String       message
-    final long         longevity
-    final boolean      sendToAll
-    final List<String> sendToGroups
-    final List<String> sendToUsers
-    final List<String> usersDeleted
+    final long            timestamp
+    final String          sender
+    final Urgency         urgency
+    final String          message
+    final long            longevity
+    final boolean         sendToAll
+    final Set<String>     sendToGroups
+    final Set<String>     sendToUsers
+    final Set<String>     usersDeleted
 
 
     @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })
-    @Ensures({ ! result.message.with{ contains( '<' ) || contains( '>' ) }})
+    @Ensures({ ( this.sendToGroups != null ) && ( this.sendToUsers != null ) && ( this.usersDeleted != null ) })
     Message ( String       sender,
               Urgency      urgency,
               String       message,
@@ -34,30 +41,34 @@ final class Message
               List<String> sendToGroups = [],
               List<String> sendToUsers  = [] )
     {
-        assert sender
-        assert urgency
-        assert message
-
         this.id           = -1
+        this.context      = null
+        this.util         = null
+        
         this.timestamp    = System.currentTimeMillis()
         this.sender       = sender
         this.urgency      = urgency
-        this.message      = UTIL.htmlEscape( message )
+        this.message      = message
         this.longevity    = longevity
         this.sendToAll    = sendToAll
-        this.sendToGroups = new ArrayList<String>( sendToGroups ).asImmutable()
-        this.sendToUsers  = new ArrayList<String>( sendToUsers  ).asImmutable()
+        this.sendToGroups = new HashSet<String>( sendToGroups ).asImmutable()
+        this.sendToUsers  = new HashSet<String>( sendToUsers  ).asImmutable()
         this.usersDeleted = []
     }
 
 
-    Message ( long id, Message message )
+    @Requires({( id > 0 ) && context && util && message })
+    @Ensures({ ( this.id == id ) && this.context.is( context ) && this.util.is( util ) })
+    Message ( long id, MessagesContext context, MessagesUtil util, Message message )
     {
         this.id           = id
+        this.context      = context
+        this.util         = util
+        
         this.timestamp    = message.timestamp
         this.sender       = message.sender
         this.urgency      = message.urgency
-        this.message      = message.message
+        this.message      = util.htmlEscape( message.message )
         this.longevity    = message.longevity
         this.sendToUsers  = message.sendToUsers
         this.sendToGroups = message.sendToGroups
@@ -68,14 +79,15 @@ final class Message
 
     @Override
     int hashCode () { id.hashCode() }
+    
 
     @Override
     boolean equals ( Object object ) { ( object instanceof Message ) && (( Message ) object ).id == id }
 
 
-    @Override
-    String toString ()
+    @Requires({ username })
+    boolean forUser ( String username )
     {
-        ''
+        ( sendToAll || sendToUsers.contains( username ) || ( ! sendToGroups.disjoint( context.getUserGroups( username ))))
     }
 }

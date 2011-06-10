@@ -7,4 +7,6 @@ package com.goldin.plugins.teamcity.messenger.api
 interface MessagesContext
 {
     String getPluginName()
+
+    Set<String> getUserGroups( String username )
 }

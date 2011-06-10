@@ -5,12 +5,16 @@ import jetbrains.buildServer.web.openapi.CustomTab
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.SimplePageExtension
+import org.gcontracts.annotations.Requires
+
 
 /**
  * Messenger extension
  */
 class MessagesSendExtension extends SimplePageExtension implements CustomTab
 {
+
+    @Requires({ pagePlaces && context })
     MessagesSendExtension ( PagePlaces pagePlaces, MessagesContext context )
     {
         super( pagePlaces, PlaceId.MY_TOOLS_TABS, context.pluginName, 'messagesSend.jsp' )

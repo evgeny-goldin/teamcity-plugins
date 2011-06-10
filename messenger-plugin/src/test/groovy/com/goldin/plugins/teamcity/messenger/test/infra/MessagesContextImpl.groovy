@@ -10,4 +10,6 @@ class MessagesContextImpl implements MessagesContext
     @Override
     String getPluginName () { 'messenger-plugin' }
 
+    @Override
+    Set<String> getUserGroups ( String username ) { [ 'dummyGroup' ] as Set }
 }

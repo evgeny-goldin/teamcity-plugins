@@ -1,12 +1,14 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.intellij.openapi.diagnostic.Logger
 import jetbrains.buildServer.serverSide.SBuildServer
+import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.web.openapi.PluginDescriptor
+import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Requires
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
-
 
 /**
  * {@link MessagesContext} implementation
@@ -22,6 +24,7 @@ class MessagesContextImpl implements InitializingBean, MessagesContext
     final ApplicationContext springContext
 
 
+    @Requires({ server && descriptor && springContext })
     MessagesContextImpl ( SBuildServer server, PluginDescriptor descriptor, ApplicationContext springContext )
     {
         this.server        = server
@@ -62,5 +65,17 @@ class MessagesContextImpl implements InitializingBean, MessagesContext
  [$beansCount] Spring beans available:
 $beans"""   )
         }
+    }
+
+
+    @Override
+    @Requires({ username })
+    @Ensures({ result })
+    Set<String> getUserGroups ( String username )
+    {
+        SUser  user = server.userModel.findUserAccount( null, username )
+        if ( ! user ) { return [] }
+        
+        user.allUserGroups*.name as Set
     }
 }
