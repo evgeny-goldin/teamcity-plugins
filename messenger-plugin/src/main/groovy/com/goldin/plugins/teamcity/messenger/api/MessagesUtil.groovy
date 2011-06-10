@@ -27,6 +27,6 @@ class MessagesUtil
 
     List<Message> sort ( List<Message> messages )
     {
-        return null
+        []
     }
 }

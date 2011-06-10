@@ -12,7 +12,7 @@ allprojects {
     springVersion       = '2.5.6'
     gcontractsVersion   = '1.2.3'
     spockVersion        = '0.6-groovy-1.8-SNAPSHOT'
-    codenarcVersion     = '0.13'
+    codenarcVersion     = '0.14'
     repoUrl             = 'http://evgeny-goldin.org/artifactory/repo/'
 
     /**
@@ -232,6 +232,7 @@ subprojects {
                            maxPriority3Violations: 0 ) {
                  report  ( type: 'html' ) { option name: 'outputFile', value: ( codenarcReportsDir.path + '/main.html' ) }
                  fileset ( dir : 'src/main/groovy' )
+                 fileset ( dir : 'src/test/groovy' )
             }
         }
     }

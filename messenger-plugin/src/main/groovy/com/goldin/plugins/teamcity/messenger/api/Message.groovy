@@ -26,13 +26,13 @@ final class Message
 
     @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ ! result.message.with{ contains( '<' ) || contains( '>' ) }})
-    public Message ( String       sender,
-                     Urgency      urgency,
-                     String       message,
-                     long         longevity    = -1,
-                     boolean      sendToAll    = true,
-                     List<String> sendToGroups = [],
-                     List<String> sendToUsers  = [] )
+    Message ( String       sender,
+              Urgency      urgency,
+              String       message,
+              long         longevity    = -1,
+              boolean      sendToAll    = true,
+              List<String> sendToGroups = [],
+              List<String> sendToUsers  = [] )
     {
         assert sender
         assert urgency
@@ -51,7 +51,7 @@ final class Message
     }
 
 
-    public Message ( long id, Message message )
+    Message ( long id, Message message )
     {
         this.id           = id
         this.timestamp    = message.timestamp
