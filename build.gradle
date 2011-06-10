@@ -78,7 +78,7 @@ subprojects {
     /**
      * Compiles API sources
      */
-    task compileApi ( type: GroovyCompile ) {
+    task compileGroovyApi ( type: GroovyCompile ) {
         description    = 'Compiles API sources.'
         classpath      = compileGroovy.classpath
         source         = compileGroovy.source
@@ -89,7 +89,7 @@ subprojects {
     /**
      * Compiles implementation sources
      */
-    task compileImpl ( type: GroovyCompile, dependsOn: compileApi ) {
+    task compileGroovyImpl ( type: GroovyCompile, dependsOn: compileGroovyApi ) {
         description    = 'Compiles implementation sources.'
         classpath      = compileGroovy.classpath
         source         = compileGroovy.source
@@ -100,29 +100,29 @@ subprojects {
     /**
      * Assembles API jar
      */
-    task assembleApiJar( type: Jar, dependsOn: compileApi ) {
+    task assembleApi( type: Jar, dependsOn: compileGroovyApi ) {
         description = 'Assembles API jar.'
         appendix    = 'api'
         includes    = apiPatterns
-        from compileApi.destinationDir
+        from compileGroovyApi.destinationDir
     }
 
     /**
      * Assembles implementation jar
      */
-    task assembleImplJar( type: Jar, dependsOn: [ classes, compileImpl ] ) {
+    task assembleImpl( type: Jar, dependsOn: [ classes, compileGroovyImpl ] ) {
         description = 'Assembles implementation jar.'
         appendix    = 'impl'
         excludes    = apiPatterns + [ 'teamcity-plugin.xml', 'teamcity-plugin-descriptor.xsd' ]
         from compileJava.destinationDir
         from processResources.destinationDir
-        from compileImpl.destinationDir
+        from compileGroovyImpl.destinationDir
     }
 
     /**
      * Creates plugin Zip archive
      */
-    task assemblePlugin( dependsOn: [ assembleApiJar, assembleImplJar ] ) {
+    task assemblePlugin( dependsOn: [ assembleApi, assembleImpl ] ) {
 
         description = 'Creates plugin Zip archive.'
 
@@ -151,18 +151,18 @@ subprojects {
              * Creating plugin Zip archive
              */
             ant.zip( destfile: destinationZip ) {
-                zipfileset( file: tempFile,                    fullpath: 'teamcity-plugin.xml' )
-                zipfileset( file: assembleApiJar.archivePath,  prefix  : 'server' )
-                zipfileset( file: assembleImplJar.archivePath, prefix  : 'server' )
-                zipfileset( dir:  compileLibs,                 prefix  : 'server' )
+                zipfileset( file: tempFile,                 fullpath: 'teamcity-plugin.xml' )
+                zipfileset( file: assembleApi.archivePath,  prefix  : 'server' )
+                zipfileset( file: assembleImpl.archivePath, prefix  : 'server' )
+                zipfileset( dir:  compileLibs,              prefix  : 'server' )
             }
 
             assert tempFile.delete()
         }
     }
 
-    task compileGroovy ( overwrite: true, dependsOn: [ compileApi,     compileImpl     ] )
-    task assemble      ( overwrite: true, dependsOn: [ assembleApiJar, assembleImplJar ] )
+    task compileGroovy ( overwrite: true, dependsOn: [ compileGroovyApi, compileGroovyImpl ] )
+    task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
     build.taskDependencies.add( assemblePlugin )
 
     
