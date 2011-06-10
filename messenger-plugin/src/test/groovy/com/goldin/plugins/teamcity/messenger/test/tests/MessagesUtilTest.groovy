@@ -43,8 +43,8 @@ class MessagesUtilTest extends BaseSpecification
         util.htmlEscape( text( input )) == text( output )
 
         where:
-        input                   | output
-        'htmlEscape-input.html' | 'htmlEscape-output.html'
+        input                       | output
+        'htmlEscape-input.html.txt' | 'htmlEscape-output.html.txt'
     }
 
 
