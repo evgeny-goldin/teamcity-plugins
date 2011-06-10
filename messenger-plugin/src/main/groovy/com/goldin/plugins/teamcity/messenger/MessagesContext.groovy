@@ -56,7 +56,7 @@ class MessagesContext implements InitializingBean
  Plugin loaded:
  Name      = [${ descriptor.pluginName }]
  Version   = [${ descriptor.pluginVersion }]
- Resources = [${ new File( server.serverRootPath, descriptor.pluginResourcesPath ).canonicalPath }]
+ Resources = [${ new File( server.serverRootPath, descriptor.pluginResourcesPath ).canonicalPath.replace( '\\', '/' ) }]
  [$beansCount] Spring beans available:
 $beans"""   )
         }
