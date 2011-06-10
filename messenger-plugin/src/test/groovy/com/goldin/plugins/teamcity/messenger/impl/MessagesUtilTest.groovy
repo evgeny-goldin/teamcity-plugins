@@ -1,17 +1,17 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
-import spock.lang.Specification
+
 
 /**
- * {@link MessagesUtilImpl} tests
+ * {@link MessagesUtil} tests
  */
-class MessagesUtilImplTest extends Specification
+class MessagesUtilTest extends BaseSpecification
 {
-    final MessagesUtil util = new MessagesUtilImpl()
+    final MessagesUtil util = new MessagesUtil()
 
 
-    def "testing HTML escaping"() {
+    def "testing HTML escaping with variables"() {
 
         expect:
         util.htmlEscape( input ) == output
@@ -26,5 +26,16 @@ class MessagesUtilImplTest extends Specification
         '<&html>'  | '&lt;&amp;html&gt;'
         '<&"html>' | '&lt;&amp;&quot;html&gt;'
         '<script>' | '&lt;script&gt;'
+    }
+
+
+    def "testing HTML escaping with files"() {
+
+        expect:
+        util.htmlEscape( text( input )) == text( output )
+
+        where:
+        input                   | output
+        'htmlEscape-input.html' | 'htmlEscape-output.html'
     }
 }

@@ -17,14 +17,17 @@ allprojects {
 
     /**
      * Creating IDEA project files
+     * http://gradle.org/idea_plugin.html
      */
-    ideaProject.javaVersion = '1.6.0_25'
+    ideaProject {
+        javaVersion = '1.6.0_25'
+    }
     ideaModule {
-        javaVersion     = ideaProject.javaVersion
-        downloadSources = true
-        downloadJavadoc = true
-        outputDir       = new File(( File ) project.buildDir, 'idea' )
-        testOutputDir   = new File(( File ) project.buildDir, 'idea/test' )
+        downloadSources   = true
+        downloadJavadoc   = true
+        inheritOutputDirs = false
+        outputDir         = new File(( File ) project.buildDir, 'idea' )
+        testOutputDir     = new File(( File ) project.buildDir, 'idea/test' )
     }
 
     /**
@@ -55,7 +58,7 @@ subprojects {
         groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
         codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant', module: 'ant' }
         codenarc    'org.apache.ant:ant:1.8.2',
-                    files( rootProject.file( 'codenarc' ))
+                    files( rootProject.file( 'codenarc' )) // For "log4j.xml"
         provided    'jetbrains:teamcity-openapi:6.5',
                     "org.springframework:spring-webmvc:$springVersion",
                     'javax.servlet:servlet-api:2.5',

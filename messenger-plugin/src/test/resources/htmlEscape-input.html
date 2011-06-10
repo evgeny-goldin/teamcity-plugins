@@ -1,0 +1,923 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+
+  <div id="loadingWarning" style="
+    text-align: center;
+    background-color: #fff;
+    border: 5px solid #c6c6c6;
+    padding: 10px;
+    position: absolute;
+    display: none;
+    top: 37%;
+    left: 35%;
+    z-index: 1000;
+    width: 12em;
+    color: #868686;
+    font-family: tahoma, verdana, arial, sans-serif;
+    font-size: 20px;
+  ">
+    LOADING...
+  </div>
+
+  <script type="text/javascript" xml:space="preserve">
+    function getLoadingDiv() {
+      return document.getElementById('loadingWarning');
+    }
+
+    var loadingTimeout = setTimeout(function(){
+      var div = getLoadingDiv();
+      if (div != null) {
+        div.style.display = 'block';
+      }
+    }, 500);
+  </script>
+
+  <head>
+  <title>Projects -- TeamCity</title>
+    <!-- :linkCSS --><style type="text/css">
+  @import "/teamcity/res/4454888366958844024.css?v=1307555595259";
+</style>
+<!--[if IE]>
+    <style type="text/css">
+      body {
+        font-family: helvetica neue, arial, sans-serif;
+      }
+    </style>
+<![endif]-->
+    <script type="text/javascript">
+  var base_uri=window.location.protocol+"//"+window.location.host+"/teamcity";
+</script>
+
+    
+    <!-- :linkScript --><script type="text/javascript" src="/teamcity/res/-831807088880509184.js?v=1307555595259"></script>
+
+    <script type="text/javascript">
+      <!--
+      window.$j = jQuery.noConflict();
+      BS.jQueryDropdown.setJQueryOptions(jQuery);
+
+      
+      var topNavPane = new TabbedPane();
+
+      topNavPane.addTab("overview", {
+        caption: "Projects",
+        url: "/teamcity/overview.html"
+      });
+      
+      topNavPane.addTab("changes", {
+        caption: "My Changes",
+        url: "/teamcity/changes.html"
+      });
+      
+
+      topNavPane.addTab("agents", {
+        caption: "Agents (1)",
+        url: "/teamcity/agents.html"
+      });
+
+      
+      topNavPane.addTab("queue", {
+        caption: "Build Queue (0)",
+        url: "/teamcity/queue.html"
+      });
+      
+
+      function initPage() {
+        
+        if (document.location.href.indexOf('#') == -1) {
+          restoreScrolling();
+        }
+        
+
+        if (typeof BS == "undefined") return;
+        BS.initReloadBlocker();
+      }
+
+      Behaviour.addLoadEvent(initPage);
+
+      Behaviour.addLoadEvent(function() {
+        if (typeof BS == "undefined") return;
+
+        BS.WindowFocusMonitor.startMonitor();
+
+        BS.StatisticsMonitor.start("/teamcity/serverStatistics.html");
+        BS.EventTracker.startTracking("/teamcity/eventTracker.html");
+      });
+
+      
+        Behaviour.addLoadEvent(function() {
+          clearTimeout(loadingTimeout);
+          var div = getLoadingDiv();
+          if (div != null) {
+            BS.Util.hide(div);
+          }
+        });
+      
+
+      Event.observe(window, "unload", function() {
+        rememberScrolling();
+        if (typeof BS == "undefined") return;
+        BS.blockRefreshPermanently();
+        BS.EventTracker.dispose();
+      });
+
+      BS.ServerLink = OO.extend(BS.AbstractModalDialog, {
+        _failuresNum: 0,
+
+        getContainer: function() {
+          return $('shutdownDialog');
+        },
+
+        onShutdown: function() {
+          if (this.isVisible() || this._wasClosed) return;
+          BS.Util.hide($('onCommunicationFailure'));
+          BS.Util.show($('onServerShutdown'));
+          $('shutdownDetails').innerHTML = "Server is unavailable since " + new Date().toLocaleString();
+          this.showCentered();
+        },
+
+        onFailure: function(ex) {
+          if (this.isVisible() || this._wasClosed) return;
+          if (++this._failuresNum > 5) {
+            BS.Util.hide($('onServerShutdown'));
+            BS.Util.show($('onCommunicationFailure'));
+            $('shutdownDetails').innerHTML = "Server is unavailable since " + new Date().toLocaleString();
+            this.showCentered();
+          }
+        },
+
+        isConnectionAvailable : function() {
+          return this._failuresNum == 0
+        },
+
+        onSuccess: function() {
+          this._failuresNum = 0;
+          this._wasClosed = false;
+          this.doClose();
+        },
+
+        close: function() {
+          this._wasClosed = true;
+          this.doClose();
+        }
+      });
+
+      window._tc_es = function(e) {Event.stop(e);};
+      //-->
+    </script>
+  <!-- :linkCSS --><style type="text/css">
+  @import "/teamcity/res/1405159448790075677.css?v=1307555595259";
+</style>
+  <!-- :linkScript --><script type="text/javascript" src="/teamcity/res/-5359394318216259576.js?v=1307555595259"></script>
+  <script type="text/javascript">
+    <!--
+    Behaviour.addLoadEvent(function() {
+      BS.RunningBuilds.startUpdates();
+      BS.SystemProblems.startUpdates();
+    });
+
+    topNavPane.setActiveCaption('overview');
+    //-->
+  </script>
+
+  
+<link rel="Shortcut Icon" href="/teamcity/favicon20.ico" type="image/x-icon"/>
+
+<meta name="application-name" content="TeamCity (Projects -- TeamCity)"/>
+<meta name="description" content="Powerful Continuous Integration and Build Server"/>
+<link rel="icon" href="/teamcity/img/icons/TeamCity512.png" sizes="512x512"/>
+<link rel="icon" href="/teamcity/img/icons/TeamCity128.png" sizes="128x128"/>
+<link rel="icon" href="/teamcity/img/icons/TeamCity48.png" sizes="48x48"/>
+<link rel="icon" href="/teamcity/img/icons/TeamCity32.png" sizes="32x32"/>
+
+<link rel="icon" href="/teamcity/img/icons/TeamCity16.png" sizes="16x16"/>
+
+
+  <!-- :linkCSS --><style type="text/css">
+  @import "/teamcity/res/4239851527364970342.css?v=1307555595259";
+</style><!-- :linkScript --><script type="text/javascript" src="/teamcity/res/-2223765811167872118.js?v=1307555595259"></script>
+<!-- START EXTENSION CONTENT jetbrains.buildServer.web.openapi.SimplePageExtension: /plugins/searchBuildByNumber/input.jsp -->
+
+
+<div id="inputIdF" style="display: none;">
+  <input class="quickSearchQuery quickSearchQueryUnfocused"
+       id="searchField"
+       value=""
+       onfocus="BS_search_onfocus(this);"
+       onblur="BS_search_onblur(this);"
+       onkeydown="BS.Tooltip.hidePopup();return true;"
+       onkeypress="{
+        if (event.keyCode == 13) {
+          BS_search_go(event.shiftKey);
+        }
+      }"
+  />
+<a href="#" onclick="BS_search_go(false);" class="quickSearchButton" title="Search"><img src='/teamcity/plugins/searchBuildByNumber/searchIcon.png'/></a>
+<script type="text/javascript">
+  function BS_setHideForeverCookie() {
+    setCookie("n_s_h", 'true', 60);
+    BS.Tooltip.hidePopup();
+  }
+  function BS_search_onfocus(field) {
+    Element.addClassName(field, 'quickSearchQueryFocused');
+    Element.removeClassName(field, 'quickSearchQueryUnfocused');
+    if (false && (field.id=="headerSearchField") && getCookie('n_s_h') != 'true') {
+      BS.Tooltip.showMessage(field, {shift: {x: -220, y: 20}, width: "300px"}, 'Search builds by build number, tag, or build configuration name.<br/>'+
+                                          'Specify several keywords to get more precise results, for example: '+
+                                          '<tt>#3453 Selena</tt>.<br /><a style="font-size: 80%" href=\'#\' '+
+                                          'onclick=\'BS_setHideForeverCookie();\'>hide and don\'t show again</a>');
+      setTimeout(function() {
+        field.select();
+      }, 20)
+    }
+  }
+  function BS_search_onblur(field) {
+    Element.removeClassName(field, 'quickSearchQueryFocused');
+    Element.addClassName(field, 'quickSearchQueryUnfocused');
+  }
+  function BS_search_go(newPage) {
+    var url = '/teamcity/searchResults.html?query='
+        + encodeURIComponent($("searchField") ? $("searchField").value : $("headerSearchField").value)
+        + '&buildTypeId='
+        + '&byTime=' + ($('searchByTime') ? $('searchByTime').value : false);
+    if(newPage) window.open(url);
+    else document.location.href = url;
+  }
+</script>
+</div>
+<script type="text/javascript">
+  function installSearchField() {
+    Element.cleanWhitespace('userPanel');
+    Element.cleanWhitespace('inputIdF');
+    $('inputIdF').firstChild.id = 'headerSearchField';
+    $('userPanel').innerHTML += "<span class='search'>" + $('inputIdF').innerHTML + "</span>";
+    $('inputIdF').innerHTML ='';
+    $('headerSearchField').onkeypress = function(event) {
+      if (BS_search_timer) clearTimeout(BS_search_timer);
+      var url = BS_search_getUrl();
+      if (event.keyCode == Event.KEY_RETURN) {
+        if(event.shiftKey) {
+          document.location.href = url;
+        } else {
+          BS_search_showPopup(url);
+        }
+      } else if (event.keyCode == Event.KEY_ESC) {
+        return false;
+      } else {
+        BS_search_timer = setTimeout(function () { BS_search_showPopup(BS_search_getUrl()); }, 700);
+      }
+    }.bindAsEventListener();
+  }
+
+  BS_search_getUrl = function() {
+    return '/teamcity/searchResults.html?query='
+        + encodeURIComponent($('headerSearchField').value)
+        + '&buildTypeId=';
+  };
+
+  var BS_search_timer;
+
+  function BS_search_showPopup(url) {
+    new BS.Popup('searchResultsPopup', {
+      delay: 0,
+      shift: {x: -150, y: 22},
+      hideOnMouseOut: false,
+      loadingText: "Loading search results ...",
+      url: url + '&popupMode=true',
+      afterShowFunc: function(popup) {
+      }
+    }).showPopupNearElement('headerSearchField');
+  }
+
+  // Tricky part - insert search field into existing tag - userPanel (top right navigation)
+  BS.WaitFor(function() {
+    return $('header-ready');
+  }, installSearchField);
+
+</script>
+
+<!-- END EXTENSION CONTENT jetbrains.buildServer.web.openapi.SimplePageExtension -->
+
+<!--[if IE]>
+    <style type="text/css">
+      .modalDialog {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f515255, endColorstr=#7f515255);       /* For IE 5.5 - 7 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f515255, endColorstr=#7f515255)"; /* For IE 8 */
+        background: transparent;
+      }
+    </style>
+<![endif]-->
+<!--[if lte IE 7]>
+    <style type="text/css">
+      @import /teamcity/css/ie7_fix.css;
+    </style>
+<![endif]-->
+  </head>
+
+  <body>
+  <div id="topWrapper">
+    <div class="headBG">
+      <div class="fixedWidth">
+
+        <a href="/teamcity/" class="headerLogo"><img src="/teamcity/img/icons/TeamCity32.png" alt="Logo"/></a>
+
+        <div id="tabsContainer"></div>
+        <div id="userPanel">
+          
+          <div class="info"><p>Welcome,
+            
+            <script type="text/javascript">BS.usernamePopup_h = new BS.Popup("usernamePopupContent",{shift: {x: -120, y: 15}});</script>
+<span class="pc "  onmouseover="BS.usernamePopup_h.stopHidingPopup()"><a href='/teamcity/profile.html?init=1'>Evgeny Goldin</a><img id="usernamePopup" src="/teamcity/img/popUpControl.gif" onmouseover="BS.usernamePopup_h.showPopupNearElement(this);_pc_over(this,'BS.usernamePopup_h.hidePopup(300)')" onclick="_tc_es(event)"/></span><script type="text/javascript">
+  window._pc_over = function(img, hidePopupCode) {
+    img.src=img.src.replace('.gif', '_hover.gif');
+    img.onmouseout = img.parentNode.onmouseout = function() { if (hidePopupCode) eval(hidePopupCode); _pc_out(this) }.bind(img);
+  };
+  window._pc_out = function(img) {img.src=img.src.replace('_hover', '');};
+</script><div id="usernamePopupContent" class="popupDiv">
+                  <div class="settings" onclick="return BS.openUrl(event,'/teamcity/profile.html?init=1');">
+                    <a href='/teamcity/profile.html?init=1'>My Settings & Tools</a>
+                  </div>
+                
+                
+                <div onclick="BS.Logout('/teamcity/ajax.html?logout=1');">
+                  <a class="logout" href="javascript://" onclick="BS.Logout('/teamcity/ajax.html?logout=1');">Logout</a>
+                </div></div></div>
+          
+            <div class="info admin"><p><a href='/teamcity/admin/admin.html'>Administration</a></div>
+          
+          
+        </div>
+      </div>
+      <div id="header-ready" class="clr"></div>
+    </div>
+    <script type="text/javascript">
+      <!--
+      if (topNavPane) {
+        topNavPane.showIn('tabsContainer');
+        jQuery("#tabsContainer li").each(function() {
+          var self = jQuery(this);
+          if (!self.hasClass("first")) {
+            self.addClass("leftBorder")
+          }
+        });
+        BS.AllProjectsPopup.install();
+      }
+      // -->
+    </script>
+
+    <div class="fixedWidth">
+      
+    <div id="toolbar">
+      <div class="toolbar-left">
+        <a href="javascript://" onclick="BS.CollapsableBlocks.collapseAll(true)" title="Click to collapse all builds">Collapse All</a>
+        | <a href="javascript://" onclick="BS.CollapsableBlocks.expandAll(true)" title="Click to expand all builds">Expand All</a>
+      </div>
+      <div class="toolbar-right">
+        
+
+<div style="">
+  <form id="propertyForm_overview.hideSuccessful" style="margin: 0; padding: 0;">
+    
+    
+    <img id="overview.hideSuccessful_progress" style="display: none; float: none;" src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="Please wait..." title="Please wait..."/>
+    <input type="checkbox" 
+       name="overview.hideSuccessful"
+       id="overview.hideSuccessful"
+       
+       style="vertical-align: bottom; position: relative; top: -1px; "
+       onclick="BS.User.setBooleanProperty('overview.hideSuccessful', this.checked, {progress: 'overview.hideSuccessful_progress',afterComplete: function() { BS.reload(true); }, __ph: null})"
+       
+       
+       
+       value="true"
+        ><input type="hidden" name="_overview.hideSuccessful" value="">
+ <label for="overview.hideSuccessful" style="float: none;">Hide Successful</label>
+  </form>
+</div>
+
+        
+          
+            <a class="quickLinksControlLink" id="configVisibleProjects" href="javascript://" onclick="BS.VisibleProjectsDialog.show();"
+               title="Show/hide and reorder the projects on this page">Configure Visible Projects</a>&nbsp;
+          
+        
+      </div>
+      <div class="clr"></div>
+    </div>
+  
+      <div class="quickLinks">
+        
+      </div>
+      <script type="text/javascript">
+        <!--
+        BS.Navigation.writeBreadcrumbs();
+        // -->
+      </script>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="fixedWidth">
+
+    
+
+
+<!-- include PlaceId.BEFORE_CONTENT -->
+
+<!-- START EXTENSION CONTENT jetbrains.buildServer.controllers.CriticalErrorsPageExtension: /pageBeforeContentCriticalErrors.jsp -->
+
+
+
+
+  
+    <div class="attentionComment" style="margin-bottom: 0.3em;">The TeamCity license will expire in 7 days.<br/>After the expiration, TeamCity will run in Professional mode and <a href='http://www.jetbrains.net/confluence/display/TCD65/Enterprise+License+Expiration'>several important restrictions</a> will be applied.</div>
+  
+
+
+  
+<!-- END EXTENSION CONTENT jetbrains.buildServer.controllers.CriticalErrorsPageExtension -->
+
+<!-- end of include PlaceId.BEFORE_CONTENT -->
+
+
+    
+    <table class="tabsTable">
+      <tr>
+        <td>
+          <div id="tabsContainer3" class="simpleTabs"></div>
+        </td>
+        <td class="besideContent">
+          
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="archivedProjectsContent" class="popupDiv" style="display:none;">    
+  </div>
+  <div id="buildResultsSummaryTemplate" style="display:none">
+    <div class="summaryContainer">
+      <span id="detailedSummary:##BUILD_ID##">
+        <table cellspacing="0">
+        <tr>
+          <td>
+            <div class="header">Build shortcuts</div>
+            <ul class="bsLinks">
+              <li style="white-space: nowrap;">
+                Log:
+                <span style="display: none;" data-vis="##SHOW_IF_RUNNING##">
+                  <a href="/teamcity/viewLog.html?tab=buildLog&buildTypeId=##BUILD_TYPE_ID##&buildId=##BUILD_ID##&tail=true"
+                         title="View log messages">tail</a> |
+                </span>
+                <span style="display: none;" data-vis="##SHOW_IF_FINISHED##">
+                  <a href="/teamcity/viewLog.html?tab=buildLog&buildTypeId=##BUILD_TYPE_ID##&buildId=##BUILD_ID##&tree=true"
+                         title="View log messages as tree">tree</a> |
+                </span>
+                <a href="/teamcity/viewLog.html?tab=buildLog&buildTypeId=##BUILD_TYPE_ID##&buildId=##BUILD_ID##"
+                       title="View important messages">short</a> |
+                <a href="/teamcity/viewLog.html?tab=buildLog&buildTypeId=##BUILD_TYPE_ID##&buildId=##BUILD_ID##&all=true"
+                       title="View all messages">full</a>
+              </li>
+              <li><a href="/teamcity/viewLog.html?tab=buildParameters&buildTypeId=##BUILD_TYPE_ID##&buildId=##BUILD_ID##"
+                     title="View build parameters">Parameters</a></li>
+              <li><span id="summaryProgress:##BUILD_ID##" style="font-weight: normal"></span></li>
+            </ul>
+          </td>
+        </tr>
+        </table>
+      </span>
+    </div>
+  </div>
+  <div id="buildTypeMenuTemplate" style="display:none">
+    <div class="summaryContainer">
+    
+    <ul class="menuList">
+      
+      <li self_element="true" onclick="return BS.openUrl(event, '/teamcity/project.html?projectId=##PROJECT_ID##');" class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'">
+        <a href="/teamcity/project.html?projectId=##PROJECT_ID##" title="Project home page">Project Home</a>
+      </li>
+      
+      <li self_element="true" onclick="return BS.openUrl(event, '/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##');"
+          style="padding-bottom: 4px; border-bottom: 1px solid #E7E7E7;" class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'">
+        <a href="/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##" title="Build configuration home page">Build Configuration Home</a>
+      </li>
+      
+      <li onclick="return BS.openUrl(event, '/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##&tab=buildTypeHistoryList');" class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'">
+        <a href="/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##&tab=buildTypeHistoryList" title="Build history for the configuration">History</a>
+      </li>
+      
+      <li onclick="return BS.openUrl(event, '/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##&tab=buildTypeChangeLog');" class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'">
+        <a href="/teamcity/viewType.html?buildTypeId=##BUILD_TYPE_ID##&tab=buildTypeChangeLog" title="View user changes">Change Log</a>
+      </li>
+      <li responsibility="true" onclick="BS.ResponsibilityDialog.loadTakeResponsibilityDialog('##BUILD_TYPE_ID##', '##BUILD_TYPE_NAME##'); return false;"
+          class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'">
+        <a href="#" onclick="BS.ResponsibilityDialog.loadTakeResponsibilityDialog('##BUILD_TYPE_ID##', '##BUILD_TYPE_NAME##'); return false;"
+           title="Assign a user to investigate problems in the configuration">Start Investigation...</a>
+      </li>
+      <li class="menuItem" onmouseover="this.className = 'menuItemSelected'" onmouseout="this.className = 'menuItem'" admin_element="true" onclick="return BS.openUrl(event, jQuery(this).children('a').attr('href'));">
+        <a href="/teamcity/admin/editBuild.html?init=1&id=buildType:##BUILD_TYPE_ID##" onmouseover="" onmouseout="" title="Edit build configuration settings" style="">Edit Settings</a>
+      </li>
+    </ul>
+    </div>
+  </div>
+  <div id="issueDetailsTemplate" style="display:none">
+    <span id="detailedSummary:##ISSUE_ID##">
+      <img src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="*"/>
+    </span>
+  </div>
+
+  <div id="mainContent" class="fixedWidth">
+    <div id="content">
+      
+      
+    
+      <script type="text/javascript">var handler = function() {BS.reload();};BS.EventTracker.subscribeOnEvent('o', 6, handler);BS.EventTracker.subscribeOnEvent('p', 0, handler);BS.EventTracker.subscribeOnEvent('q', 0, handler);</script>
+      
+<div id="buildTypes">
+  <div class="clr"></div
+>
+    
+<script type="text/javascript"
+  >var handler = function() {
+    BS.Projects.updateProjectView('project4', true);};BS.EventTracker.subscribeOnProjectEvent('a', 2, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('b', 2, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('c', 2, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('e', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('v', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('t', 2, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('u', 2, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('r', 1, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('s', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('x', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('m', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('l', 0, 'project4', handler);</script>
+<script type="text/javascript"
+  >var handler = function() {BS.reload();};BS.EventTracker.subscribeOnProjectEvent('n', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('p', 0, 'project4', handler);BS.EventTracker.subscribeOnProjectEvent('q', 0, 'project4', handler);</script><div class="build " id="p_project4">
+  <span style="display:none;"><!-- ================ Project block header: -->gcommons</span>
+  <div class="projectHeader exp">
+   <table>
+     <tr>
+       <td class="projectName">
+         <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Project has failing build configurations. Click to expand / collapse details" class="handle"
+       style="margin-right: 3px;" id="blockHandleovr_project4" />
+         <a href="/teamcity/project.html?projectId=project4&tab=projectOverview" title="Go to the project page">gcommons</a>
+         <span class="projectDescription">GCommons library - <a target="_blank" title="Click to open this link in a new window" href="http://evgeny-goldin.com/wiki/GCommons">http://evgeny-goldin.com/wiki/GCommons</a></span>
+       </td>
+       <td class="projectStatus"><div class="successful"></div><div class="failing">1 failing</div>
+       </td>
+       <td class="hideProject">
+         <span class="pc "  onmouseover="BS.ChangesPopup.stopHidingPopup();">no hidden<img id="vis_project4" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ShowBuildTypesPopup.showPopup(this, 'project4');;_pc_over(this,'BS.ShowBuildTypesPopup.hidePopup(300);')" onclick="_tc_es(event)"/></span><a class="hideProject" href="javascript://" onclick="BS.Projects.hideProject('project4');" title="Hide project from viewing"/>
+       </td>
+     </tr>
+   </table>
+  </div>
+  <div id="btbovr_project4">
+  
+<!-- Start of BC caption gcommons :: Master Deploy (Nightly) --> <div class="tableCaption" id="bt12-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project4', 'bt12');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt12" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt12', [], '');" value="Run "/><img id="run_bt12" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt12', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt12" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt12&tab=buildTypeStatusDiv" title="Build configuration is failing. Click to open &quot;Master Deploy (Nightly)&quot; home page">Master Deploy (Nightly)</a><img id="btppbt12" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt12', 'project4', false, true, true, 'Master Deploy (Nightly)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;06:05">13 hours ago</span> </span> <span id="buildType:13070642050:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642050:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt12', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt12', '13070642050');</script> </div> <!-- End of BC caption gcommons :: Master Deploy (Nightly) --> <!-- Start of builds for gcommons :: Master Deploy (Nightly) --> <div class="overviewTypeTableCont" id="btbbt12" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#324 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildFailed.gif" id="build:4297:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4297");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4297" style="display: none;">Build failed<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4297_handle) { BS.res4297_handle = new BS.BuildResultsSummary(4297, 'bt12', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4297_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4297&tab=buildResultsDiv&buildTypeId=bt12" title="View build results" ><span id="build:4297:text">Tests failed: 8 (8 new), passed: 128</span></a><img id="results:4297" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4297_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4297_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4297:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4354" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4354);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4297">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;06:05">13 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4297:duration">5m:19s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt12']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt12', 'eluruDesign/projectFailing.gif')); </script> </div> <!-- End of builds for gcommons :: Master Deploy (Nightly) -->
+  </div>
+
+  <script type="text/javascript">
+      BS.Blocks._saved['t_ovr_project4']='';
+      
+      BS.CollapsableBlocks.registerBlock(new BS.ProjectBlock("t_", 'ovr_project4', "eluruDesign/projectFailing.gif", false));
+    </script>
+  <span style="display:none;"><!-- ================ END Project build types for: -->gcommons</span>
+  <script type="text/javascript">
+    jQuery("#p_project4 .tableCaption:first").addClass("firstRow");
+  </script>
+</div>
+<form id="pauseBuildTypeForm" action="/teamcity/action.html" method="post" onsubmit="return BS.PauseBuildTypeDialog.submit();" style="margin: 0; padding: 0;" autocomplete="off">
+  <div id="pauseBuildTypeFormDialog" class="pauseBuildTypeFormDialog modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.PauseBuildTypeDialog.close();" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="pauseBuildTypeFormTitle">Pause build configuration</h3>
+  </div>
+  <div class="modalDialogBody">
+    
+  <textarea name="pauseComment" rows="5" cols="46" class="commentTextArea"
+            onclick="if (this.value == this.defaultValue) this.value = '';">&lt;your comment here></textarea>
+  <input type="hidden" name="pauseBuildType" value=""/>
+  <input type="hidden" name="pause" value=""/>
+                             
+  <div class="popupSaveButtonsBlock">
+    <a href="javascript://" onclick="BS.PauseBuildTypeDialog.close()" class="cancel">Cancel</a>
+    <input class="submitButton" type="submit" value="Pause" id="PauseSubmitButton"/>
+    <img id="pauseProgressIcon" style="display: none; padding-top: 0.1em; float: right;" src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="Please wait..." title="Please wait..."/>
+    <br clear="all"/>
+  </div>
+  <br/>
+  div>
+</div></form>
+<script type="text/javascript"
+  >var handler = function() {
+    BS.Projects.updateProjectView('project7', false);};BS.EventTracker.subscribeOnProjectEvent('a', 2, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('b', 2, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('c', 2, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('e', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('v', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('t', 2, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('u', 2, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('r', 1, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('s', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('x', 6, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('m', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('l', 0, 'project7', handler);</script>
+<script type="text/javascript"
+  >var handler = function() {BS.reload();};BS.EventTracker.subscribeOnProjectEvent('n', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('p', 0, 'project7', handler);BS.EventTracker.subscribeOnProjectEvent('q', 0, 'project7', handler);</script><div class="build " id="p_project7">
+  <span style="display:none;"><!-- ================ Project block header: -->teamcity-plugins</span>
+  <div class="projectHeader exp">
+   <table>
+     <tr>
+       <td class="projectName">
+         <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Project is successful. Click to expand / collapse details" class="handle"
+       style="margin-right: 3px;" id="blockHandleovr_project7" />
+         <a href="/teamcity/project.html?projectId=project7&tab=projectOverview" title="Go to the project page">teamcity-plugins</a>
+         <span class="projectDescription">TeamCity Plugins - <a target="_blank" title="Click to open this link in a new window" href="https://github.com/evgeny-goldin/teamcity-plugins">https://github.com/evgeny-goldin/teamcity-plugins</a></span>
+       </td>
+       <td class="projectStatus"><div class="successful">1 successful</div><div class="failing"></div>
+       </td>
+       <td class="hideProject">
+         <span class="pc "  onmouseover="BS.ChangesPopup.stopHidingPopup();">no hidden<img id="vis_project7" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ShowBuildTypesPopup.showPopup(this, 'project7');;_pc_over(this,'BS.ShowBuildTypesPopup.hidePopup(300);')" onclick="_tc_es(event)"/></span><a class="hideProject" href="javascript://" onclick="BS.Projects.hideProject('project7');" title="Hide project from viewing"/>
+       </td>
+     </tr>
+   </table>
+  </div>
+  <div id="btbovr_project7">
+  
+<!-- Start of BC caption teamcity-plugins :: Master Build (Nightly) --> <div class="tableCaption" id="bt20-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project7', 'bt20');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="pendingMessage"><span class="pc highlightChanges" onmouseover="BS.ChangesPopup.stopHidingPopup()"><a href="/teamcity/viewType.html?buildTypeId=bt20&tab=pendingChangesDiv" title="View pending changes">Pending (2)</a><img id="pending:bt20" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showPendingChangesPopup(this, 'bt20');;_pc_over(this,'BS.ChangesPopup.hidePopup()')" onclick="_tc_es(event)"/></span></td> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt20" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt20', [], '');" value="Run "/><img id="run_bt20" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt20', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt20" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt20&tab=buildTypeStatusDiv" title="Click to open &quot;Master Build (Nightly)&quot; home page">Master Build (Nightly)</a><img id="btppbt20" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt20', 'project7', false, true, false, 'Master Build (Nightly)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;06:05">13 hours ago</span> </span> <span id="buildType:13070642051:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642051:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt20', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt20', '13070642051');</script> </div> <!-- End of BC caption teamcity-plugins :: Master Build (Nightly) --> <!-- Start of builds for teamcity-plugins :: Master Build (Nightly) --> <div class="overviewTypeTableCont" id="btbbt20" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#21 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildSuccessful.gif" id="build:4298:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4298");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4298" style="display: none;">Build was successful<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4298_handle) { BS.res4298_handle = new BS.BuildResultsSummary(4298, 'bt20', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4298_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4298&tab=buildResultsDiv&buildTypeId=bt20" title="View build results" ><span id="build:4298:text">Tests passed: 1</span></a><img id="results:4298" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4298_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4298_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4298:artifactsLink"><span class="pc " onmouseover="BS.ArtifactsPopup.stopHidingPopup()"><a href="/teamcity/viewLog.html?buildId=4298&tab=artifacts&buildTypeId=bt20" title="View build artifacts" >Artifacts</a><img id="artifacts:4298" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ArtifactsPopup.showArtifactsPopup(this, 'bt20', 4298);_pc_over(this,'BS.ArtifactsPopup.hidePopup()')" onclick="_tc_es(event)"/></span></span> </td> <td class=" link changesLink"><span class="pc highlightChanges" onmouseover="BS.ChangesPopup.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4298&tab=buildChangesDiv&buildTypeId=bt20" title="" id='changes:4355'>evgeny goldin &lt;&hellip; (4)</a><img id="changes:4355" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4355);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4298">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;06:05">13 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4298:duration">17s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt20']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt20', 'eluruDesign/projectSuccessful.gif')); </script> </div> <!-- End of builds for teamcity-plugins :: Master Build (Nightly) -->
+  </div>
+
+  <script type="text/javascript">
+      BS.Blocks._saved['t_ovr_project7']='_:';
+      
+      BS.CollapsableBlocks.registerBlock(new BS.ProjectBlock("t_", 'ovr_project7', "eluruDesign/projectSuccessful.gif", true));
+    </script>
+  <span style="display:none;"><!-- ================ END Project build types for: -->teamcity-plugins</span>
+  <script type="text/javascript">
+    jQuery("#p_project7 .tableCaption:first").addClass("firstRow");
+  </script>
+</div>
+
+<script type="text/javascript"
+  >var handler = function() {
+    BS.Projects.updateProjectView('project6', false);};BS.EventTracker.subscribeOnProjectEvent('a', 2, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('b', 2, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('c', 2, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('e', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('v', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('t', 2, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('u', 2, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('r', 1, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('s', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('x', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('m', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('l', 0, 'project6', handler);</script>
+<script type="text/javascript"
+  >var handler = function() {BS.reload();};BS.EventTracker.subscribeOnProjectEvent('n', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('p', 0, 'project6', handler);BS.EventTracker.subscribeOnProjectEvent('q', 0, 'project6', handler);</script><div class="build " id="p_project6">
+  <span style="display:none;"><!-- ================ Project block header: -->gradle-plugins</span>
+  <div class="projectHeader exp">
+   <table>
+     <tr>
+       <td class="projectName">
+         <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Project is successful. Click to expand / collapse details" class="handle"
+       style="margin-right: 3px;" id="blockHandleovr_project6" />
+         <a href="/teamcity/project.html?projectId=project6&tab=projectOverview" title="Go to the project page">gradle-plugins</a>
+         <span class="projectDescription">Gradle plugins - <a target="_blank" title="Click to open this link in a new window" href="https://github.com/evgeny-goldin/gradle-plugins">https://github.com/evgeny-goldin/gradle-plugins</a></span>
+       </td>
+       <td class="projectStatus"><div class="successful">1 successful</div><div class="failing"></div>
+       </td>
+       <td class="hideProject">
+         <span class="pc "  onmouseover="BS.ChangesPopup.stopHidingPopup();">no hidden<img id="vis_project6" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ShowBuildTypesPopup.showPopup(this, 'project6');;_pc_over(this,'BS.ShowBuildTypesPopup.hidePopup(300);')" onclick="_tc_es(event)"/></span><a class="hideProject" href="javascript://" onclick="BS.Projects.hideProject('project6');" title="Hide project from viewing"/>
+       </td>
+     </tr>
+   </table>
+  </div>
+  <div id="btbovr_project6">
+  
+<!-- Start of BC caption gradle-plugins :: Master Deploy (Nightly) --> <div class="tableCaption" id="bt18-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project6', 'bt18');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt18" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt18', [], '');" value="Run "/><img id="run_bt18" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt18', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt18" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt18&tab=buildTypeStatusDiv" title="Click to open &quot;Master Deploy (Nightly)&quot; home page">Master Deploy (Nightly)</a><img id="btppbt18" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt18', 'project6', false, true, false, 'Master Deploy (Nightly)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;04:00">15 hours ago</span> </span> <span id="buildType:13070642052:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642052:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt18', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt18', '13070642052');</script> </div> <!-- End of BC caption gradle-plugins :: Master Deploy (Nightly) --> <!-- Start of builds for gradle-plugins :: Master Deploy (Nightly) --> <div class="overviewTypeTableCont" id="btbbt18" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#42 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildSuccessful.gif" id="build:4296:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4296");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4296" style="display: none;">Build was successful<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4296_handle) { BS.res4296_handle = new BS.BuildResultsSummary(4296, 'bt18', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4296_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4296&tab=buildResultsDiv&buildTypeId=bt18" title="View build results" ><span id="build:4296:text">Success</span></a><img id="results:4296" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4296_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4296_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4296:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4353" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4353);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4296">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;04:00">15 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4296:duration">13s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt18']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt18', 'eluruDesign/projectSuccessful.gif')); </script> </div> <!-- End of builds for gradle-plugins :: Master Deploy (Nightly) -->
+  </div>
+
+  <script type="text/javascript">
+      BS.Blocks._saved['t_ovr_project6']='_:';
+      
+      BS.CollapsableBlocks.registerBlock(new BS.ProjectBlock("t_", 'ovr_project6', "eluruDesign/projectSuccessful.gif", true));
+    </script>
+  <span style="display:none;"><!-- ================ END Project build types for: -->gradle-plugins</span>
+  <script type="text/javascript">
+    jQuery("#p_project6 .tableCaption:first").addClass("firstRow");
+  </script>
+</div>
+
+<script type="text/javascript"
+  >var handler = function() {
+    BS.Projects.updateProjectView('project2', false);};BS.EventTracker.subscribeOnProjectEvent('a', 2, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('b', 2, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('c', 2, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('e', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('v', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('t', 2, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('u', 2, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('r', 1, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('s', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('x', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('m', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('l', 0, 'project2', handler);</script>
+<script type="text/javascript"
+  >var handler = function() {BS.reload();};BS.EventTracker.subscribeOnProjectEvent('n', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('p', 0, 'project2', handler);BS.EventTracker.subscribeOnProjectEvent('q', 0, 'project2', handler);</script><div class="build " id="p_project2">
+  <span style="display:none;"><!-- ================ Project block header: -->maven-plugins</span>
+  <div class="projectHeader exp">
+   <table>
+     <tr>
+       <td class="projectName">
+         <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Project is successful. Click to expand / collapse details" class="handle"
+       style="margin-right: 3px;" id="blockHandleovr_project2" />
+         <a href="/teamcity/project.html?projectId=project2&tab=projectOverview" title="Go to the project page">maven-plugins</a>
+         <span class="projectDescription">Maven Plugins - <a target="_blank" title="Click to open this link in a new window" href="http://evgeny-goldin.com/wiki/Maven-plugins">http://evgeny-goldin.com/wiki/Maven-plugins</a></span>
+       </td>
+       <td class="projectStatus"><div class="successful">1 successful</div><div class="failing"></div>
+       </td>
+       <td class="hideProject">
+         <span class="pc "  onmouseover="BS.ChangesPopup.stopHidingPopup();">no hidden<img id="vis_project2" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ShowBuildTypesPopup.showPopup(this, 'project2');;_pc_over(this,'BS.ShowBuildTypesPopup.hidePopup(300);')" onclick="_tc_es(event)"/></span><a class="hideProject" href="javascript://" onclick="BS.Projects.hideProject('project2');" title="Hide project from viewing"/>
+       </td>
+     </tr>
+   </table>
+  </div>
+  <div id="btbovr_project2">
+  
+<!-- Start of BC caption maven-plugins :: Master Deploy (Nightly) --> <div class="tableCaption" id="bt4-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project2', 'bt4');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt4" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt4', [], '');" value="Run "/><img id="run_bt4" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt4', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt4" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt4&tab=buildTypeStatusDiv" title="Click to open &quot;Master Deploy (Nightly)&quot; home page">Master Deploy (Nightly)</a><img id="btppbt4" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt4', 'project2', false, true, false, 'Master Deploy (Nightly)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:03">12 hours ago</span> </span> <span id="buildType:13070642053:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642053:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt4', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt4', '13070642053');</script> </div> <!-- End of BC caption maven-plugins :: Master Deploy (Nightly) --> <!-- Start of builds for maven-plugins :: Master Deploy (Nightly) --> <div class="overviewTypeTableCont" id="btbbt4" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#546 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildSuccessful.gif" id="build:4299:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4299");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4299" style="display: none;">Build was successful<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4299_handle) { BS.res4299_handle = new BS.BuildResultsSummary(4299, 'bt4', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4299_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4299&tab=buildResultsDiv&buildTypeId=bt4" title="View build results" ><span id="build:4299:text">Tests passed: 15</span></a><img id="results:4299" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4299_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4299_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4299:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4356" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4356);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4299">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:03">12 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4299:duration">2m:52s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt4']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt4', 'eluruDesign/projectSuccessful.gif')); </script> </div> <!-- End of builds for maven-plugins :: Master Deploy (Nightly) -->
+  </div>
+
+  <script type="text/javascript">
+      BS.Blocks._saved['t_ovr_project2']='_:';
+      
+      BS.CollapsableBlocks.registerBlock(new BS.ProjectBlock("t_", 'ovr_project2', "eluruDesign/projectSuccessful.gif", true));
+    </script>
+  <span style="display:none;"><!-- ================ END Project build types for: -->maven-plugins</span>
+  <script type="text/javascript">
+    jQuery("#p_project2 .tableCaption:first").addClass("firstRow");
+  </script>
+</div>
+
+<script type="text/javascript"
+  >var handler = function() {
+    BS.Projects.updateProjectView('project3', false);};BS.EventTracker.subscribeOnProjectEvent('a', 2, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('b', 2, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('c', 2, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('e', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('v', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('t', 2, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('u', 2, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('r', 3, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('s', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('x', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('m', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('l', 0, 'project3', handler);</script>
+<script type="text/javascript"
+  >var handler = function() {BS.reload();};BS.EventTracker.subscribeOnProjectEvent('n', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('p', 0, 'project3', handler);BS.EventTracker.subscribeOnProjectEvent('q', 0, 'project3', handler);</script><div class="build " id="p_project3">
+  <span style="display:none;"><!-- ================ Project block header: -->maven-plugins-test</span>
+  <div class="projectHeader exp">
+   <table>
+     <tr>
+       <td class="projectName">
+         <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Project has failing build configurations. Click to expand / collapse details" class="handle"
+       style="margin-right: 3px;" id="blockHandleovr_project3" />
+         <a href="/teamcity/project.html?projectId=project3&tab=projectOverview" title="Go to the project page">maven-plugins-test</a>
+         <span class="projectDescription">Maven Plugins tests - <a target="_blank" title="Click to open this link in a new window" href="https://github.com/evgeny-goldin/maven-plugins-test">https://github.com/evgeny-goldin/maven-plugins-test</a></span>
+       </td>
+       <td class="projectStatus"><div class="successful">1 successful</div><div class="failing">2 failing</div>
+       </td>
+       <td class="hideProject">
+         <span class="pc "  onmouseover="BS.ChangesPopup.stopHidingPopup();">no hidden<img id="vis_project3" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ShowBuildTypesPopup.showPopup(this, 'project3');;_pc_over(this,'BS.ShowBuildTypesPopup.hidePopup(300);')" onclick="_tc_es(event)"/></span><a class="hideProject" href="javascript://" onclick="BS.Projects.hideProject('project3');" title="Hide project from viewing"/>
+       </td>
+     </tr>
+   </table>
+  </div>
+  <div id="btbovr_project3">
+  
+<!-- Start of BC caption maven-plugins-test :: generate-jenkins-jobs (Manual) --> <div class="tableCaption" id="bt15-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project3', 'bt15');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt15" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt15', [], '');" value="Run "/><img id="run_bt15" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt15', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt15" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt15&tab=buildTypeStatusDiv" title="Click to open &quot;generate-jenkins-jobs (Manual)&quot; home page">generate-jenkins-jobs (Manual)</a><img id="btppbt15" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt15', 'project3', false, true, false, 'generate-jenkins-jobs (Manual)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="20&nbsp;May&nbsp;11&nbsp;14:11">3 weeks ago</span> </span> <span id="buildType:13070642054:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642054:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt15', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt15', '13070642054');</script> </div> <!-- End of BC caption maven-plugins-test :: generate-jenkins-jobs (Manual) --> <!-- Start of builds for maven-plugins-test :: generate-jenkins-jobs (Manual) --> <div class="overviewTypeTableCont" id="btbbt15" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#33 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildSuccessful.gif" id="build:4116:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4116");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4116" style="display: none;">Build was successful<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4116_handle) { BS.res4116_handle = new BS.BuildResultsSummary(4116, 'bt15', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4116_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4116&tab=buildResultsDiv&buildTypeId=bt15" title="View build results" ><span id="build:4116:text">Success</span></a><img id="results:4116" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4116_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4116_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4116:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4173" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4173);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4116">DOAgent</p> <span class="date" title="20&nbsp;May&nbsp;11&nbsp;14:11">3 weeks ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4116:duration">22s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt15']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt15', 'eluruDesign/projectSuccessful.gif')); </script> </div> <!-- End of builds for maven-plugins-test :: generate-jenkins-jobs (Manual) -->
+<!-- Start of BC caption maven-plugins-test :: maven-plugins-test - Maven 2 (Wait for Deploy) --> <div class="tableCaption" id="bt7-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project3', 'bt7');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt7" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt7', [], '');" value="Run "/><img id="run_bt7" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt7', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt7" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt7&tab=buildTypeStatusDiv" title="Build configuration is failing. Click to open &quot;maven-plugins-test - Maven 2 (Wait for Deploy)&quot; home page">maven-plugins-test - Maven 2 (Wait for Deploy)</a><img id="btppbt7" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt7', 'project3', false, true, true, 'maven-plugins-test - Maven 2 (Wait for Deploy)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:06">12 hours ago</span> </span> <span id="buildType:13070642055:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642055:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt7', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt7', '13070642055');</script> </div> <!-- End of BC caption maven-plugins-test :: maven-plugins-test - Maven 2 (Wait for Deploy) --> <!-- Start of builds for maven-plugins-test :: maven-plugins-test - Maven 2 (Wait for Deploy) --> <div class="overviewTypeTableCont" id="btbbt7" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#696 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildFailed.gif" id="build:4300:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4300");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4300" style="display: none;">Build failed<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4300_handle) { BS.res4300_handle = new BS.BuildResultsSummary(4300, 'bt7', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4300_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4300&tab=buildResultsDiv&buildTypeId=bt7" title="View build results" ><span id="build:4300:text">Failure</span></a><img id="results:4300" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4300_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4300_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4300:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4357" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4357);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4300">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:06">12 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4300:duration">3m:22s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt7']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt7', 'eluruDesign/projectFailing.gif')); </script> </div> <!-- End of builds for maven-plugins-test :: maven-plugins-test - Maven 2 (Wait for Deploy) -->
+<!-- Start of BC caption maven-plugins-test :: maven-plugins-test - Maven 3 (Wait for Deploy) --> <div class="tableCaption" id="bt8-div" > <div class="relative"> <a href="#" onclick="return BS.hideBuildType('project3', 'bt8');" class="close-bt">&nbsp;</a> </div> <table class="runTable"> <tr> <td class="runningStatus"> <span class="runningStatus"><img src="/teamcity/img/buildStates/empty.gif" class="icon " /></span> <span class="runningStatus">Idle</span> </td> <td class="runButton"> <span class="buttonWrapper"><input title="Click to run build on any agent" id="runButton:bt8" type="button" class="action" onclick="BS.RunBuild.runOnAgent(this, 'bt8', [], '');" value="Run "/><img id="run_bt8" src="/teamcity/img/buttonPopup.gif" onmouseover="this.src = '/teamcity/img/buttonPopup_hover.gif';" onmouseout="this.src = '/teamcity/img/buttonPopup.gif'" onclick="BS.RunBuild.runCustomBuild(this.parentNode, 'bt8', '');" title="Run custom build" alt="Run custom build"/></span> </td> </tr> </table> <img src="/teamcity/img/eluruDesign/projectExpanded.gif" title="Click to collapse/expand details" class="handle" id="blockHandlebt8" /> <span class="pc " onmouseover="BS.BuildTypeSummary.stopHidingPopup();"><a class="buildTypeName" style="padding-left:0px;" href="/teamcity/viewType.html?buildTypeId=bt8&tab=buildTypeStatusDiv" title="Build configuration is failing. Click to open &quot;maven-plugins-test - Maven 3 (Wait for Deploy)&quot; home page">maven-plugins-test - Maven 3 (Wait for Deploy)</a><img id="btppbt8" src="/teamcity/img/popUpControl.gif" onmouseover="BS.BuildTypeSummary.showSummaryPopup(this, 'bt8', 'project3', false, true, true, 'maven-plugins-test - Maven 3 (Wait for Deploy)');;_pc_over(this,'BS.BuildTypeSummary.hidePopup();')" onclick="_tc_es(event)"/></span> <span class="addMessage lastBuilt"> Last built: <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:08">12 hours ago</span> </span> <span id="buildType:13070642056:systemProblems" class="systemProblemsBar" style="display:none;" onclick="_tc_es(event)"> <span id="buildType:13070642056:systemProblemsText" data-maxWidth="40">Configuration problems found</span> <div class="sep1"></div><div class="sep2"></div> <a title="View more information" href="#" onclick="BS.SystemProblemsPopup.showDetails('bt8', '', '', true, this); return false;">details &raquo;</a> </span> <script type="text/javascript">BS.SystemProblems.registerProblemId('bt8', '13070642056');</script> </div> <!-- End of BC caption maven-plugins-test :: maven-plugins-test - Maven 3 (Wait for Deploy) --> <!-- Start of builds for maven-plugins-test :: maven-plugins-test - Maven 3 (Wait for Deploy) --> <div class="overviewTypeTableCont" id="btbbt8" style=""> <div class="bt-separator"></div> <table cellspacing="0" class="overviewTypeTable"> <tr><td class=" buildNumber"> <span>#413 </span> </td> <td class=" status"> <img src="/teamcity/img/buildStates/buildFailed.gif" id="build:4301:img" class="icon" onmouseover='BS.Tooltip.showMessageFromContainer(this, {shift:{x:10, y:5}, hideDelay: 10}, "dataHover_4301");' onmouseout='BS.Tooltip.hidePopup()' /><div id="dataHover_4301" style="display: none;">Build failed<br/>Build agent: <a href="/teamcity/agentDetails.html?name=DOAgent&agentTypeId=1" title="Click to view &quot;DOAgent&quot; agent details">DOAgent</a></div> <script type="text/javascript"> if (!BS.res4301_handle) { BS.res4301_handle = new BS.BuildResultsSummary(4301, 'bt8', true, 'true'); } </script> <span class="pc " style="white-space: normal;" onmouseover="BS.res4301_handle.stopHidingPopup();"><a href="/teamcity/viewLog.html?buildId=4301&tab=buildResultsDiv&buildTypeId=bt8" title="View build results" ><span id="build:4301:text">Failure</span></a><img id="results:4301" src="/teamcity/img/popUpControl.gif" onmouseover="BS.res4301_handle.showPopupNearElement(this);;_pc_over(this,'BS.res4301_handle.hidePopup();')" onclick="_tc_es(event)"/></span> </td> <td class=" link artifactsLink"><span id="build:4301:noArtifactsText" class="commentText">No artifacts</span> </td> <td class=" link changesLink"><span class="pc " onmouseover="BS.ChangesPopup.stopHidingPopup();"><span class="commentText">No changes</span><img id="changes:4358" src="/teamcity/img/popUpControl.gif" onmouseover="BS.ChangesPopup.showBuildChangesPopup(this, 4358);;_pc_over(this,'BS.ChangesPopup.hidePopup();')" onclick="_tc_es(event)"/></span></td> <td class=" progressTd"><p class="hidden" id="aName:4301">DOAgent</p> <span class="date" title="10&nbsp;Jun&nbsp;11&nbsp;07:08">12 hours ago</span> <span class="progressDuration" title="Build duration">(<span id="build:4301:duration">1m:42s</span>)</span> </td> <td class=" stopBuild"></td></tr> </table> <script type="text/javascript"> BS.Blocks._saved['btbt8']=''; BS.CollapsableBlocks.registerBlock(new BS.BuildTypeBlock("bt", 'bt8', 'eluruDesign/projectFailing.gif')); </script> </div> <!-- End of builds for maven-plugins-test :: maven-plugins-test - Maven 3 (Wait for Deploy) -->
+  </div>
+
+  <script type="text/javascript">
+      BS.Blocks._saved['t_ovr_project3']='_:';
+      
+      BS.CollapsableBlocks.registerBlock(new BS.ProjectBlock("t_", 'ovr_project3', "eluruDesign/projectFailing.gif", true));
+    </script>
+  <span style="display:none;"><!-- ================ END Project build types for: -->maven-plugins-test</span>
+  <script type="text/javascript">
+    jQuery("#p_project3 .tableCaption:first").addClass("firstRow");
+  </script>
+</div>
+
+  </div>
+
+      
+
+
+
+    
+    
+  
+  <div id="projects_visibleDialogContainer" style="margin: 0; padding: 0;"></div>
+  <div id="bt_visibleDialogContainer" style="margin: 0; padding: 0;"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+
+  
+
+
+<script type="text/javascript">
+  var addr = "teamcity" + "-" + "feedback" + "@" + "jetbrains.com";
+  var version = "6.5.1 (build 17834)";
+</script>
+
+<div class="footerExtensions fixedWidth">
+<!-- START EXTENSION CONTENT jetbrains.buildServer.usageStatistics.impl.providers.WebPagesUsageStatisticsProvider$2: /plugins/usage-statistics/empty.jsp -->
+
+<!-- END EXTENSION CONTENT jetbrains.buildServer.usageStatistics.impl.providers.WebPagesUsageStatisticsProvider$2 -->
+</div>
+
+<div id="footer">
+  <div class="fixedWidth">
+    <div class="column1">
+      <a class="helpLink" target="_blank" href="http://www.jetbrains.net/confluence/display/TCD65"> Help</a>
+      <script type="text/javascript">document.write('<a class="feedbackLink" target="_blank" href="http://www.jetbrains.com/teamcity/feedback?source=footer&version=6.5.1 (build 17834)&build=17834&mode=ent">Feedback</a>');</script>
+    </div>
+
+    <div class="column2">
+      <a target="_blank" href="http://www.jetbrains.com/teamcity/?fromServer">TeamCity Enterprise</a> <span class="versionTag"><span class="vWord">Version</span> 6.5.1 (build 17834)</span>
+
+    </div>
+
+    <div class="column3">
+      <a onclick="BS.Util.popupWindow('/teamcity/showAgreement.html', 'agreement');" href="javascript://">License agreement</a>
+      
+      <span class="expirationWarning">
+          Temporary license will expire in 7 day(s)
+      </span>
+      
+    </div>
+
+    <div class="clr"></div>
+  </div>
+</div>
+
+
+  <script type="text/javascript">var handler = function() {BS.ServerLink.onShutdown();};BS.EventTracker.subscribeOnEvent('H', 0, handler);</script>
+
+  <form id="testResponsibilityForm" action="#" method="post" onsubmit="return BS.TestResponsibilityDialog.submit();;" style="margin: 0; padding: 0;" autocomplete="off">
+  <div id="testResponsibilityFormDialog" class="testResponsibilityFormDialog modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.TestResponsibilityDialog.close();" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="testResponsibilityFormTitle"></h3>
+  </div>
+  <div class="modalDialogBody">
+    
+    <div id="testResponsibilityDialog"></div>
+  
+  </div>
+</div></form>
+
+  <form id="muteTestsForm" action="#" method="post" onsubmit="return BS.BulkInvestigateDialog.submit();;" style="margin: 0; padding: 0;" autocomplete="off">
+  <div id="muteTestsFormDialog" class="muteTestsFormDialog modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.BulkInvestigateDialog.close();" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="muteTestsFormTitle">Mute test</h3>
+  </div>
+  <div class="modalDialogBody">
+    
+    <div id="mute-dialog-container"></div>
+    <div><img id="mute-dialog-progress" style="display: none; float: none;" src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="Please wait..." title="Please wait..."/></div>
+  
+  </div>
+</div></form>
+
+  <div id="shutdownDialog" class=" modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.ServerLink.close()" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="shutdownDialogTitle">Server communication failure</h3>
+  </div>
+  <div class="modalDialogBody">
+    
+    <strong id="shutdownDetails">Server is unavailable</strong>
+    <p id="onCommunicationFailure">Server stopped or communication with the server is not possible due to network failure.</p>
+    <p id="onServerShutdown">Server shutdown started.</p>
+  
+  </div>
+</div>
+
+  <span id="runBuildContainer"></span>
+
+  <form id="stopBuildForm" action="/teamcity/ajax.html" method="post" onsubmit="return BS.StopBuildDialog.killBuild();;" style="margin: 0; padding: 0;" autocomplete="off">
+  <div id="stopBuildFormDialog" class="stopBuildFormDialog modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.StopBuildDialog.close()" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="stopBuildFormTitle">TODO</h3>
+  </div>
+  <div class="modalDialogBody">
+    
+  <textarea id="removeQueuedBuildComment" name="comment" rows="3" cols="46" class="commentTextArea" onclick="if (this.value == this.defaultValue) this.value = '';">&lt;your comment here></textarea>
+  <input type="hidden" name="kill" value=""/>
+
+  <div id="moreToStop">
+    Loading related builds...
+    <img id="moreToStopLoader" style="display: none; float: none;" src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="Loading related builds to stop ..." title="Loading related builds to stop ..."/>
+  </div>
+  <span id="moreToStopFragment"></span>
+
+  <div class="popupSaveButtonsBlock">
+    <a href="javascript://" onclick="BS.StopBuildDialog.close()" class="cancel" id="cancelRemoveQueuedBuild">Cancel</a>
+    <input class="submitButton" type="submit" name="submit" value="Stop" id="submitRemoveQueuedBuild"/>
+    <img id="saving" style="display: none; padding-top: 0.1em; float: right;" src="/teamcity/img/ajax-loader.gif" width="16" height="16" alt="Please wait..." title="Please wait..."/>
+    <br clear="all"/>
+  </div>
+  <br/>
+
+  </div>
+</div></form>
+
+  <form id="ResponsibilityForm" action="/teamcity/action.html" method="post" onsubmit="return BS.ResponsibilityDialog.submit();" style="margin: 0; padding: 0;" autocomplete="off">
+  <div id="ResponsibilityFormDialog" class="ResponsibilityFormDialog modalDialog">
+  <div class="dialogHeader">
+    <div class="closeWindow">
+      <a title="Close dialog window" href="javascript://" onclick="BS.ResponsibilityDialog.close();" >
+        <img src='/teamcity/img/close.gif'/>
+      </a>
+    </div>
+    <h3 class="dialogTitle" id="ResponsibilityFormTitle">Responsibility</h3>
+  </div>
+  <div class="modalDialogBody">
+    
+  </div>
+</div></form>
+  </body>
+</html>

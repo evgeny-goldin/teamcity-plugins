@@ -7,11 +7,11 @@
 
     <bean class="com.goldin.plugins.teamcity.messenger.MessagesContext"/>
 
+    <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesUtilImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
 
     <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesController"/>

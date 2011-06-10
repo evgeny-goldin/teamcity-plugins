@@ -1,5 +1,8 @@
 package com.goldin.plugins.teamcity.messenger.api
 
+import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Requires
+
 /**
  * Message data container
  */
@@ -7,7 +10,7 @@ final class Message
 {
     public enum Urgency { INFO, WARNING, CRITICAL }
 
-    static final MessagesUtil UTIL = null//new MessagesUtilImpl()
+    static final MessagesUtil UTIL = new MessagesUtil()
 
     final long         id
     final long         timestamp
@@ -21,6 +24,8 @@ final class Message
     final List<String> usersDeleted
 
 
+    @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })
+    @Ensures({ ! result.message.with{ contains( '<' ) || contains( '>' ) }})
     public Message ( String       sender,
                      Urgency      urgency,
                      String       message,
@@ -40,11 +45,9 @@ final class Message
         this.message      = UTIL.htmlEscape( message )
         this.longevity    = longevity
         this.sendToAll    = sendToAll
-        this.sendToGroups = new ArrayList<String>( sendToGroups ?: [] ).asImmutable()
-        this.sendToUsers  = new ArrayList<String>( sendToUsers  ?: [] ).asImmutable()
+        this.sendToGroups = new ArrayList<String>( sendToGroups ).asImmutable()
+        this.sendToUsers  = new ArrayList<String>( sendToUsers  ).asImmutable()
         this.usersDeleted = []
-
-        assert ! this.message.with{ contains( '<' ) || contains( '>' ) }
     }
 
 
