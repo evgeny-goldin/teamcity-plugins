@@ -1,6 +1,5 @@
 package com.goldin.plugins.teamcity.messenger.api
 
-import groovy.transform.ToString
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 
@@ -8,7 +7,6 @@ import org.gcontracts.annotations.Requires
 /**
  * Message data container
  */
-@ToString
 final class Message
 {
    /**
@@ -85,9 +83,24 @@ final class Message
     boolean equals ( Object object ) { ( object instanceof Message ) && (( Message ) object ).id == id }
 
 
+    /**
+     * Determines if message should be delivered to the user specified.
+     * 
+     * @param username message recipient username
+     * @return true if message should be delivered to the user specified,
+     *         false otherwise
+     */
     @Requires({ username })
     boolean forUser ( String username )
     {
-        ( sendToAll || sendToUsers.contains( username ) || ( ! sendToGroups.disjoint( context.getUserGroups( username ))))
+        ( sendToAll ||
+          sendToUsers.contains( username ) ||
+          util.intersect ( sendToGroups, context.getUserGroups( username )))
+    }
+
+    @Override
+    String toString ()
+    {
+        "Message [$id]"
     }
 }

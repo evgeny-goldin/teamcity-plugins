@@ -40,6 +40,22 @@ class MessagesUtil
     boolean different ( boolean b1, boolean b2 ) { ( b1 || b2 ) && ( ! ( b1 && b2 )) }
 
 
+    /**
+     * Determines if two sets intersect
+     * @param c1 first set to check
+     * @param c2 second set to check
+     * @return true of sets specified have elements in common, false otherwise
+     */
+    @Requires({ ( c1 != null ) && ( c2 != null ) })
+    boolean intersect ( Collection<?> c1, Collection<?> c2 )
+    {
+        def ( Collection smaller, Collection larger ) = ( c1.size() <= c2.size()) ? [ c1, c2 ] : [ c2, c1 ]
+        assert smaller.size() <= larger.size()
+
+        for ( o in smaller ) { if ( larger.contains( o )) {  return true }}
+        false
+    }
+
 
     @Requires({ ( messages != null ) && username && ( ! messages.any{ it == null }) })
     List<Message> sort( Collection<Message> messages, String username )
@@ -60,8 +76,8 @@ class MessagesUtil
             if ( different( m1ForUser, m2ForUser )){ return ( m1ForUser ? -1 : 1 ) }
 
             Set<String> userGroups = context.getUserGroups( username )
-            boolean m1ForUserGroup = ! m1.sendToGroups.disjoint( userGroups )
-            boolean m2ForUserGroup = ! m2.sendToGroups.disjoint( userGroups )
+            boolean m1ForUserGroup = intersect( m1.sendToGroups, userGroups )
+            boolean m2ForUserGroup = intersect( m2.sendToGroups, userGroups )
 
             if ( different( m1ForUserGroup, m2ForUserGroup )){ return ( m1ForUserGroup ? -1 : 1 ) }
 
