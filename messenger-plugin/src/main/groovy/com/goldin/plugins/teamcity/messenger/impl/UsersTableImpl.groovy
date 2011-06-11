@@ -1,10 +1,10 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.intellij.util.containers.ConcurrentList
 import java.util.concurrent.ConcurrentHashMap
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
+
 
 /**
  * {@link UsersTable} implementation
@@ -15,7 +15,7 @@ class UsersTableImpl implements UsersTable
     final MessagesContext       context
     final MessagesUtil          util
 
-    final private             List<Message>  all    = new ConcurrentList<Message>( 16 )
+    final private             List<Message>  all    = new ArrayList<Message>( 16 )
     final private Map<String, List<Message>> groups = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
     final private Map<String, List<Message>> users  = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
 
