@@ -8,15 +8,12 @@ import jetbrains.buildServer.web.openapi.PositionConstraint
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.util.WebUtil
 import org.gcontracts.annotations.Requires
-import org.jetbrains.annotations.NotNull
-
 
 /**
  * Messenger extension
  */
 class MessagesDisplayExtension extends SimplePageExtension
 {
-
     @Requires({ pagePlaces && context })
     MessagesDisplayExtension ( PagePlaces pagePlaces, MessagesContext context )
     {
@@ -25,8 +22,10 @@ class MessagesDisplayExtension extends SimplePageExtension
         register()
     }
 
+    
     @Override
-    boolean isAvailable ( @NotNull final HttpServletRequest request )
+    @Requires({ request })
+    boolean isAvailable ( final HttpServletRequest request )
     {
         def path = WebUtil.getPathWithoutAuthenticationType( request )
         (( path == '/' ) || path.startsWith( '/overview.html' ))
