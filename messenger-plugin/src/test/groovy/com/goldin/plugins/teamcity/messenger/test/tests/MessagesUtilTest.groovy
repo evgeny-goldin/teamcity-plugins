@@ -49,7 +49,7 @@ class MessagesUtilTest extends BaseSpecification
         }
 
         where:
-        s1                | s2
+        s1         | s2
         [1, 2, 3]  | [3, 4, 5]
         [1]        | [3, 4, 5, 1, 6]
         [0, 0, 0]  | [3, 4, 5, 0, 6]
