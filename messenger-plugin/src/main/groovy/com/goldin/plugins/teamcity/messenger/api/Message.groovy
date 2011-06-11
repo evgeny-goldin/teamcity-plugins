@@ -12,7 +12,7 @@ import org.gcontracts.annotations.Requires
 final class Message
 {
    /**
-    * Urgency levels should be specified from most to least critical!
+    * Urgency levels should be specified from most to least critical, it affects messages sorting.
     */
     public enum Urgency { CRITICAL, WARNING, INFO }
 
