@@ -68,8 +68,7 @@ class MessagesUtil
 //    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForAll ( Collection<Message> messages )
     {
-        messages.each{ Message m -> assert m.sendToAll, "[$m] wasn't sent to all" }
-        
+        messages.each { Message m -> assert m.sendToAll, "[$m] wasn't sent to all" }
         messages.sort {
             Message m1, Message m2 ->
 
@@ -93,8 +92,7 @@ class MessagesUtil
 //    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForGroup ( Collection<Message> messages, String groupName )
     {
-        messages.each{ Message m -> assert m.forGroup( groupName ), "[$m] wasn't sent to group [$groupName]" }
-
+        messages.each { Message m -> assert m.forGroup( groupName ), "[$m] wasn't sent to group [$groupName]" }
         messages.sort {
             Message m1, Message m2 ->
 
@@ -120,8 +118,7 @@ class MessagesUtil
 //    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForUser ( Collection<Message> messages, String username )
     {
-        messages.each{ Message m -> assert m.forUser( username ), "[$m] wasn't sent to user [$username]" }
-        
+        messages.each { Message m -> assert m.forUser( username ), "[$m] wasn't sent to user [$username]" }
         messages.sort {
             Message m1, Message m2 ->
 
