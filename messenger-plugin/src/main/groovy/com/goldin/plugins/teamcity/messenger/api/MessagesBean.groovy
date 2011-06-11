@@ -20,7 +20,7 @@ interface MessagesBean
      * @param username recipient username
      * @return messages addressed to user specified
      */
-    List<Message> getMessages ( String username )
+    List<Message> getMessagesForUser( String username )
 
 
     /**
@@ -37,5 +37,5 @@ interface MessagesBean
      * @param username username of the person who deleted his message
      * @return message deleted
      */
-    Message deleteMessage( long messageId, String username )
+    Message deleteMessageByUser( long messageId, String username )
 }

@@ -30,15 +30,10 @@ class UsersTableImpl implements UsersTable
 
     
     @Override
-    @Requires({ messages })
+    @Requires({ messages != null })
     void init ( List<Message> messages )
     {
-        for ( m in messages )
-        {
-            if ( m.sendToAll )  { all          << m }
-            m.sendToGroups.each { groups[ it ] << m }
-            m.sendToUsers. each { users [ it ] << m }
-        }
+        messages.each{ addMessage( it ) }
 
         /**
          * Ordering messages for possible "over-the-limit" cleanup
@@ -51,17 +46,19 @@ class UsersTableImpl implements UsersTable
     
     @Override
     @Requires({ username })
+    @Ensures({ result != null })
     List<Message> getMessagesForUser ( String username )
     {
-        []
+        new ArrayList( users[ username ] ).asImmutable()
     }
 
 
     @Override
     @Requires({ groupName })
+    @Ensures({ result != null })
     List<Message> getMessagesForGroup ( String groupName )
     {
-        []
+        new ArrayList( groups[ groupName ] ).asImmutable()
     }
 
 
@@ -69,14 +66,18 @@ class UsersTableImpl implements UsersTable
     @Ensures({ result != null })
     List<Message> getMessagesForAll ()
     {
-        []
+        new ArrayList( all ).asImmutable()
     }
 
 
     @Override
-    @Requires({ message && ( message.id > 0 ) })
-    long addMessage ( Message message )
+    @Requires({ m && ( m.id > 0 ) })
+    @Ensures({ ( result > 0 ) && ( result == m.id ) })
+    long addMessage ( Message m )
     {
-        0
+        if ( m.sendToAll )  { all          << m }
+        m.sendToGroups.each { groups[ it ] << m }
+        m.sendToUsers. each { users [ it ] << m }
+        m.id
     }
 }

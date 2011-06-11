@@ -30,22 +30,20 @@ class MessagesBeanImpl implements MessagesBean
     @Ensures({ result > 0 })
     long sendMessage ( Message message )
     {
-        Message m = messagesTable.addMessage( message )
-        usersTable.addMessage( m )
-        m.id
+        usersTable.addMessage( messagesTable.addMessage( message ))
     }
 
     
     @Override
     @Requires({ username })
     @Ensures({ result.each{ it.forUser( username ) } })
-    List<Message> getMessages ( String username )
+    List<Message> getMessagesForUser ( String username )
     {
         List<Message> messages = []
 
-        messages << usersTable.getMessagesForUser( username )
-        context.getUserGroups( username ).each { messages << usersTable.getMessagesForGroup( it ) }
-        messages << usersTable.messagesForAll
+        messages.addAll( usersTable.getMessagesForUser( username ))
+        context.getUserGroups( username ).each { messages.addAll( usersTable.getMessagesForGroup( it )) }
+        messages.addAll( usersTable.messagesForAll )
 
         util.sortForUser( messages.unique  { Message m1, Message m2 -> m1.id <=> m2.id }.
                                    findAll { Message m -> ! m.usersDeleted.contains( username )}.
@@ -66,7 +64,7 @@ class MessagesBeanImpl implements MessagesBean
     @Override
     @Requires({ ( messageId > 0  ) && username })
     @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
-    Message deleteMessage ( long messageId, String username )
+    Message deleteMessageByUser ( long messageId, String username )
     {
         messagesTable.deleteMessageByUser( messageId, username )
     }
