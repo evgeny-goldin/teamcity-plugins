@@ -55,6 +55,7 @@ class MessagesBeanImpl implements MessagesBean
     
     @Override
     @Requires({ messageId > 0 })
+    @Ensures({ result && ( result.id == messageId ) && ( ! messagesTable.containsMessage( result )) })
     Message deleteMessage ( long messageId )
     {
         messagesTable.deleteMessage( messageId )
@@ -63,6 +64,7 @@ class MessagesBeanImpl implements MessagesBean
     
     @Override
     @Requires({ ( messageId > 0  ) && username })
+    @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
     Message deleteMessage ( long messageId, String username )
     {
         messagesTable.deleteMessage( messageId, username )

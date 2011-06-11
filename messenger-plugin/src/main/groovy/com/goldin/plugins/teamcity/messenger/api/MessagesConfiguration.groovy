@@ -9,4 +9,5 @@ interface MessagesConfiguration
     int getAjaxRequestInterval()
     int getPersistencyInterval()
     int getMessagesLimitPerUser()
+    int getMessageLengthLimit()
 }
