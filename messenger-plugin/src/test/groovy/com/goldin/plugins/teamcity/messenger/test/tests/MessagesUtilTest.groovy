@@ -92,7 +92,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sortForAll( messages ) == [ m4, m2, m3, m1 ]
+            List<Message> messages -> def    result = util.sortForAll( messages )
+                                      assert result.is( messages ) && result == [ m4, m2, m3, m1 ]
         }
     }
 
@@ -108,7 +109,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sortForGroup( messages, TEST_GROUP ) == [ m4, m2, m3, m1 ]
+            List<Message> messages -> def    result = util.sortForGroup( messages, TEST_GROUP )
+                                      assert result.is( messages ) && result == [ m4, m2, m3, m1 ]
         }
     }
 
@@ -122,7 +124,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         6 == permutations([ m1, m2, m3 ]) {
-            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m2, m3, m1 ]
+            List<Message> messages -> def    result = util.sortForUser( messages, TEST_USERNAME )
+                                      assert result.is( messages ) && result == [ m2, m3, m1 ]
         }
     }
 
@@ -137,7 +140,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m3, m2, m4, m1 ]
+            List<Message> messages -> def    result = util.sortForUser( messages, TEST_USERNAME )
+                                      assert result.is( messages ) && result == [ m3, m2, m4, m1 ]
         }
     }
 
@@ -151,7 +155,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         6 == permutations([ m1, m2, m3 ]) {
-            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m3, m2, m1 ]
+            List<Message> messages -> def    result = util.sortForUser( messages, TEST_USERNAME )
+                                      assert result.is( messages ) && result == [ m3, m2, m1 ]
         }
     }
 
@@ -166,7 +171,8 @@ class MessagesUtilTest extends BaseSpecification
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m4, m2, m3, m1 ]
+            List<Message> messages -> def    result = util.sortForUser( messages, TEST_USERNAME )
+                                      assert result.is( messages ) && result == [ m4, m2, m3, m1 ]
         }
     }
 }
