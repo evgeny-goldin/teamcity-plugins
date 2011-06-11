@@ -1,14 +1,13 @@
 package com.goldin.plugins.teamcity.messenger.test.tests
 
-import com.goldin.plugins.teamcity.messenger.api.MessagesBean
-import com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl
-import org.springframework.beans.factory.annotation.Autowired
-import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
+import com.goldin.plugins.teamcity.messenger.api.MessagesBean
+import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
+import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Ignore
 
 /**
- * {@link MessagesBeanImpl} test
+ * {@link MessagesBean} test
  */
 class MessagesBeanTest extends BaseSpecification
 {

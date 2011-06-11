@@ -5,6 +5,7 @@ import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 
+
 /**
  * {@link MessagesUtil} tests
  */

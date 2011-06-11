@@ -41,21 +41,22 @@ class MessagesBeanImpl implements MessagesBean
     @Ensures({ result.each{ it.forUser( username ) } })
     List<Message> getMessages ( String username )
     {
-        Set<Message> messages = []
+        List<Message> messages = []
 
         messages << usersTable.getMessagesForUser( username )
         context.getUserGroups( username ).each { messages << usersTable.getMessagesForGroup( it ) }
         messages << usersTable.messagesForAll
 
-        util.sort( messages.findAll { Message m -> ! m.usersDeleted.contains( username ) }.
-                            findAll { Message m -> messagesTable.containsMessage( m )    },
+        util.sort( messages.unique  { Message m1, Message m2 -> m1.id <=> m2.id }.
+                            findAll { Message m -> ! m.usersDeleted.contains( username )}.
+                            findAll { Message m -> messagesTable.containsMessage( m.id )},
                    username )
     }
 
     
     @Override
     @Requires({ messageId > 0 })
-    @Ensures({ result && ( result.id == messageId ) && ( ! messagesTable.containsMessage( result )) })
+    @Ensures({ result && ( result.id == messageId ) && ( ! messagesTable.containsMessage( result.id )) })
     Message deleteMessage ( long messageId )
     {
         messagesTable.deleteMessage( messageId )
@@ -67,6 +68,6 @@ class MessagesBeanImpl implements MessagesBean
     @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
     Message deleteMessage ( long messageId, String username )
     {
-        messagesTable.deleteMessage( messageId, username )
+        messagesTable.deleteMessageByUser( messageId, username )
     }
 }

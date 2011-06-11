@@ -24,6 +24,9 @@ class BaseSpecification extends Specification
 
     private counter = 1
 
+    
+    final Random random = new Random( new Random( System.currentTimeMillis()).nextLong())
+
 
     /**
      * Retrieves text of the file specified.

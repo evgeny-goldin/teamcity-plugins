@@ -52,6 +52,8 @@ final class Message
         this.sendToGroups = new HashSet<String>( sendToGroups ).asImmutable()
         this.sendToUsers  = new HashSet<String>( sendToUsers  ).asImmutable()
         this.usersDeleted = []
+
+        assert ( this.sendToAll || this.sendToGroups || this.sendToUsers ), "[$this] has no recipients"
     }
 
 

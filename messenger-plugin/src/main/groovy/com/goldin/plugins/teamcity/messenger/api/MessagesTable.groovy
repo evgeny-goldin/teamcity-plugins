@@ -8,13 +8,19 @@ interface MessagesTable
 {
     Message addMessage( Message message )
 
+    Message getMessage( long messageId )
+
     Message deleteMessage( long messageId )
     
-    Message deleteMessage( long messageId, String username )
+    Message deleteMessageByUser ( long messageId, String username )
 
     List<Message> getAllMessages()
 
-    boolean containsMessage( Message m )
+    boolean containsMessage( long messageId )
+
+    int getNumberOfMessages()
+
+    void deleteAllMessages()
 
     void persist()
     
