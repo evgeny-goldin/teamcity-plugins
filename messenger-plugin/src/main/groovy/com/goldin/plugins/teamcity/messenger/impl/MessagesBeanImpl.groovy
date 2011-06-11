@@ -47,10 +47,10 @@ class MessagesBeanImpl implements MessagesBean
         context.getUserGroups( username ).each { messages << usersTable.getMessagesForGroup( it ) }
         messages << usersTable.messagesForAll
 
-        util.sort( messages.unique  { Message m1, Message m2 -> m1.id <=> m2.id }.
-                            findAll { Message m -> ! m.usersDeleted.contains( username )}.
-                            findAll { Message m -> messagesTable.containsMessage( m.id )},
-                   username )
+        util.sortForUser( messages.unique  { Message m1, Message m2 -> m1.id <=> m2.id }.
+                                   findAll { Message m -> ! m.usersDeleted.contains( username )}.
+                                   findAll { Message m -> messagesTable.containsMessage( m.id )},
+                          username )
     }
 
     

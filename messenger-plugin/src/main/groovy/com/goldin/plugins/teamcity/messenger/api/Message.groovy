@@ -86,8 +86,22 @@ final class Message
 
 
     /**
-     * Determines if message should be delivered to the user specified.
+     * Determines if message should be delivered to the group specified.
      * 
+     * @param groupName message recipient group name
+     * @return true if message should be delivered to the group specified,
+     *         false otherwise
+     */
+    @Requires({ groupName })
+    boolean forGroup ( String groupName )
+    {
+        ( sendToAll || sendToGroups.contains( groupName ))
+    }
+
+
+    /**
+     * Determines if message should be delivered to the user specified.
+     *
      * @param username message recipient username
      * @return true if message should be delivered to the user specified,
      *         false otherwise

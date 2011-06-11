@@ -1,5 +1,6 @@
 package com.goldin.plugins.teamcity.messenger.test.tests
 
+import static com.goldin.plugins.teamcity.messenger.test.infra.Constants.*
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
@@ -11,6 +12,7 @@ import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
  */
 class MessagesUtilTest extends BaseSpecification
 {
+
     def "testing HTML escaping with variables"() {
 
         expect:
@@ -79,60 +81,92 @@ class MessagesUtilTest extends BaseSpecification
     }
 
 
-    def "testing Messages sorting by urgency"() {
+    def "testing messages for all sorting"() {
 
         when:
-        def m1 = messageWithId( Urgency.INFO,     false, [], [ 'username' ] )
-        def m2 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
-        def m3 = messageWithId( Urgency.WARNING,  false, [], [ 'username' ] )
-
-        then:
-        6 == permutations([ m1, m2, m3 ]) {
-            List<Message> messages -> assert util.sort( messages, 'username' ) == [ m2, m3, m1 ]
-        }
-    }
-
-
-    def "testing Messages sorting by urgency and sent to 'All'"() {
-
-        when:
-        def m1 = messageWithId( Urgency.INFO,     true,  [], [ 'username' ] )
-        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ 'username' ] )
-        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
-        def m4 = messageWithId( Urgency.INFO,     false, [], [ 'username' ] )
+        def m1 = messageWithId( Urgency.INFO,     true, [], [] )
+        def m2 = messageWithId( Urgency.CRITICAL, true, [], [] )
+        sleep( 20 )
+        def m3 = messageWithId( Urgency.WARNING,  true, [], [] )
+        def m4 = messageWithId( Urgency.CRITICAL, true, [], [] )
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sort( messages, 'username' ) == [ m3, m2, m4, m1 ]
+            List<Message> messages -> assert util.sortForAll( messages ) == [ m4, m2, m3, m1 ]
         }
     }
 
 
-    def "testing Messages sorting by sending to users"() {
+    def "testing group messages sorting"() {
+
+        when:
+        def m1 = messageWithId( Urgency.WARNING,  false, [ TEST_GROUP, 'otherGroup' ], [] )
+        def m2 = messageWithId( Urgency.CRITICAL, true,  [ 'anotherGroup' ], [] )
+        sleep( 20 )
+        def m3 = messageWithId( Urgency.WARNING,  false, [ TEST_GROUP ], [] )
+        def m4 = messageWithId( Urgency.CRITICAL, false, [ 'myGroup', TEST_GROUP ], [] )
+
+        then:
+        24 == permutations([ m1, m2, m3, m4 ]) {
+            List<Message> messages -> assert util.sortForGroup( messages, TEST_GROUP ) == [ m4, m2, m3, m1 ]
+        }
+    }
+
+
+    def "testing user messages sorting by urgency"() {
+
+        when:
+        def m1 = messageWithId( Urgency.INFO,     false, [], [ TEST_USERNAME ] )
+        def m2 = messageWithId( Urgency.CRITICAL, false, [], [ TEST_USERNAME ] )
+        def m3 = messageWithId( Urgency.WARNING,  false, [], [ TEST_USERNAME ] )
+
+        then:
+        6 == permutations([ m1, m2, m3 ]) {
+            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m2, m3, m1 ]
+        }
+    }
+
+
+    def "testing user messages sorting by urgency and sent to 'All'"() {
+
+        when:
+        def m1 = messageWithId( Urgency.INFO,     true,  [], [ TEST_USERNAME ] )
+        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ TEST_USERNAME ] )
+        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ TEST_USERNAME ] )
+        def m4 = messageWithId( Urgency.INFO,     false, [], [ TEST_USERNAME ] )
+
+        then:
+        24 == permutations([ m1, m2, m3, m4 ]) {
+            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m3, m2, m4, m1 ]
+        }
+    }
+
+
+    def "testing user messages sorting by sending to users"() {
 
         when:
         def m1 = messageWithId( Urgency.CRITICAL, true,  [], [] )
-        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ 'username' ] )
-        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
+        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ TEST_USERNAME ] )
+        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ TEST_USERNAME ] )
 
         then:
         6 == permutations([ m1, m2, m3 ]) {
-            List<Message> messages -> assert util.sort( messages, 'username' ) == [ m3, m2, m1 ]
+            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m3, m2, m1 ]
         }
     }
 
 
-    def "testing Messages sorting by sending to groups"() {
+    def "testing user messages sorting by sending to groups"() {
 
         when:
-        def m1 = messageWithId( Urgency.INFO,    true,  [ 'testGroup'  ],              [ 'otherUser' ] )
-        def m2 = messageWithId( Urgency.WARNING, false, [ 'otherGroup' ],              [ 'username', 'otherUser' ] )
-        def m3 = messageWithId( Urgency.WARNING, true,  [ 'testGroup', 'otherGroup' ], []  )
-        def m4 = messageWithId( Urgency.WARNING, false, [ 'testGroup' ],               [ 'username' ]  )
+        def m1 = messageWithId( Urgency.INFO,    true,  [ TEST_GROUP   ],             [ 'otherUser' ] )
+        def m2 = messageWithId( Urgency.WARNING, false, [ 'otherGroup' ],             [ TEST_USERNAME, 'otherUser' ] )
+        def m3 = messageWithId( Urgency.WARNING, true,  [ TEST_GROUP, 'otherGroup' ], []  )
+        def m4 = messageWithId( Urgency.WARNING, false, [ TEST_GROUP ],               [ TEST_USERNAME ]  )
 
         then:
         24 == permutations([ m1, m2, m3, m4 ]) {
-            List<Message> messages -> assert util.sort( messages, 'username' ) == [ m4, m2, m3, m1 ]
+            List<Message> messages -> assert util.sortForUser( messages, TEST_USERNAME ) == [ m4, m2, m3, m1 ]
         }
     }
 }

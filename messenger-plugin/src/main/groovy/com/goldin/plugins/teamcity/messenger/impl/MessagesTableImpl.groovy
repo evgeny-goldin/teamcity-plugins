@@ -1,11 +1,11 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicLong
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
+
 
 /**
  * {@link MessagesTable} implementation
@@ -16,8 +16,8 @@ class MessagesTableImpl implements MessagesTable
     final MessagesContext       context
     final MessagesUtil          util
 
-    final private ConcurrentMap<Long, Message> messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
-    final private AtomicLong                   messageIdGenerator = new AtomicLong( 1000  )
+    final private Map<Long, Message> messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
+    final private AtomicLong         messageIdGenerator = new AtomicLong( 1000  )
 
 
     @Requires({ configuration && context && util })
@@ -125,5 +125,6 @@ class MessagesTableImpl implements MessagesTable
     {
         // Restore messages table
         // Restore nextMessageId
+        // UsersTable.init()
     }
 }

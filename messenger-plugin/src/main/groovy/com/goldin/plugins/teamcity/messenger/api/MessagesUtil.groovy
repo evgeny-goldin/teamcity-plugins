@@ -57,15 +57,75 @@ class MessagesUtil
     }
 
 
-    @Requires({ ( messages != null ) && username && ( ! messages.any{ it == null }) })
-    List<Message> sort( Collection<Message> messages, String username )
+    /**
+     * Sorts messages specified  ignoring their groups and user recipients.
+     * @param  messages messages to sort
+     * @return messages sorted ignoring messages groups and user recipients,
+     *         if collection specified is a <code>List</code> then sorting happens <b>in place</b> and
+     *         original <code>List</code> is modified and returned
+     */
+    @Requires({ ( messages != null ) })
+//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    List<Message> sortForAll ( Collection<Message> messages )
     {
+        messages.each{ Message m -> assert m.sendToAll, "[$m] wasn't sent to all" }
+        
         messages.sort {
             Message m1, Message m2 ->
 
-            [ m1, m2 ].each{ assert it.forUser( username ), "[$it] wasn't sent to user [$username]" }
+            int  urgencyCompare = ( m1.urgency <=> m2.urgency )
+            if ( urgencyCompare != 0 ){ return urgencyCompare }
 
-            int urgencyCompare = m1.urgency <=> m2.urgency
+            - ( m1.timestamp <=> m2.timestamp )
+        }
+    }
+
+
+    /**
+     * Sorts messages specified for specific group, ignoring their user recipients.
+     * @param  messages messages to sort
+     * @param  groupName name of the group to sort the messages for
+     * @return messages sorted ignoring messages user recipients,
+     *         if collection specified is a <code>List</code> then sorting happens <b>in place</b> and
+     *         original <code>List</code> is modified and returned
+     */
+    @Requires({ ( messages != null ) && groupName })
+//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    List<Message> sortForGroup ( Collection<Message> messages, String groupName )
+    {
+        messages.each{ Message m -> assert m.forGroup( groupName ), "[$m] wasn't sent to group [$groupName]" }
+
+        messages.sort {
+            Message m1, Message m2 ->
+
+            int urgencyCompare = ( m1.urgency <=> m2.urgency )
+
+            if ( urgencyCompare != 0                    ){ return urgencyCompare }
+            if ( different( m1.sendToAll, m2.sendToAll )){ return ( m1.sendToAll ? 1 : -1 ) }
+
+            - ( m1.timestamp <=> m2.timestamp )
+        }
+    }
+
+
+    /**
+     * Sorts messages specified for specific user.
+     * @param  messages messages to sort
+     * @param  username name of the user to sort the messages for
+     * @return messages sorted for the user provided,
+     *         if collection specified is a <code>List</code> then sorting happens <b>in place</b> and
+     *         original <code>List</code> is modified and returned
+     */
+    @Requires({ ( messages != null ) && username })
+//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    List<Message> sortForUser ( Collection<Message> messages, String username )
+    {
+        messages.each{ Message m -> assert m.forUser( username ), "[$m] wasn't sent to user [$username]" }
+        
+        messages.sort {
+            Message m1, Message m2 ->
+
+            int  urgencyCompare = ( m1.urgency <=> m2.urgency )
             if ( urgencyCompare != 0                    ){ return urgencyCompare }
             
             if ( different( m1.sendToAll, m2.sendToAll )){ return ( m1.sendToAll ? 1 : -1 ) }
@@ -81,8 +141,7 @@ class MessagesUtil
 
             if ( different( m1ForUserGroup, m2ForUserGroup )){ return ( m1ForUserGroup ? -1 : 1 ) }
 
-            (( m1.timestamp > m2.timestamp ) ? -1 : 1 )
+            - ( m1.timestamp <=> m2.timestamp )
         }
     }
-
 }
