@@ -35,17 +35,18 @@ class BaseSpecification extends Specification
     }
 
 
-    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
+//    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
+    @Ensures({ result.id > 0 })
     Message messageWithId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
         new Message( counter++, context, util, messageNoId( urgency, sendToAll, sendToGroups, sendToUsers ))
     }
 
     
-    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
+//    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ result.id == -1 })
     Message messageNoId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
-        return new Message( 'me', urgency, "[$urgency] message", -1, sendToAll, sendToGroups, sendToUsers )
+        new Message( 'me', urgency, "[$urgency] message", -1, sendToAll, sendToGroups, sendToUsers )
     }
 }

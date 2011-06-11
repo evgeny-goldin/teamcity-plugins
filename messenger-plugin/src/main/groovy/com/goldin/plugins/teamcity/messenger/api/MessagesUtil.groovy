@@ -41,7 +41,7 @@ class MessagesUtil
 
 
 
-    @Requires({ ( messages != null ) && username })
+    @Requires({ ( messages != null ) && username && ( ! messages.any{ it == null }) })
     List<Message> sort( Collection<Message> messages, String username )
     {
         messages.sort {
