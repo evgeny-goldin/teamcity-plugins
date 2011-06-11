@@ -1,26 +1,15 @@
 package com.goldin.plugins.teamcity.messenger.test.tests
 
-import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
-import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
-import org.springframework.beans.factory.annotation.Autowired
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
+import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 
 /**
  * {@link MessagesUtil} tests
  */
 class MessagesUtilTest extends BaseSpecification
 {
-    @Autowired
-    final MessagesUtil util
-
-    @Autowired
-    final MessagesContext context
-
-    private counter = 1
-
-
     def "testing HTML escaping with variables"() {
 
         expect:
@@ -39,11 +28,6 @@ class MessagesUtilTest extends BaseSpecification
     }
 
 
-    private Message message( Urgency urgency, boolean sendToAll, List<String> sendToGroups = [], List<String> sendToUsers = [] )
-    {
-        new Message( counter++, context, util, new Message( 'me', urgency, "[$urgency] message", -1, sendToAll, sendToGroups, sendToUsers ))
-    }
-
     def "testing HTML escaping with files"() {
 
         expect:
@@ -59,9 +43,9 @@ class MessagesUtilTest extends BaseSpecification
     def "testing Messages sorting by urgency"() {
 
         when:
-        def m1 = message( Urgency.INFO,     false, [], [ 'username' ] )
-        def m2 = message( Urgency.CRITICAL, false, [], [ 'username' ] )
-        def m3 = message( Urgency.WARNING,  false, [], [ 'username' ] )
+        def m1 = messageWithId( Urgency.INFO,     false, [], [ 'username' ] )
+        def m2 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
+        def m3 = messageWithId( Urgency.WARNING,  false, [], [ 'username' ] )
 
         def tests = 0
         [ m1, m2, m3 ].eachPermutation{
@@ -78,10 +62,10 @@ class MessagesUtilTest extends BaseSpecification
     def "testing Messages sorting by urgency and sent to 'All'"() {
 
         when:
-        def m1 = message( Urgency.INFO,     true,  [], [ 'username' ] )
-        def m2 = message( Urgency.CRITICAL, true,  [], [ 'username' ] )
-        def m3 = message( Urgency.CRITICAL, false, [], [ 'username' ] )
-        def m4 = message( Urgency.INFO,     false, [], [ 'username' ] )
+        def m1 = messageWithId( Urgency.INFO,     true,  [], [ 'username' ] )
+        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ 'username' ] )
+        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
+        def m4 = messageWithId( Urgency.INFO,     false, [], [ 'username' ] )
 
         def tests = 0
         [ m1, m2, m3, m4 ].eachPermutation{
@@ -98,9 +82,9 @@ class MessagesUtilTest extends BaseSpecification
     def "testing Messages sorting by sending to users"() {
 
         when:
-        def m1 = message( Urgency.CRITICAL, true,  [], [] )
-        def m2 = message( Urgency.CRITICAL, true,  [], [ 'username' ] )
-        def m3 = message( Urgency.CRITICAL, false, [], [ 'username' ] )
+        def m1 = messageWithId( Urgency.CRITICAL, true,  [], [] )
+        def m2 = messageWithId( Urgency.CRITICAL, true,  [], [ 'username' ] )
+        def m3 = messageWithId( Urgency.CRITICAL, false, [], [ 'username' ] )
 
         def tests = 0
         [ m1, m2, m3 ].eachPermutation{
@@ -117,10 +101,10 @@ class MessagesUtilTest extends BaseSpecification
     def "testing Messages sorting by sending to groups"() {
 
         when:
-        def m1 = message( Urgency.INFO,    true,  [ 'testGroup'  ],              [ 'otherUser' ] )
-        def m2 = message( Urgency.WARNING, false, [ 'otherGroup' ],              [ 'username', 'otherUser' ] )
-        def m3 = message( Urgency.WARNING, true,  [ 'testGroup', 'otherGroup' ], []  )
-        def m4 = message( Urgency.WARNING, false, [ 'testGroup' ],               [ 'username' ]  )
+        def m1 = messageWithId( Urgency.INFO,    true,  [ 'testGroup'  ],              [ 'otherUser' ] )
+        def m2 = messageWithId( Urgency.WARNING, false, [ 'otherGroup' ],              [ 'username', 'otherUser' ] )
+        def m3 = messageWithId( Urgency.WARNING, true,  [ 'testGroup', 'otherGroup' ], []  )
+        def m4 = messageWithId( Urgency.WARNING, false, [ 'testGroup' ],               [ 'username' ]  )
 
         def tests = 0
         [ m1, m2, m3, m4 ].eachPermutation{

@@ -12,7 +12,7 @@ interface UsersTable
 
     List<Message> getMessagesForGroup( String groupName )
 
-    List<Message> getMessagesForAll  ( String groupName )
+    List<Message> getMessagesForAll  ()
 
     long addMessage( Message message )
 }

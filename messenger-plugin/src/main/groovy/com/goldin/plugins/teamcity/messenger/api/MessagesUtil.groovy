@@ -41,8 +41,8 @@ class MessagesUtil
 
 
 
-    @Requires({ messages && username })
-    List<Message> sort( List<Message> messages, String username )
+    @Requires({ ( messages != null ) && username })
+    List<Message> sort( Collection<Message> messages, String username )
     {
         messages.sort {
             Message m1, Message m2 ->

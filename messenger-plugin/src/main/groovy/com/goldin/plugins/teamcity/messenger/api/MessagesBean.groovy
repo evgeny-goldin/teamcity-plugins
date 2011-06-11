@@ -20,7 +20,7 @@ interface MessagesBean
      * @param username recipient username
      * @return messages addressed to user specified
      */
-    List<Message> getMessagesForUser( String username )
+    List<Message> getMessages ( String username )
 
 
     /**

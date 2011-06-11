@@ -1,27 +1,27 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.goldin.plugins.teamcity.messenger.api.Message
-import com.goldin.plugins.teamcity.messenger.api.MessagesBean
-import com.goldin.plugins.teamcity.messenger.api.MessagesTable
-import com.goldin.plugins.teamcity.messenger.api.UsersTable
-import org.gcontracts.annotations.Requires
 import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Requires
+import com.goldin.plugins.teamcity.messenger.api.*
 
 /**
  * {@link MessagesBean} implementation
  */
 class MessagesBeanImpl implements MessagesBean
 {
+    final MessagesTable   messagesTable
+    final UsersTable      usersTable
+    final MessagesContext context
+    final MessagesUtil    util
 
-    final MessagesTable messagesTable
-    final UsersTable    usersTable
 
-
-    @Requires({ messagesTable && usersTable })
-    MessagesBeanImpl ( MessagesTable messagesTable, UsersTable usersTable )
+    @Requires({ messagesTable && usersTable && context && util })
+    MessagesBeanImpl ( MessagesTable messagesTable, UsersTable usersTable, MessagesContext context, MessagesUtil util )
     {
         this.messagesTable = messagesTable
         this.usersTable    = usersTable
+        this.context       = context
+        this.util          = util
     }
     
 
@@ -37,21 +37,34 @@ class MessagesBeanImpl implements MessagesBean
 
     
     @Override
-    List<Message> getMessagesForUser ( String username )
+    @Requires({ username })
+    @Ensures({ result.each{ it.forUser( username ) } })
+    List<Message> getMessages ( String username )
     {
-        []
+        Set<Message> messages = []
+
+        messages << usersTable.getMessagesForUser( username )
+        context.getUserGroups( username ).each { messages << usersTable.getMessagesForGroup( it ) }
+        messages << usersTable.messagesForAll
+
+        util.sort( messages.findAll { Message m -> ! m.usersDeleted.contains( username ) }.
+                            findAll { Message m -> messagesTable.containsMessage( m )    },
+                   username )
     }
 
+    
     @Override
-    Message deleteMessage (long messageId)
+    @Requires({ messageId > 0 })
+    Message deleteMessage ( long messageId )
     {
-        null
+        messagesTable.deleteMessage( messageId )
     }
 
+    
     @Override
-    Message deleteMessage (long messageId, String username)
+    @Requires({ ( messageId > 0  ) && username })
+    Message deleteMessage ( long messageId, String username )
     {
-        null
+        messagesTable.deleteMessage( messageId, username )
     }
-
 }

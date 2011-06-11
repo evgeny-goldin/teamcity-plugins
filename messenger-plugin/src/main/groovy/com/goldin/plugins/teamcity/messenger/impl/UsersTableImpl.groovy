@@ -3,6 +3,7 @@ package com.goldin.plugins.teamcity.messenger.impl
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 import com.goldin.plugins.teamcity.messenger.api.UsersTable
+import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 
 /**
@@ -21,33 +22,41 @@ class UsersTableImpl implements UsersTable
 
     
     @Override
-    void init (List<Message> messages)
+    @Requires({ messages })
+    void init ( List<Message> messages )
     {
 
     }
 
+    
     @Override
-    List<Message> getMessagesForUser (String username)
-    {
-        []
-    }
-
-    @Override
-    List<Message> getMessagesForGroup (String groupName)
+    @Requires({ username })
+    List<Message> getMessagesForUser ( String username )
     {
         []
     }
 
+
     @Override
-    List<Message> getMessagesForAll (String groupName)
+    @Requires({ groupName })
+    List<Message> getMessagesForGroup ( String groupName )
     {
         []
     }
 
+
     @Override
-    long addMessage (Message message)
+    @Ensures({ result != null })
+    List<Message> getMessagesForAll ()
+    {
+        []
+    }
+
+
+    @Override
+    @Requires({ message && ( message.id > 0 ) })
+    long addMessage ( Message message )
     {
         0
     }
-
 }
