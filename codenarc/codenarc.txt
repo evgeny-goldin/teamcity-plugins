@@ -127,8 +127,8 @@ ruleset {
     StatelessSingleton
     
     // rulesets/dry.xml
-    DuplicateNumberLiteral
-    //DuplicateStringLiteral
+    // DuplicateNumberLiteral
+    // DuplicateStringLiteral
 
     // rulesets/exceptions.xml
     CatchArrayIndexOutOfBoundsException
@@ -209,7 +209,7 @@ ruleset {
     FieldName
     InterfaceName
     MethodName {
-       regex = /[a-z][\w\s']*/
+       regex = /[a-z][\w\s'\(\)]*/
     }
     ObjectOverrideMisspelledMethodName
     PackageName
