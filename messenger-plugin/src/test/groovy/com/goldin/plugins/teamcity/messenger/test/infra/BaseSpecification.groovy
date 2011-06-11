@@ -4,6 +4,7 @@ import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
+import java.security.SecureRandom
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +26,7 @@ class BaseSpecification extends Specification
     private counter = 1
 
     
-    final Random random = new Random( new Random( System.currentTimeMillis()).nextLong())
+    final Random random = new SecureRandom()
 
 
     /**

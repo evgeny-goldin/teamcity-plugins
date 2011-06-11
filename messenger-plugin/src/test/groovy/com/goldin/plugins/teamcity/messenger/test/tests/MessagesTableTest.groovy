@@ -5,6 +5,7 @@ import com.goldin.plugins.teamcity.messenger.api.MessagesTable
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 import org.springframework.beans.factory.annotation.Autowired
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
+import org.junit.Before
 
 /**
  * {@link MessagesTable} test
@@ -12,7 +13,7 @@ import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 class MessagesTableTest extends BaseSpecification
 {
     @Autowired
-    MessagesTable table
+    final MessagesTable table
 
 
     private List<Message> newMessages() {
@@ -22,6 +23,7 @@ class MessagesTableTest extends BaseSpecification
     }
 
 
+    @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
     def setup() { table.deleteAllMessages() }
 
     
