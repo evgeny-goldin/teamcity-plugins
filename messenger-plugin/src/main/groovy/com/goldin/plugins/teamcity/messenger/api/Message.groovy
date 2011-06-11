@@ -32,7 +32,7 @@ final class Message
 
 
     @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })
-    @Ensures({ ( this.sendToGroups != null ) && ( this.sendToUsers != null ) && ( this.usersDeleted != null ) })
+    @Ensures({ ( this.id == -1 ) && ( this.sendToGroups != null ) && ( this.sendToUsers != null ) && ( this.usersDeleted != null ) })
     Message ( String       sender,
               Urgency      urgency,
               String       message,
