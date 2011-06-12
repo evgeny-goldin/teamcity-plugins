@@ -1,10 +1,23 @@
 
 /**
- * Gradle plugins repo
+ * Gradle plugins repos:
+ * https://github.com/evgeny-goldin/gradle-plugins
+ * https://github.com/valkolovos/gradle_cobertura
  */
 buildscript  {
-    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
-    dependencies { classpath       'com.goldin.plugins:gradle:0.0.1-SNAPSHOT' }
+    def coberturaPluginUrl = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
+    repositories {
+        mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'
+        add( new org.apache.ivy.plugins.resolver.URLResolver()) {
+            name = 'cobertura'
+            addArtifactPattern "$coberturaPluginUrl/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"
+            addIvyPattern      "$coberturaPluginUrl/[organization]/[module]/[revision]/ivy.xml"
+        }
+    }
+    dependencies {
+        classpath 'com.goldin.plugins:gradle:0.0.1-SNAPSHOT',
+                  'gradle_cobertura:gradle_cobertura:1.0-rc4'
+    }
 }
 
 allprojects {
@@ -12,6 +25,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'groovy'
     apply plugin: 'about'
+    apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
 
     defaultTasks 'clean', 'build'
 
@@ -24,9 +38,14 @@ allprojects {
     gcontractsVersion   = '1.2.3'
     spockVersion        = '0.6-groovy-1.8-SNAPSHOT'
     codenarcVersion     = '0.14'
+    toolReportsDir      = project.buildDir.canonicalPath + '/reports'
 
     repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
-    about        { dumpDependencies = true /* http://evgeny-goldin.org/youtrack/issue/gp-1 */ }
+    about        { dumpDependencies = true /* TODO: evgeny-goldin.org/youtrack/issue/gp-1 */ }
+    cobertura    {
+        coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
+        coverageReportDir = new File( toolReportsDir, 'cobertura' )
+    }
 
     /**
      * Creating IDEA project files
@@ -241,9 +260,9 @@ subprojects {
                            maxPriority1Violations: 0,
                            maxPriority2Violations: 0,
                            maxPriority3Violations: 0 ) {
-                 report  ( type: 'html' ) { option name: 'outputFile', value: new File(( File ) project.buildDir, 'codenarc.html' ) }
-                 fileset ( dir : 'src/main/groovy' )
-                 fileset ( dir : 'src/test/groovy' )
+                 report  ( type : 'html' ) { option name: 'outputFile', value: toolReportsDir + '/codenarc.html' }
+                 fileset ( dir  : 'src/main/groovy' )
+                 fileset ( dir  : 'src/test/groovy' )
             }
         }
     }
