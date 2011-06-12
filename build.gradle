@@ -1,19 +1,19 @@
 
-def groovyVersion     = '1.8.0'
-def springVersion     = '2.5.6'
-def gcontractsVersion = '1.2.3'
-def spockVersion      = '0.6-groovy-1.8-SNAPSHOT'
-def codenarcVersion   = '0.14'
-def junitVersion      = '4.8.2'
-
-
 /**
  * Gradle plugins repos:
  * https://github.com/evgeny-goldin/gradle-plugins
  * https://github.com/valkolovos/gradle_cobertura
  */
 buildscript  {
-    def coberturaPluginUrl = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
+
+    groovyVersion      = '1.8.0'
+    springVersion      = '2.5.6'
+    gcontractsVersion  = '1.2.3'
+    spockVersion       = '0.6-groovy-1.8-SNAPSHOT'
+    codenarcVersion    = '0.14'
+    junitVersion       = '4.8.2'
+    coberturaPluginUrl = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
+
     repositories {
         mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'
         add( new org.apache.ivy.plugins.resolver.URLResolver()) {
@@ -24,8 +24,8 @@ buildscript  {
     }
     dependencies {
         classpath 'com.goldin.plugins:gradle:0.0.1-SNAPSHOT',
-                  'org.codehaus.groovy:groovy-all:1.8.0',
-                  'junit:junit:4.8.2'
+                  "org.codehaus.groovy:groovy-all:$groovyVersion",
+                  "junit:junit:$junitVersion"
         classpath ( 'gradle_cobertura:gradle_cobertura:1.0-rc4' ) { exclude module: 'groovy' }
     }
 }
