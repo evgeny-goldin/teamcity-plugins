@@ -47,7 +47,7 @@ subprojects {
     Set<String> apiPatterns    = [ '**/api/**' ]
 
     repositories   { mavenRepo urls: repoUrl }
-    
+
     configurations {
         codenarc
         provided
@@ -71,7 +71,7 @@ subprojects {
                     "org.springframework:spring-test:3.0.5.RELEASE"
     }
 
-    
+
     /**
      * Default compilation options
      */
@@ -170,7 +170,7 @@ subprojects {
     task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
     build.taskDependencies.add( assemblePlugin )
 
-    
+
     /**
      * Deploys plugin Zip to TeamCity instance
      */
@@ -219,7 +219,7 @@ subprojects {
 
         doFirst {
             File codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
-            File codenarcReportsDir = new File(( File ) rootProject.buildDir, 'codenarc' )
+            File codenarcReportsDir = new File(( File ) project.buildDir, 'codenarc' )
 
             assert codenarcConfigFile.isFile()
             assert codenarcReportsDir.isDirectory() || codenarcReportsDir.mkdirs()
