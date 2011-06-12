@@ -8,5 +8,6 @@ package com.goldin.plugins.teamcity.messenger.test.infra
 class Constants
 {
     public static final String TEST_USERNAME = 'username'
+    public static final String TEST_SENDER   = 'me'
     public static final String TEST_GROUP    = 'testGroup'
 }

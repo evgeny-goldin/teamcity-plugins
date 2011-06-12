@@ -62,7 +62,7 @@ class MessagesTableImpl implements MessagesTable
 
     @Override
     @Requires({ ( messageId > 0 ) && messages.containsKey( messageId ) })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Ensures({ result && ( result.id == messageId ) && ( ! messages.containsKey( messageId )) })
     Message deleteMessage ( long messageId )
     {
         messages.remove( messageId )
@@ -71,13 +71,17 @@ class MessagesTableImpl implements MessagesTable
 
     @Override
     @Requires({ ( messageId > 0 ) && messages.containsKey( messageId ) && username })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
     Message deleteMessageByUser ( long messageId, String username )
     {
         Message m = messages[ messageId ]
         assert  m.forUser( username ), "[$m] is not for user [$username], can not be deleted by him"
         
         m.usersDeleted << username
+        if (( ! m.sendToAll ) && ( ! m.sendToGroups ) && ( m.usersDeleted.containsAll( m.sendToUsers )))
+        {
+            deleteMessage( m.id )
+        }
         m
     }
 

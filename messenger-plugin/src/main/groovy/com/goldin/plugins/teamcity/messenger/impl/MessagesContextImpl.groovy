@@ -67,13 +67,25 @@ $beans"""   )
         }
     }
 
+    @Override
+    boolean isTest () { false }
+
+
+    @Override
+    @Requires({ username })
+    @Ensures({ ( result != null ) || ( result == null )})
+    SUser getUser ( String username )
+    {
+        server.userModel.findUserAccount( null, username )
+    }
+
 
     @Override
     @Requires({ username })
     @Ensures({ result })
     Set<String> getUserGroups ( String username )
     {
-        SUser  user = server.userModel.findUserAccount( null, username )
+        SUser user = getUser( username )
         if ( ! user ) { return [] }
         
         user.allUserGroups*.name as Set

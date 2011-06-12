@@ -23,20 +23,21 @@ class MessagesBeanImpl implements MessagesBean
         this.context       = context
         this.util          = util
     }
-    
+
 
     @Override
     @Requires({ message && ( message.id < 0 )})
     @Ensures({ result > 0 })
     long sendMessage ( Message message )
     {
+        assert ( context.isTest() || context.getUser( message.sender )), "Sender [${ message.sender }] doesn't exist"
         usersTable.addMessage( messagesTable.addMessage( message ))
     }
 
     
     @Override
     @Requires({ username })
-    @Ensures({ result.each{ it.forUser( username ) } })
+    @Ensures({ result.isEmpty() || result.each{ it.forUser( username ) } })
     List<Message> getMessagesForUser ( String username )
     {
         List<Message> messages = []
@@ -63,7 +64,7 @@ class MessagesBeanImpl implements MessagesBean
     
     @Override
     @Requires({ ( messageId > 0  ) && username })
-    @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
+    @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessageByUser ( long messageId, String username )
     {
         messagesTable.deleteMessageByUser( messageId, username )

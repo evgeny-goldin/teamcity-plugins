@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
+
 /**
  * Super class for all tests
  */
@@ -99,6 +100,6 @@ class BaseSpecification extends Specification
     @Ensures({ result.id == -1 })
     Message messageNoId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
-        new Message( 'me', urgency, "[$urgency] message", -1, sendToAll, sendToGroups, sendToUsers )
+        new Message( Constants.TEST_SENDER, urgency, "[$urgency] message", -1, sendToAll, sendToGroups, sendToUsers )
     }
 }
