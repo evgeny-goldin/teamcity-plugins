@@ -218,11 +218,8 @@ subprojects {
         description = 'Runs CodeNarc inspections on Groovy sources.'
 
         doFirst {
-            File codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
-            File codenarcReportsDir = new File(( File ) project.buildDir, 'codenarc' )
-
+            File   codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
             assert codenarcConfigFile.isFile()
-            assert codenarcReportsDir.isDirectory() || codenarcReportsDir.mkdirs()
 
             ant.taskdef( name     : 'codenarc',
                          classname: 'org.codenarc.ant.CodeNarcTask',
@@ -232,7 +229,7 @@ subprojects {
                            maxPriority1Violations: 0,
                            maxPriority2Violations: 0,
                            maxPriority3Violations: 0 ) {
-                 report  ( type: 'html' ) { option name: 'outputFile', value: ( codenarcReportsDir.path + '/main.html' ) }
+                 report  ( type: 'html' ) { option name: 'outputFile', value: new File(( File ) project.buildDir, 'codenarc.html' ) }
                  fileset ( dir : 'src/main/groovy' )
                  fileset ( dir : 'src/test/groovy' )
             }
