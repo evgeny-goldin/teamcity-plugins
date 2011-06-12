@@ -43,6 +43,7 @@
       <profile version="1.0" is_locked="false">
         <option name="myName" value="TeamCity" />
         <option name="myLocal" value="false" />
+        <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
         <inspection_tool class="AutowiredDependenciesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
         <inspection_tool class="JavaDoc" enabled="false" level="WARNING" enabled_by_default="false">
@@ -87,8 +88,8 @@
         <inspection_tool class="XmlUnboundNsPrefix" enabled="false" level="WARNING" enabled_by_default="false" />
       </profile>
     </profiles>
-    <option name="PROJECT_PROFILE" />
-    <option name="USE_PROJECT_PROFILE" value="false" />
+    <option name="PROJECT_PROFILE" value="TeamCity" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
   </component>
   <component name="JavadocGenerationManager">
