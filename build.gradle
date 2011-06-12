@@ -43,21 +43,18 @@ allprojects {
     version             = '0.0.1-SNAPSHOT'
     sourceCompatibility = 1.6
     targetCompatibility = 1.6
-    toolReportsDir      = new File(( File ) project.buildDir, 'reports' )
+    toolReportsDir      = new File(( File ) project.buildDir, 'reports'    )
 
     repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
     about        { dumpDependencies = true /* TODO: evgeny-goldin.org/youtrack/issue/gp-1 */ }
+    test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
     cobertura    {
         coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
         coverageReportDir = new File( toolReportsDir, 'cobertura' )
     }
 
-    /**
-     * Creating IDEA project files
-     * http://gradle.org/idea_plugin.html
-     */
     ideaProject {
-        javaVersion = '1.6.0_25'
+        javaVersion       = '1.6.0_25'
     }
     ideaModule {
         downloadSources   = true
@@ -65,14 +62,6 @@ allprojects {
         inheritOutputDirs = false
         outputDir         = new File(( File ) project.buildDir, 'idea' )
         testOutputDir     = new File(( File ) project.buildDir, 'idea/test' )
-    }
-
-    /**
-     * Configuring tests
-     */
-    test {
-        test.testReportDir  = new File(( File ) project.buildDir, 'test/reports' )
-        test.testResultsDir = new File(( File ) project.buildDir, 'test/results' )
     }
 }
 
