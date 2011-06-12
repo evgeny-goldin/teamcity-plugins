@@ -8,14 +8,16 @@ buildscript  {
 
     groovyVersion      = '1.8.0'
     springVersion      = '2.5.6'
+    antVersion         = '1.8.2'
     gcontractsVersion  = '1.2.3'
     spockVersion       = '0.6-groovy-1.8-SNAPSHOT'
     codenarcVersion    = '0.14'
     junitVersion       = '4.8.2'
     coberturaPluginUrl = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
+    repoUrl            = 'http://evgeny-goldin.org/artifactory/repo/'
 
     repositories {
-        mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/'
+        mavenRepo urls: repoUrl
         add( new org.apache.ivy.plugins.resolver.URLResolver()) {
             name = 'cobertura'
             addArtifactPattern "$coberturaPluginUrl/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"
@@ -25,7 +27,8 @@ buildscript  {
     dependencies {
         classpath 'com.goldin.plugins:gradle:0.0.1-SNAPSHOT',
                   "org.codehaus.groovy:groovy-all:$groovyVersion",
-                  "junit:junit:$junitVersion"
+                  "junit:junit:$junitVersion",
+                  "org.apache.ant:ant:$antVersion"
         classpath ( 'gradle_cobertura:gradle_cobertura:1.0-rc4' ) { exclude module: 'groovy' }
     }
 }
@@ -45,7 +48,7 @@ allprojects {
     targetCompatibility = 1.6
     toolReportsDir      = new File(( File ) project.buildDir, 'reports'    )
 
-    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
+    repositories { mavenRepo urls: repoUrl }
     about        { dumpDependencies = true /* TODO: evgeny-goldin.org/youtrack/issue/gp-1 */ }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
     cobertura    {
@@ -82,7 +85,7 @@ subprojects {
     dependencies   {
         groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
         codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant', module: 'ant' }
-        codenarc    'org.apache.ant:ant:1.8.2',
+        codenarc    "org.apache.ant:ant:$antVersion",
                     files( rootProject.file( 'codenarc' )) // For "log4j.xml"
         provided    'jetbrains:teamcity-openapi:6.5',
                     "org.springframework:spring-webmvc:$springVersion",
@@ -91,9 +94,11 @@ subprojects {
                     'com.intellij:openapi:7.0.3',
                     'jdom:jdom:1.0'
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit', module: 'junit' }
+        testRuntime "org.apache.ant:ant:$antVersion"
         testCompile "org.spockframework:spock-core:$spockVersion",
                     "org.spockframework:spock-spring:$spockVersion",
                     "org.springframework:spring-test:3.0.5.RELEASE",
+                    "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion"
     }
 
