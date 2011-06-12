@@ -139,7 +139,7 @@ subprojects {
     /**
      * Creates plugin Zip archive
      */
-    task assemblePlugin( dependsOn: [ assembleApi, assembleImpl ] ) {
+    task assemblePlugin( dependsOn: [ assembleApi, assembleImpl, about ] ) {
 
         description = 'Creates plugin Zip archive.'
 
