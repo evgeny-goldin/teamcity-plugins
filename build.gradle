@@ -1,6 +1,17 @@
+
+/**
+ * Gradle plugins repo
+ */
+buildscript  {
+    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
+    dependencies { classpath       'com.goldin.plugins:gradle:0.0.1-SNAPSHOT' }
+}
+
 allprojects {
+
     apply plugin: 'idea'
     apply plugin: 'groovy'
+    apply plugin: 'about'
 
     defaultTasks 'clean', 'build'
 
@@ -13,7 +24,9 @@ allprojects {
     gcontractsVersion   = '1.2.3'
     spockVersion        = '0.6-groovy-1.8-SNAPSHOT'
     codenarcVersion     = '0.14'
-    repoUrl             = 'http://evgeny-goldin.org/artifactory/repo/'
+
+    repositories { mavenRepo urls: 'http://evgeny-goldin.org/artifactory/repo/' }
+    about        { dumpDependencies = true /* http://evgeny-goldin.org/youtrack/issue/gp-1 */ }
 
     /**
      * Creating IDEA project files
@@ -46,7 +59,6 @@ subprojects {
     File        destinationZip = new File( project.buildDir, "${project.name}.zip" )
     Set<String> apiPatterns    = [ '**/api/**' ]
 
-    repositories   { mavenRepo urls: repoUrl }
 
     configurations {
         codenarc
