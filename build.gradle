@@ -6,6 +6,7 @@
  */
 buildscript  {
 
+    teamCityVersion      = '6.5.1'
     groovyVersion        = '1.8.0'
     springVersion        = '2.5.6'
     antVersion           = '1.8.2'
@@ -80,20 +81,18 @@ subprojects {
 
     dependencies   {
         groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
-        codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant', module: 'ant' }
+        codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant' }
         codenarc    "org.apache.ant:ant:$antVersion",
                     files( rootProject.file( 'codenarc' )) // For "log4j.xml"
-        provided    'jetbrains:teamcity-openapi:6.5',
+        provided    "jetbrains:teamcity-openapi:$teamCityVersion",
+                    "jetbrains:teamcity-openapi.util:$teamCityVersion",
                     "org.springframework:spring-webmvc:$springVersion",
-                    'javax.servlet:servlet-api:2.5',
-                    'com.intellij:annotations:7.0.3',
-                    'com.intellij:openapi:7.0.3',
-                    'jdom:jdom:1.0'
-        compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit', module: 'junit' }
+                    'javax.servlet:servlet-api:2.5'
+        compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
         testRuntime "org.apache.ant:ant:$antVersion"
         testCompile "org.spockframework:spock-core:$spockVersion",
                     "org.spockframework:spock-spring:$spockVersion",
-                    "org.springframework:spring-test:3.0.5.RELEASE",
+                    "org.springframework:spring-test:$springVersion",
                     "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion"
     }

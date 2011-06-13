@@ -28,13 +28,13 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/jars/gcontracts-core-1.2.3.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/jars/gcontracts-core-1.2.4.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/javadocs/gcontracts-core-1.2.3-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/javadocs/gcontracts-core-1.2.4-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/sources/gcontracts-core-1.2.3-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.gcontracts/gcontracts-core/sources/gcontracts-core-1.2.4-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -63,14 +63,23 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/jars/teamcity-openapi-6.5.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/jars/teamcity-openapi-6.5.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/javadocs/teamcity-openapi-6.5-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/javadocs/teamcity-openapi-6.5.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/sources/teamcity-openapi-6.5-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi/sources/teamcity-openapi-6.5.1-sources.jar!/" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/jetbrains/teamcity-openapi.util/jars/teamcity-openapi.util-6.5.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -174,41 +183,65 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/com.intellij/annotations/jars/annotations-7.0.3.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/net.sourceforge.cobertura/cobertura/jars/cobertura-1.9.4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/net.sourceforge.cobertura/cobertura/javadocs/cobertura-1.9.4.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/net.sourceforge.cobertura/cobertura/sources/cobertura-1.9.4.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/jars/ant-1.8.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/com.intellij/openapi/jars/openapi-7.0.3.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.8.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/com.intellij/extensions/jars/extensions-7.0.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/jdom/jdom/jars/jdom-1.0.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/jars/oro-2.0.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/cache/jdom/jdom/sources/jdom-1.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/sources/oro-2.0.8-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/asm/asm-tree/jars/asm-tree-3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/jars/log4j-1.2.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/sources/log4j-1.2.9-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -267,11 +300,24 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/cache/org.springframework/spring-test/jars/spring-test-3.0.5.RELEASE.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.springframework/spring-test/jars/spring-test-2.5.6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/cache/org.springframework/spring-test/sources/spring-test-3.0.5.RELEASE-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/cache/org.springframework/spring-test/sources/spring-test-2.5.6-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/junit/junit/jars/junit-4.8.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/junit/junit/javadocs/junit-4.8.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/junit/junit/sources/junit-4.8.2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
