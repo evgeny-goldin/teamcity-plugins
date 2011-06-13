@@ -6,15 +6,16 @@
  */
 buildscript  {
 
-    groovyVersion      = '1.8.0'
-    springVersion      = '2.5.6'
-    antVersion         = '1.8.2'
-    gcontractsVersion  = '1.2.3'
-    spockVersion       = '0.6-groovy-1.8-SNAPSHOT'
-    codenarcVersion    = '0.14'
-    junitVersion       = '4.8.2'
-    coberturaPluginUrl = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
-    repoUrl            = 'http://evgeny-goldin.org/artifactory/repo/'
+    groovyVersion        = '1.8.0'
+    springVersion        = '2.5.6'
+    antVersion           = '1.8.2'
+    gcontractsVersion    = '1.2.4'
+    spockVersion         = '0.6-groovy-1.8-SNAPSHOT'
+    codenarcVersion      = '0.14'
+    junitVersion         = '4.8.2'
+    gradlePluginsVersion = '0.1-RC'
+    coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
+    repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
 
     repositories {
         mavenRepo urls: repoUrl
@@ -25,7 +26,7 @@ buildscript  {
         }
     }
     dependencies {
-        classpath 'com.goldin.plugins:gradle:0.0.1-SNAPSHOT',
+        classpath "com.goldin.plugins:gradle:$gradlePluginsVersion",
                   "org.codehaus.groovy:groovy-all:$groovyVersion",
                   "junit:junit:$junitVersion",
                   "org.apache.ant:ant:$antVersion"
@@ -49,12 +50,8 @@ allprojects {
     toolReportsDir      = new File(( File ) project.buildDir, 'reports'    )
 
     repositories { mavenRepo urls: repoUrl }
-    about        { dumpDependencies = true /* TODO: evgeny-goldin.org/youtrack/issue/gp-1 */ }
+    about        { dumpDependencies = true }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
-    cobertura    {
-        coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
-        coverageReportDir = new File( toolReportsDir, 'cobertura' )
-    }
 
     ideaProject {
         javaVersion       = '1.6.0_25'
@@ -74,7 +71,6 @@ subprojects {
     File        teamCityDir    = new File( 'T:/' )
     File        destinationZip = new File( project.buildDir, "${project.name}.zip" )
     Set<String> apiPatterns    = [ '**/api/**' ]
-
 
     configurations {
         codenarc
@@ -100,6 +96,11 @@ subprojects {
                     "org.springframework:spring-test:3.0.5.RELEASE",
                     "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion"
+    }
+
+    cobertura {
+        coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
+        coverageReportDir = new File( toolReportsDir, 'cobertura' )
     }
 
 

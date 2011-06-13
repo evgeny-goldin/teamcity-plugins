@@ -65,7 +65,7 @@ class MessagesUtil
      *         original <code>List</code> is modified and returned
      */
     @Requires({ ( messages != null ) })
-//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForAll ( Collection<Message> messages )
     {
         messages.each { Message m -> assert m.sendToAll, "[$m] wasn't sent to all" }
@@ -89,7 +89,7 @@ class MessagesUtil
      *         original <code>List</code> is modified and returned
      */
     @Requires({ ( messages != null ) && groupName })
-//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForGroup ( Collection<Message> messages, String groupName )
     {
         messages.each { Message m -> assert m.forGroup( groupName ), "[$m] wasn't sent to group [$groupName]" }
@@ -115,7 +115,7 @@ class MessagesUtil
      *         original <code>List</code> is modified and returned
      */
     @Requires({ ( messages != null ) && username })
-//    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
+    @Ensures({  ( result   != null ) && ( result.size() == messages.size()) })
     List<Message> sortForUser ( Collection<Message> messages, String username )
     {
         messages.each { Message m -> assert m.forUser( username ), "[$m] wasn't sent to user [$username]" }

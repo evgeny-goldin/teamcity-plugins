@@ -85,7 +85,7 @@ class BaseSpecification extends Specification
     /**
      * Retrieves test message with 'id' assigned.
      */
-//    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
+    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ result.id > 0 })
     Message messageWithId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
@@ -96,7 +96,7 @@ class BaseSpecification extends Specification
     /**
      * Retrieves test message without 'id' assigned.
      */
-//    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
+    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ result.id == -1 })
     Message messageNoId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
