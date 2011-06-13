@@ -226,16 +226,14 @@ subprojects {
      * Copies static resources to TeamCity instance
      */
     task copy () {
-        description = 'Copies static resources to TeamCity instance.'
+        description        = 'Copies static resources to TeamCity instance.'
+        def destinationDir = "${teamCityDir}/webapps/ROOT/plugins/${project.name}"
+        def sourceDir      = "${project.projectDir}/src/main/resources/buildServerResources"
 
         doFirst {
             ant {
-                copy( todir  : "${teamCityDir}/webapps/ROOT/plugins/messenger-plugin" ) {
-                    fileset( dir : 'src/main/resources/buildServerResources' )
-                }
-                touch () {
-                    fileset( dir : 'src/main/resources/buildServerResources' )
-                }
+                copy ( todir  : destinationDir ) { fileset( dir : sourceDir      ) }
+                touch()                          { fileset( dir : destinationDir ) }
             }
         }
     }
