@@ -29,6 +29,11 @@
                 jQuery( '#messages-errormessage' ).text( 'Message is empty' );
                 return false;
             }
+            else
+            {
+                jQuery( '#messages-message' ).removeClass( 'errorField' );
+                jQuery( '#messages-errormessage' ).text( '' );
+            }
 
             var    recipientsSelected = ( jQuery( '#messages-all' ).attr( 'checked' ) ||
                                           jQuery( '#messages-groups' ).val()          ||
@@ -38,6 +43,10 @@
                 jQuery( '#messages-errorselection' ).text( 'No recipients selected' );
                 return false;
             }
+            else
+            {
+                jQuery( '#messages-errorselection' ).text( '' );
+            }
 
             jQuery.post( this.action,
                          jQuery( this ).serialize(),
@@ -46,7 +55,6 @@
                          },
                          'text' );//.error( function() { alert( "Failed to send the message" ); } );
 
-//            jQuery( '#messages-form' ).get().reset();
             return false;
         });
     })
