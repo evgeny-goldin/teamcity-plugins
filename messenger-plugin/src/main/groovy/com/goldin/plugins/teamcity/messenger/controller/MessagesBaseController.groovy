@@ -11,7 +11,7 @@ import org.gcontracts.annotations.Requires
 abstract class MessagesBaseController extends BaseController
 {
     @Requires({ server })
-    MessagesBaseController ( SBuildServer server )
+    protected MessagesBaseController ( SBuildServer server )
     {
         super( server )
     }

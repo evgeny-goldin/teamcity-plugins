@@ -36,7 +36,7 @@ class MessagesSendController extends MessagesBaseController
     protected ModelAndView doHandle ( HttpServletRequest request, HttpServletResponse response )
     {
         SUser  user = SessionUser.getUser( request )
-        assert user, "User is not logged in"
+        assert user, 'User is not logged in'
 
         def          sender        = user.username
         def          urgency       = param( request, 'urgency' ).toUpperCase() as Urgency

@@ -38,8 +38,8 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
         def groups = groupsManager.userGroups*.name
         def users  = server.userModel.allUsers.users*.username
 
-        assert groups, "No groups found on the server"
-        assert users,  "No users found on the server"
+        assert groups, 'No groups found on the server'
+        assert users,  'No users found on the server'
 
         model << [ groups: groups, users : users ]
     }
