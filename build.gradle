@@ -199,7 +199,7 @@ subprojects {
 
     task compileGroovy ( overwrite: true, dependsOn: [ compileGroovyApi, compileGroovyImpl ] )
     task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
-    build.taskDependencies.add( assemblePlugin )
+    build.dependsOn( assemblePlugin )
 
 
     /**
