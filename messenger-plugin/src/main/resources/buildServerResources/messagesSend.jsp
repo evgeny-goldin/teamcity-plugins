@@ -6,50 +6,53 @@
 
 
 <script type="text/javascript">
-    jQuery( function() {
 
-        jQuery( '#messages-message' ).focus();
+    var j = jQuery
+
+    j( function() {
+
+        j( '#messages-message' ).focus();
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
         */
-        jQuery( '#messages-all' ).change( function() {
-            jQuery( '#messages-groups' ).attr({ disabled: this.value });
-            jQuery( '#messages-users'  ).attr({ disabled: this.value });
+        j( '#messages-all' ).change( function() {
+            j( '#messages-groups' ).attr({ disabled: this.value });
+            j( '#messages-users'  ).attr({ disabled: this.value });
         });
 
        /**
         * Listener submitting a request when form is submitted
         */
-        jQuery( '#messages-form' ).submit( function() {
+        j( '#messages-form' ).submit( function() {
 
-            if ( ! jQuery.trim( jQuery( '#messages-message' ).val()))
+            if ( ! j.trim( j( '#messages-message' ).val()))
             {
-                jQuery( '#messages-message'      ).addClass( 'errorField'   );
-                jQuery( '#messages-errormessage' ).text( 'Message is empty' );
+                j( '#messages-message'      ).addClass( 'errorField'   );
+                j( '#messages-errormessage' ).text( 'Message is empty' );
                 return false;
             }
             else
             {
-                jQuery( '#messages-message' ).removeClass( 'errorField' );
-                jQuery( '#messages-errormessage' ).text( '' );
+                j( '#messages-message' ).removeClass( 'errorField' );
+                j( '#messages-errormessage' ).text( '' );
             }
 
-            var    recipientsSelected = ( jQuery( '#messages-all' ).attr( 'checked' ) ||
-                                          jQuery( '#messages-groups' ).val()          ||
-                                          jQuery( '#messages-users' ).val());
+            var    recipientsSelected = ( j( '#messages-all' ).attr( 'checked' ) ||
+                                          j( '#messages-groups' ).val()          ||
+                                          j( '#messages-users' ).val());
             if ( ! recipientsSelected )
             {
-                jQuery( '#messages-errorselection' ).text( 'No recipients selected' );
+                j( '#messages-errorselection' ).text( 'No recipients selected' );
                 return false;
             }
             else
             {
-                jQuery( '#messages-errorselection' ).text( '' );
+                j( '#messages-errorselection' ).text( '' );
             }
 
-            jQuery.post( this.action,
-                         jQuery( this ).serialize(),
+            j.post( this.action,
+                         j( this ).serialize(),
                          function( response, status ){
                              alert( 'Message id [' + response + '] was sent' );
                          },
