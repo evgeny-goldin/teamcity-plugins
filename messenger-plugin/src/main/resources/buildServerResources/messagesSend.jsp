@@ -10,6 +10,11 @@
 
     var j = jQuery
 
+    function messagesSentDialog( message ) {
+         j( '#messages-sent-text' ).text( message );
+         j( "#messages-sent"      ).dialog({ height : 100, width : 250 });
+    }
+
     j( function() {
 
         j( '#messages-message' ).focus();
@@ -60,13 +65,12 @@
                 j( '#messages-errorselection' ).text( '' );
             }
 
-            j.post( this.action,
-                         j( this ).serialize(),
-                         function( response, status ){
-                             j( '#messages-sent-text' ).text( 'Message "' + response + '" was sent' );
-                             j( "#messages-sent"      ).dialog({ height : 100, width : 250 });
-                         },
-                         'text' );//.error( function() { alert( "Failed to send the message" ); } );
+            j.ajax({ url      : this.action,
+                     data     : j( this ).serialize(),
+                     dataType : 'text',  
+                     success  : function( response ){ messagesSentDialog( 'Message "' + response + '" was sent' ) },
+                     error    : function()          { messagesSentDialog( 'Failed to send the message' ) }
+                    });
 
             return false;
         });
@@ -77,7 +81,7 @@
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span  id="messages-sent-text"></span>
-        <input id="messages-sent-button" type="button" value="Ok"/>
+        <input id="messages-sent-button" type="button" value=" Ok "/>
 	</p>
 </div>
 
