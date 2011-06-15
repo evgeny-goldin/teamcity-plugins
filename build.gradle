@@ -215,9 +215,12 @@ subprojects {
             def teamCityZip = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
             delete( teamCityZip,
                     new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
-                    new File( teamCityDir, "webapps/ROOT/plugins/${project.name}" ),
                     new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ))
-            new File( teamCityDir, "logs" ).eachFile { it.delete() }
+
+            [ "webapps/ROOT/plugins/${project.name}", "logs" ].each {
+                new File( teamCityDir, it ).eachFile{ File f -> project.delete( f ) }
+            }
+
             ant.copy( file: destinationZip, tofile: teamCityZip )
         }
     }
