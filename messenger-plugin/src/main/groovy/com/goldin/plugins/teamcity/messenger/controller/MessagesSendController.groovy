@@ -3,12 +3,12 @@ package com.goldin.plugins.teamcity.messenger.controller
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.web.openapi.WebControllerManager
-import jetbrains.buildServer.web.util.SessionUser
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.web.servlet.ModelAndView
@@ -18,26 +18,23 @@ import org.springframework.web.servlet.ModelAndView
  */
 class MessagesSendController extends MessagesBaseController
 {
-    private final MessagesBean messagesBean
 
-
-    @Requires({ server && manager && messagesBean })
-    MessagesSendController ( SBuildServer server, WebControllerManager manager, MessagesBean messagesBean )
+    @Requires({ server && messagesBean && context && util && manager })
+    MessagesSendController ( SBuildServer         server,
+                             MessagesBean         messagesBean,
+                             MessagesContext      context,
+                             MessagesUtil         util,
+                             WebControllerManager manager )
     {
-        super( server )
-        this.messagesBean = messagesBean
+        super( server, messagesBean, context, util )
         manager.registerController( '/messagesSend.html', this )
     }
 
 
-    @Override
-    @Requires({ request && response })
+    @Requires({ request && user })
     @Ensures({ result != null })
-    protected ModelAndView doHandle ( HttpServletRequest request, HttpServletResponse response )
+    ModelAndView handleRequest ( HttpServletRequest request, SUser user )
     {
-        SUser  user = SessionUser.getUser( request )
-        assert user, 'User is not logged in'
-
         def          sender        = user.username
         def          urgency       = param( request, 'urgency' ).toUpperCase() as Urgency
         def          messageText   = param( request, 'message' )

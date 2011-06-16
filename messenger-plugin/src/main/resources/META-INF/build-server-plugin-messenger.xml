@@ -17,6 +17,7 @@
     <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
 
     <!-- UI Controllers -->
+    <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
     <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesSendController"/>
 
     <!-- UI Extensions -->

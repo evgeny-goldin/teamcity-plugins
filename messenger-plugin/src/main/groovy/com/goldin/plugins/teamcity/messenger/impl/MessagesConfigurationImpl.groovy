@@ -34,5 +34,9 @@ class MessagesConfigurationImpl implements MessagesConfiguration
     @Override
     @Ensures({ result > 0 })
     int getMessageLengthLimit () { 100 }
+
+    @Override
+    @Ensures({ result })
+    String getDateFormatPattern () { 'EEEEEEE, MMMMMM dd, yyyy \'at\' HH:mm' } // "Wed, Jun 15, 2011 at 17:03"
 }
 

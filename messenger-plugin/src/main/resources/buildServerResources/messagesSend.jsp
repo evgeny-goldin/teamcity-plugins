@@ -66,6 +66,7 @@
             }
 
             j.ajax({ url      : this.action,
+                     type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',  
                      success  : function( response ){ messagesSentDialog( 'Message "' + response + '" was sent' ) },

@@ -14,19 +14,19 @@ final class Message
     */
     public enum Urgency { CRITICAL, WARNING, INFO }
 
-    final long            id
-    final MessagesContext context
-    final MessagesUtil    util
+    final long            id            // Message id, assigned when added to messages table: MessagesTable.addMessage()
+    final MessagesContext context       // Context instance
+    final MessagesUtil    util          // Util instance
 
-    final long            timestamp
-    final String          sender
-    final Urgency         urgency
-    final String          message
-    final long            longevity
-    final boolean         sendToAll
-    final Set<String>     sendToGroups
-    final Set<String>     sendToUsers
-    final Set<String>     usersDeleted
+    final long            timestamp     // Message creation timestamp
+    final String          sender        // Message sender, a username
+    final Urgency         urgency       // Message urgency
+    final String          message       // Message text
+    final long            longevity     // Message "longevity", for how many hours should it be kept alive
+    final boolean         sendToAll     // Whether message should be sent to all users
+    final Set<String>     sendToGroups  // Groups message should be sent to
+    final Set<String>     sendToUsers   // Users message should be sent to
+    final Set<String>     usersDeleted  // Users who deleted this message, usernames
 
 
     @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })

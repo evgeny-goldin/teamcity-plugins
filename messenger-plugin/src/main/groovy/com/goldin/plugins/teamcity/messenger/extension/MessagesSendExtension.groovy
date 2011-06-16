@@ -38,8 +38,8 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
     @Requires({ ( model != null ) && server && groupsManager })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        def groups = groupsManager.userGroups*.name
-        def users  = server.userModel.allUsers.users*.username
+        def groups = groupsManager.userGroups*.name.findAll{ it }
+        def users  = server.userModel.allUsers.users*.username.findAll{ it }
 
         assert groups, 'No groups found on the server'
         assert users,  'No users found on the server'
