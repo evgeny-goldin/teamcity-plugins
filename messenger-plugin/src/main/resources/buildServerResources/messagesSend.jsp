@@ -10,9 +10,20 @@
 
     var j = jQuery
 
-    function messagesSentDialog( message ) {
+   /**
+    * Opens a "Message Sent" dialog
+    */
+    function messagesSentDialogOpen( message ) {
          j( '#messages-sent-text' ).text( message );
-         j( "#messages-sent"      ).dialog({ height : 100, width : 250 });
+         j( "#messages-sent"      ).dialog({ height : 100, width : 250, close: messagesSentDialogClose });
+    }
+
+    /**
+     * Closes a "Message Sent" dialog
+     */
+    function messagesSentDialogClose() {
+        j( "#messages-sent"    ).dialog( 'destroy' );
+        j( '#messages-message' ).val( '' ).focus();
     }
 
     j( function() {
@@ -22,10 +33,7 @@
        /**
         * "Message Sent" Ok buton listener
         */
-        j( '#messages-sent-button' ).click( function(){
-            j( "#messages-sent"    ).dialog( 'destroy' );
-            j( '#messages-message' ).val( '' ).focus();
-        });
+        j( '#messages-sent-button' ).click( messagesSentDialogClose );
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
@@ -69,8 +77,8 @@
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',  
-                     success  : function( response ){ messagesSentDialog( 'Message "' + response + '" was sent' ) },
-                     error    : function()          { messagesSentDialog( 'Failed to send the message' ) }
+                     success  : function( response ){ messagesSentDialogOpen( 'Message "' + response + '" was sent' ) },
+                     error    : function()          { messagesSentDialogOpen( 'Failed to send the message' ) }
                     });
 
             return false;

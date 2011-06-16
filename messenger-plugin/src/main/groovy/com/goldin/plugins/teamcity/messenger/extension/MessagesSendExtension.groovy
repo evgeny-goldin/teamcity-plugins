@@ -8,8 +8,8 @@ import jetbrains.buildServer.web.openapi.CustomTab
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.SimplePageExtension
+import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
-
 
 /**
  * Messenger extension
@@ -36,6 +36,7 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
 
     @Override
     @Requires({ ( model != null ) && server && groupsManager })
+    @Ensures({ ( model[ 'groups'] != null ) && ( model[ 'users'] != null ) })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
         def groups = groupsManager.userGroups*.name.findAll{ it }

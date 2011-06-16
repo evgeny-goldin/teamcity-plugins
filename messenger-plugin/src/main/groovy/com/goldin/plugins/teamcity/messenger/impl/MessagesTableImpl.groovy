@@ -39,7 +39,7 @@ class MessagesTableImpl implements MessagesTable
 
     @Override
     @Requires({ message && ( message.id < 0 ) && message.usersDeleted.isEmpty() })
-    @Ensures({  result  && ( result.id  > 0 ) && ( result.timestamp == message.timestamp ) && result.message.is( message.message ) })
+    @Ensures({  result  && ( result.id  > 0 ) && ( result.timestamp == message.timestamp ) })
     Message addMessage ( Message message )
     {
         long    messageId  = nextMessageId()
