@@ -14,16 +14,16 @@
     var messagesSend = {
         dialog : function( message )
         {
-            j( '#messages-sent-dialog' ).text( message );
-            j( "#messages-sent"      ).dialog({ height : 55,
-                                                width  : 230,
-                                                close  : messagesSend.dialogClose });
+            j( '#messages-send-dialog-text' ).text( message );
+            j( '#messages-send-dialog'      ).dialog({ height : 55,
+                                                       width  : 230,
+                                                       close  : messagesSend.dialogClose });
         },
         dialogClose : function()
         {
-            j( "#messages-sent"     ).dialog( 'destroy' );
-            j( '#messages-message'  ).val( '' ).focus();
-            j( '#messages-send'     ).attr({ disabled: null });
+            j( '#messages-send-dialog' ).dialog( 'destroy' );
+            j( '#messages-message'     ).val( '' ).focus();
+            j( '#messages-send'        ).attr({ disabled: null });
         }
     };
 
@@ -34,7 +34,7 @@
        /**
         * "Message Sent" Ok buton listener
         */
-        j( '#messages-sent-dialog-ok' ).click( messagesSend.dialogClose );
+        j( '#messages-send-dialog-ok' ).click( messagesSend.dialogClose );
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
@@ -92,11 +92,11 @@
 </script>
 
 
-<div id="messages-sent" style="display:none; overflow:hidden;">
+<div id="messages-send-dialog" style="display:none; overflow:hidden;">
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        <span id="messages-sent-dialog"></span>
-        <a id="messages-sent-dialog-ok" href="#" style="margin-left: 15px; color: #1564c2">Ok</a>
+        <span id="messages-send-dialog-text"></span>
+        <a id="messages-send-dialog-ok" href="#" style="margin-left: 15px; color: #1564c2">Ok</a>
 	</p>
 </div>
 

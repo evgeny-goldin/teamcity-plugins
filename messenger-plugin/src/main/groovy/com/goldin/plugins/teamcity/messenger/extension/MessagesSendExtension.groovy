@@ -29,8 +29,7 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
         this.server        = server
         this.groupsManager = groupsManager
 
-        addJsFile( 'js/jquery-ui-1.8.13.custom.min.js' )
-        addCssFile( 'css/messenger-plugin.css' )
+        addJsFile(  'js/jquery-ui-1.8.13.custom.min.js' )
         addCssFile( 'css/custom-theme/jquery-ui-1.8.13.custom.css' )
     }
 
