@@ -132,7 +132,7 @@
             </p>
 
             <p><label for="messages-message">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
-                <textarea class="textfield" id="messages-message" name="message" cols="10" rows="8" value=""></textarea>
+                <textarea class="textfield" id="messages-message" name="message" cols="30" rows="12"></textarea>
                 <span class="error" id="messages-errormessage" style="margin-left: 10.5em;"></span>
             </p>
 
