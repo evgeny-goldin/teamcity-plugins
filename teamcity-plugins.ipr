@@ -88,8 +88,8 @@
         <inspection_tool class="XmlUnboundNsPrefix" enabled="false" level="WARNING" enabled_by_default="false" />
       </profile>
     </profiles>
-    <option name="PROJECT_PROFILE" value="TeamCity" />
-    <option name="USE_PROJECT_PROFILE" value="true" />
+    <option name="PROJECT_PROFILE" />
+    <option name="USE_PROJECT_PROFILE" value="false" />
     <version value="1.0" />
   </component>
   <component name="JavadocGenerationManager">

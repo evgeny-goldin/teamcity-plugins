@@ -4,27 +4,27 @@
 <jsp:useBean id="groups" scope="request" type="java.util.Collection"/>
 <jsp:useBean id="users"  scope="request" type="java.util.Collection"/>
 
-<link   rel="stylesheet"       href="">
-<script type="text/javascript" src=""></script>
+
+<style type="text/css">
+    .ui-dialog-titlebar{ display: none; } // Hiding dialog title
+</style>
 <script type="text/javascript">
 
-    var j = jQuery
-
-   /**
-    * Opens a "Message Sent" dialog
-    */
-    function messagesSentDialogOpen( message ) {
-         j( '#messages-sent-text' ).text( message );
-         j( "#messages-sent"      ).dialog({ height : 100, width : 250, close: messagesSentDialogClose });
-    }
-
-    /**
-     * Closes a "Message Sent" dialog
-     */
-    function messagesSentDialogClose() {
-        j( "#messages-sent"    ).dialog( 'destroy' );
-        j( '#messages-message' ).val( '' ).focus();
-    }
+    var j            = jQuery
+    var messagesSend = {
+        dialog : function( message )
+        {
+            j( '#messages-sent-dialog' ).text( message );
+            j( "#messages-sent"      ).dialog({ height : 55,
+                                                width  : 230,
+                                                close  : messagesSend.dialogClose });
+        },
+        dialogClose : function()
+        {
+            j( "#messages-sent"    ).dialog( 'destroy' );
+            j( '#messages-message' ).val( '' ).focus();
+        }
+    };
 
     j( function() {
 
@@ -33,7 +33,7 @@
        /**
         * "Message Sent" Ok buton listener
         */
-        j( '#messages-sent-button' ).click( messagesSentDialogClose );
+        j( '#messages-sent-dialog-ok' ).click( messagesSend.dialogClose );
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
@@ -60,9 +60,9 @@
                 j( '#messages-errormessage' ).text( '' );
             }
 
-            var    recipientsSelected = ( j( '#messages-all' ).attr( 'checked' ) ||
+            var    recipientsSelected = ( j( '#messages-all'    ).attr( 'checked' ) ||
                                           j( '#messages-groups' ).val()          ||
-                                          j( '#messages-users' ).val());
+                                          j( '#messages-users'  ).val());
             if ( ! recipientsSelected )
             {
                 j( '#messages-errorselection' ).text( 'No recipients selected' );
@@ -73,12 +73,23 @@
                 j( '#messages-errorselection' ).text( '' );
             }
 
+            j( '#messages-go'       ).hide();
+            j( '#messages-progress' ).show();
+
             j.ajax({ url      : this.action,
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',  
-                     success  : function( response ){ messagesSentDialogOpen( 'Message "' + response + '" was sent' ) },
-                     error    : function()          { messagesSentDialogOpen( 'Failed to send the message' ) }
+                     success  : function( response ) {
+                         messagesSend.dialog( 'Message "' + response + '" was sent' );
+                     },
+                     error    : function() {
+                         messagesSend.dialog( 'Failed to send the message' );
+                     },
+                     complete : function() {
+                         j( '#messages-go'       ).show();
+                         j( '#messages-progress' ).hide();
+                     }
                     });
 
             return false;
@@ -86,11 +97,12 @@
     })
 </script>
 
-<div id="messages-sent" title="Message Sent" style="display:none; overflow:hidden;">
+
+<div id="messages-sent" style="display:none; overflow:hidden;">
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        <span  id="messages-sent-text"></span>
-        <input id="messages-sent-button" type="button" value=" Ok "/>
+        <span id="messages-sent-dialog"></span>
+        <a id="messages-sent-dialog-ok" href="#" style="margin-left: 15px; color: #1564c2">Ok</a>
 	</p>
 </div>
 
@@ -148,7 +160,7 @@
             </p>
 
             <p>
-                <input type="submit" value="Send" id="messages-go" name="go">
+                <input type="submit" value="Send" id="messages-go" name="go"><img id="messages-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
             </p>
 
         </form>
