@@ -21,8 +21,9 @@
         },
         dialogClose : function()
         {
-            j( "#messages-sent"    ).dialog( 'destroy' );
-            j( '#messages-message' ).val( '' ).focus();
+            j( "#messages-sent"     ).dialog( 'destroy' );
+            j( '#messages-message'  ).val( '' ).focus();
+            j( '#messages-send'     ).attr({ disabled: null });
         }
     };
 
@@ -73,23 +74,16 @@
                 j( '#messages-errorselection' ).text( '' );
             }
 
-            j( '#messages-go'       ).hide();
+            j( '#messages-send'     ).attr({ disabled: 'disabled' });
             j( '#messages-progress' ).show();
 
             j.ajax({ url      : this.action,
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',  
-                     success  : function( response ) {
-                         messagesSend.dialog( 'Message "' + response + '" was sent' );
-                     },
-                     error    : function() {
-                         messagesSend.dialog( 'Failed to send the message' );
-                     },
-                     complete : function() {
-                         j( '#messages-go'       ).show();
-                         j( '#messages-progress' ).hide();
-                     }
+                     success  : function( response ) { messagesSend.dialog( 'Message "' + response + '" was sent' )},
+                     error    : function()           { messagesSend.dialog( 'Failed to send the message' )},
+                     complete : function()           { j( '#messages-progress' ).hide()}
                     });
 
             return false;
@@ -160,9 +154,8 @@
             </p>
 
             <p>
-                <input type="submit" value="Send" id="messages-go" name="go"><img id="messages-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
+                <input type="submit" value="Send" id="messages-send"> <img id="messages-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
             </p>
-
         </form>
     </div>
 </div>
