@@ -21,4 +21,7 @@ interface MessagesConfiguration
 
     @Ensures({ result })
     String getDateFormatPattern()
+
+    @Ensures({ result })
+    String getTimeFormatPattern()
 }

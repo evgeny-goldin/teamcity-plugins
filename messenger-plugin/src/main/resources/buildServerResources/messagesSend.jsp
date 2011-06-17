@@ -12,6 +12,10 @@
 
     var j            = jQuery
     var messagesSend = {
+
+       /**
+        * Opens the dialog with message specified
+        */
         dialog : function( message )
         {
             j( '#messages-send-dialog-text' ).text( message );
@@ -19,6 +23,9 @@
                                                        width  : 230,
                                                        close  : messagesSend.dialogClose });
         },
+        /**
+         * Closes the dialog and enables "Send" button
+         */
         dialogClose : function()
         {
             j( '#messages-send-dialog' ).dialog( 'destroy' );
