@@ -1,8 +1,29 @@
 
 /**
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * "messenger-plugin" custom CSS classes
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
+/**
+ * Text that appears as link
+ */
 a.text-link {
     color: #1564c2; /* Should be identical to "main.css:92" ! */
+}
+
+
+/**
+ * Messages display dialog classes for each urgency level
+ */
+.messages-display-dialog-info {
+    background-color: #f2f3f5
+}
+
+.messages-display-dialog-warning {
+    background-color: blue;
+}
+
+.messages-display-dialog-critical {
+    background-color: red;
 }

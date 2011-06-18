@@ -24,27 +24,35 @@
         messageDisplayed : 0,
 
         /**
+         * Chooses first non-null object
+         */
+        choose : function ( o1, o2 ) { return ( o1 != null ) ? o1 : o2 },
+
+        /**
          * Displays message and title specified in a dialog widget
          */
-        dialog : function( title, text, showDelete, closeAfter ) {
+        dialog : function( options ) {
+
+            var title       = options.title;
+            var text        = options.text;
+            var showDelete  = messagesDisplay.choose( options.showDelete,  true );
+            var closeAfter  = messagesDisplay.choose( options.closeAfter,  -1   );
+            var dialogClass = messagesDisplay.choose( options.dialogClass, ''   );
 
             if ( showDelete ) { j( '#messages-display-dialog-delete' ).show(); }
             else              { j( '#messages-display-dialog-delete' ).hide(); }
 
             j( '#messages-display-dialog-text' ).text( text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
-            j( '#messages-display-dialog' ).dialog({ height   : 80,
-                                                     width    : 490,
-                                                     position : 'top',
-                                                     title    : title,
-                                                     close    : messagesDisplay.dialogClose });
+            j( '#messages-display-dialog' ).dialog({ height      : 80,
+                                                     width       : 490,
+                                                     position    : 'top',
+                                                     dialogClass : dialogClass,
+                                                     title       : title,
+                                                     close       : messagesDisplay.dialogClose });
             if ( closeAfter > 0 )
             {
-                var timeoutId = window.setTimeout( function(){
-                    messagesDisplay.dialogClose();
-                    window.clearTimeout( timeoutId );
-                },
-                closeAfter * 1000 );
+                messagesDisplay.dialogClose.delay( closeAfter );
             }
         },
 
@@ -53,7 +61,9 @@
          */
         dialogMessage : function( message ) {
             j( '#messages-display-id' ).text( message.id );
-            messagesDisplay.dialog( messagesDisplay.titleTemplate.evaluate( message ), message.text, true, -1 );
+            messagesDisplay.dialog({ title       : messagesDisplay.titleTemplate.evaluate( message ),
+                                     text        : message.text,
+                                     dialogClass : 'messages-display-dialog-' + message.urgency });
         },
 
         /**
@@ -61,7 +71,7 @@
          */
         getMessages   : function() {
             j.get( '${action}',
-                   { timestamp: new Date().getTime() },
+                   { timestamp: j.now() },
                    function ( messages )
                    {   /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
                        if ( messages.length > 0 )
@@ -115,10 +125,16 @@
                      data     : { id : messageId },
                      dataType : 'text',
                      success  : function( response ) {
-                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', false, 1 );
+                         messagesDisplay.dialog({ title      : 'Message Deleted',
+                                                  text       : 'Message "' + response + '" was deleted',
+                                                  showDelete : false,
+                                                  closeAfter : 1 });
                      },
                      error    : function() {
-                         messagesDisplay.dialog( 'Message not Deleted', 'Failed to delete message "' + messageId + '"', false, -1 );
+                         messagesDisplay.dialog({ title       : 'Message not Deleted',
+                                                  text        : 'Failed to delete message "' + messageId + '"',
+                                                  showDelete  : false,
+                                                  dialogClass : 'messages-display-dialog-critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
@@ -128,12 +144,12 @@
             return false;
         });
 
-       /**
-        * Setting an interval to fire up a periodic "Get Messages" request
-        */
-        var intervalID = window.setInterval( messagesDisplay.getMessages, ${intervalMs} );
-        messagesDisplay.getMessages();
-        j( window ).unload( function() { window.clearInterval( intervalID ) });
+
+        /**
+         * Setting an interval to fire up a periodic "Get Messages" request
+         * http://api.prototypejs.org/language/PeriodicalExecuter/
+         */
+        new PeriodicalExecuter( messagesDisplay.getMessages, ${intervalMs} );
     })
 </script>
 

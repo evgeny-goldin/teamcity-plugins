@@ -25,11 +25,7 @@
                                                        close  : messagesSend.dialogClose });
             if ( closeAfter > 0 )
             {
-                var timeoutId = window.setTimeout( function(){
-                    messagesSend.dialogClose();
-                    window.clearTimeout( timeoutId );
-                },
-                closeAfter * 1000 );
+                messagesSend.dialogClose.delay( closeAfter );
             }
         },
         /**
