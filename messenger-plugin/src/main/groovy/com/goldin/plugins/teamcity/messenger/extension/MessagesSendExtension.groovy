@@ -38,7 +38,7 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
 
     @Override
     @Requires({ ( model != null ) && server && groupsManager })
-    @Ensures({ ( model[ 'groups'] != null ) && ( model[ 'users'] != null ) })
+    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
         def groups = groupsManager.userGroups*.name.findAll{ it }

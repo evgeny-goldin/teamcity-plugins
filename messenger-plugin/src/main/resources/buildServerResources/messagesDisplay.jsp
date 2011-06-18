@@ -1,8 +1,9 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesDisplayExtension.fillModel() --%>
-<jsp:useBean id="intervalMs" scope="request" type="java.lang.Integer"/>
-<jsp:useBean id="action"     scope="request" type="java.lang.String"/>
+<jsp:useBean id="intervalSec" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="action"      scope="request" type="java.lang.String"/>
+
 
 <style type="text/css">
     .ui-dialog .ui-dialog-content { padding: 0 } /* Disabling widget-enforced text padding in dialog */
@@ -149,7 +150,8 @@
          * Setting an interval to fire up a periodic "Get Messages" request
          * http://api.prototypejs.org/language/PeriodicalExecuter/
          */
-        new PeriodicalExecuter( messagesDisplay.getMessages, ${intervalMs} );
+        new PeriodicalExecuter( messagesDisplay.getMessages, ${intervalSec} );
+        messagesDisplay.getMessages();
     })
 </script>
 
