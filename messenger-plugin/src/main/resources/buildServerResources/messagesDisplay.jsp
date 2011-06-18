@@ -21,7 +21,11 @@
         /**
          * Displays message and title specified in a dialog widget
          */
-        dialog : function( title, text, closeAfter ) {
+        dialog : function( title, text, showDelete, closeAfter ) {
+
+            if ( showDelete ) { j( '#messages-display-dialog-delete' ).show(); }
+            else              { j( '#messages-display-dialog-delete' ).hide(); }
+
             j( '#messages-display-dialog-text' ).text( text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
             j( '#messages-display-dialog' ).dialog({ height   : 80,
@@ -38,13 +42,13 @@
                 closeAfter * 1000 );
             }
         },
-                
+
         /**
          * Displays message specified in a dialog widget
          */
         dialogMessage : function( message ) {
             j( '#messages-display-id' ).text( message.id );
-            messagesDisplay.dialog( messagesDisplay.titleTemplate.evaluate( message ), message.text, -1 );
+            messagesDisplay.dialog( messagesDisplay.titleTemplate.evaluate( message ), message.text, true, -1 );
         },
 
         /**
@@ -98,10 +102,10 @@
                      data     : { id : messageId },
                      dataType : 'text',
                      success  : function( response ) {
-                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', 2 );
+                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', false, 2 );
                      },
                      error    : function() {
-                         messagesDisplay.dialog( 'Message not Deleted', 'Failed to delete message "' + messageId + '"', -1 );
+                         messagesDisplay.dialog( 'Message not Deleted', 'Failed to delete message "' + messageId + '"', false, -1 );
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
@@ -112,10 +116,11 @@
         });
 
        /**
-        * Setting interval to fire up a periodic "Get Messages" request
+        * Setting an interval to fire up a periodic "Get Messages" request
         */
-        window.setInterval( messagesDisplay.getMessages, ${intervalMs} );
+        var intervalID = window.setInterval( messagesDisplay.getMessages, ${intervalMs} );
         messagesDisplay.getMessages();
+        j( window ).unload( function() { window.clearInterval( intervalID ) });
     })
 </script>
 
@@ -126,8 +131,7 @@
         <span id="messages-display-dialog-text"></span>
         <br/>
         <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">[Close]</a>
-        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 10px">[Delete]</a>
+        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 10px; display: none">[Delete]</a>
         <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
 	</p>
 </div>
-
