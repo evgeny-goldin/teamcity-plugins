@@ -17,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView
  */
 class MessagesSendController extends MessagesBaseController
 {
+    static final String MAPPING = 'messagesSend.html'
+
+
     @Requires({ server && messagesBean && context && util && manager })
     MessagesSendController ( SBuildServer         server,
                              MessagesBean         messagesBean,
@@ -25,7 +28,7 @@ class MessagesSendController extends MessagesBaseController
                              WebControllerManager manager )
     {
         super( server, messagesBean, context, util )
-        manager.registerController( '/messagesSend.html', this )
+        manager.registerController( "/$MAPPING", this )
     }
 
 

@@ -10,6 +10,7 @@ import jetbrains.buildServer.web.openapi.SimplePageExtension
 import jetbrains.buildServer.web.util.WebUtil
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
+import com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController
 
 /**
  * Messenger extension
@@ -49,6 +50,6 @@ class MessagesDisplayExtension extends SimplePageExtension
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
         model << [ intervalMs : ( ajaxRequestInterval * 1000 ),
-                   action     : 'messagesDisplay.html' ]
+                   action     : MessagesDisplayController.MAPPING ]
     }
 }

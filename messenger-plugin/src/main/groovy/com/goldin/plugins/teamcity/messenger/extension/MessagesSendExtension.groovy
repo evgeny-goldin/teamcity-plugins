@@ -10,6 +10,7 @@ import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
+import com.goldin.plugins.teamcity.messenger.controller.MessagesSendController
 
 /**
  * Messenger extension
@@ -48,7 +49,7 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
 
         model << [ groups : groups,
                    users  : users,
-                   action : 'messagesSend.html' ]
+                   action : MessagesSendController.MAPPING ]
     }
 
 

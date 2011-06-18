@@ -13,26 +13,52 @@
 
         /**
          * Template to be used for message title
-         * http://api.prototypejs.org/language/Template/
+         * See http://api.prototypejs.org/language/Template/
+         *     MessagesDisplayController.handleRequest()
          */
         titleTemplate : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
 
         /**
-         * Makes an Ajax request, retrieves messages for the current user and shows them in a dialog
+         * Displays message and title specified in a dialog widget
+         */
+        dialog : function( title, text, closeAfter ) {
+            j( '#messages-display-dialog-text' ).text( text );
+            j( '#messages-display-dialog' ).dialog( 'destroy' );
+            j( '#messages-display-dialog' ).dialog({ height   : 80,
+                                                     width    : 490,
+                                                     position : 'top',
+                                                     title    : title,
+                                                     close    : messagesDisplay.dialogClose });
+            if ( closeAfter > 0 )
+            {
+                var timeoutId = window.setTimeout( function(){
+                    messagesDisplay.dialogClose();
+                    window.clearTimeout( timeoutId );
+                },
+                closeAfter * 1000 );
+            }
+        },
+                
+        /**
+         * Displays message specified in a dialog widget
+         */
+        dialogMessage : function( message ) {
+            j( '#messages-display-id' ).text( message.id );
+            messagesDisplay.dialog( messagesDisplay.titleTemplate.evaluate( message ), message.text, -1 );
+        },
+
+        /**
+         * Makes an Ajax request, retrieves messages for the current user and shows the first one in a dialog
          */
         getMessages   : function() {
             j.get( '${action}',
                    { timestamp: new Date().getTime() },
                    function ( messages )
-                   {   /* JSON array of messages, as sent by MessagesDisplayController */
-                       j.each( messages, function( index, m ) {
-                           j( '#messages-display-dialog-text' ).text( m.text );
-                           j( '#messages-display-dialog'      ).dialog({ height   : 80,
-                                                                         width    : 490,
-                                                                         position : 'top',
-                                                                         title    : messagesDisplay.titleTemplate.evaluate( m ),
-                                                                         close    : messagesDisplay.dialogClose });
-                       });
+                   {   /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
+                       if ( messages.length > 0 ) {
+                           // Store all messages !!!
+                           messagesDisplay.dialogMessage( messages[ 0 ] )
+                       }
                    },
                    'json'
             );
@@ -43,6 +69,7 @@
          */
         dialogClose : function()
         {
+            // Display next message  !!!
             j( '#messages-display-dialog' ).dialog( 'destroy' );
         }
     };
@@ -61,15 +88,26 @@
         * Message "Delete" button listener
         */
         j( '#messages-display-dialog-delete' ).click( function(){
-            j( '#messages-display-progress' ).show();
-            j.get( '${action}',
-                   { id: '1111', timestamp: new Date().getTime() },
-                   function ( messages ) {
 
-                   },
-                   'text'
-            );
-            messagesDisplay.dialogClose();
+            var messageId = j( '#messages-display-id' ).text();
+
+            j( '#messages-display-progress' ).show();
+            
+            j.ajax({ url      : '${action}',
+                     type     : 'POST',
+                     data     : { id : messageId },
+                     dataType : 'text',
+                     success  : function( response ) {
+                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', 2 );
+                     },
+                     error    : function() {
+                         messagesDisplay.dialog( 'Message not Deleted', 'Failed to delete message "' + messageId + '"', -1 );
+                     },
+                     complete : function() {
+                         j( '#messages-display-progress' ).hide();
+                     }
+                    });
+            
             return false;
         });
 
@@ -81,7 +119,8 @@
     })
 </script>
 
-<div id="messages-display-dialog" style="display:none; overflow:hidden;">
+<div id="messages-display-dialog"  style="display:none; overflow:hidden;">
+    <span id="messages-display-id" style="display:none;"></span>
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>

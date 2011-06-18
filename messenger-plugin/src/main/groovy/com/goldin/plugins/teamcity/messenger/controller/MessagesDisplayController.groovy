@@ -16,6 +16,8 @@ import com.goldin.plugins.teamcity.messenger.api.*
  */
 class MessagesDisplayController extends MessagesBaseController
 {
+    static final String MAPPING = 'messagesDisplay.html'
+
     private final DateFormat dateFormatter
     private final DateFormat timeFormatter
 
@@ -31,7 +33,7 @@ class MessagesDisplayController extends MessagesBaseController
         super( server, messagesBean, context, util )
         this.dateFormatter = new SimpleDateFormat( config.dateFormatPattern, context.locale )
         this.timeFormatter = new SimpleDateFormat( config.timeFormatPattern, context.locale )
-        manager.registerController( '/messagesDisplay.html', this )
+        manager.registerController( "/$MAPPING", this )
     }
 
     
@@ -39,6 +41,19 @@ class MessagesDisplayController extends MessagesBaseController
     @Ensures({ result != null })
     ModelAndView handleRequest ( Map<String, ?> requestParams, SUser user, String username )
     {
+        String messageId = requestParams[ 'id' ]
+        
+        if ( messageId )
+        {   /**
+             * User deletes message displayed
+             */
+            messagesBean.deleteMessageByUser( messageId as long, username )
+            return new ModelAndView( new TextView( messageId, context.locale ))
+        }
+
+        /**
+         * User retrieves all his messages
+         */
         def groups   = context.getUserGroups( username )
         def messages = messagesBean.getMessagesForUser( username ).collect {
             Message m ->
