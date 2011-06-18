@@ -1,5 +1,7 @@
 package com.goldin.plugins.teamcity.messenger.api
 
+import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Requires
 
 /**
  * Bean sending messages and retrieving messages sent
@@ -12,6 +14,8 @@ interface MessagesBean
     * @param message message to send
     * @return message id
     */
+    @Requires({ message && ( message.id < 0 )})
+    @Ensures({ result > 0 })
     long sendMessage( Message message )
 
 
@@ -20,6 +24,8 @@ interface MessagesBean
      * @param username recipient username
      * @return messages addressed to user specified
      */
+    @Requires({ username })
+    @Ensures({ result.isEmpty() || result.each{ Message m -> m.forUser( username ) } })
     List<Message> getMessagesForUser( String username )
 
 
@@ -28,6 +34,8 @@ interface MessagesBean
      * @param messageId message id to delete
      * @return message deleted
      */
+    @Requires({ messageId > 0 })
+    @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessage( long messageId )
 
 
@@ -37,5 +45,7 @@ interface MessagesBean
      * @param username username of the person who deleted his message
      * @return message deleted
      */
+    @Requires({ ( messageId > 0 ) && username })
+    @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessageByUser( long messageId, String username )
 }

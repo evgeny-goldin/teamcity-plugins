@@ -5,7 +5,6 @@ import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
-import javax.servlet.http.HttpServletRequest
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.web.openapi.WebControllerManager
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView
  */
 class MessagesSendController extends MessagesBaseController
 {
-
     @Requires({ server && messagesBean && context && util && manager })
     MessagesSendController ( SBuildServer         server,
                              MessagesBean         messagesBean,
@@ -31,30 +29,29 @@ class MessagesSendController extends MessagesBaseController
     }
 
 
-    @Requires({ request && user })
+    @Requires({ requestParams && user && username })
     @Ensures({ result != null })
-    ModelAndView handleRequest ( HttpServletRequest request, SUser user )
+    ModelAndView handleRequest ( Map<String, ?> requestParams, SUser user, String username )
     {
-        def          sender        = user.username
-        def          urgency       = param( request, 'urgency' ).toUpperCase() as Urgency
-        def          messageText   = param( request, 'message' )
-        long         longevity     = longevity( request )
-        boolean      sendToAll     = request.getParameter( 'all' ) as boolean
-        List<String> sendToGroups  = params( request, 'groups', false ) // Values are not sent
-        List<String> sendToUsers   = params( request, 'users',  false ) // when groups/users are disabled
-        Message      message       = new Message( sender, urgency, messageText, longevity, sendToAll, sendToGroups, sendToUsers )
+        Urgency      urgency       = param( requestParams, 'urgency' ).toUpperCase() as Urgency
+        String       messageText   = param( requestParams, 'message' )
+        long         longevity     = longevity( requestParams )
+        boolean      sendToAll     = param( requestParams,  'all',    false ) as boolean
+        List<String> sendToGroups  = params( requestParams, 'groups', false ) // Values are not sent
+        List<String> sendToUsers   = params( requestParams, 'users',  false ) // when groups/users are disabled
+        Message      message       = new Message( username, urgency, messageText, longevity, sendToAll, sendToGroups, sendToUsers )
         long         messageId     = messagesBean.sendMessage( message )
 
-        new ModelAndView( new TextView( messageId as String ))
+        new ModelAndView( new TextView( messageId as String, context.locale ))
     }
 
 
-    @Requires({ request })
+    @Requires({ requestParams })
     @Ensures({ result > 0 })
-    private long longevity ( HttpServletRequest request )
+    private long longevity ( Map<String, ?> requestParams)
     {
-        long   number = param( request, 'longevity-number' ) as long
-        String unit   = param( request, 'longevity-unit'   )
+        long   number = param( requestParams, 'longevity-number' ) as long
+        String unit   = param( requestParams, 'longevity-unit'   )
 
         number * (( 'hours'  == unit ) ? 1       :
                   ( 'days'   == unit ) ? 24      :

@@ -21,7 +21,7 @@
         {
             j( '#messages-send-dialog-text' ).text( message );
             j( '#messages-send-dialog'      ).dialog({ height : 55,
-                                                       width  : 230,
+                                                       width  : 240,
                                                        close  : messagesSend.dialogClose });
         },
         /**
@@ -104,7 +104,7 @@
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-send-dialog-text"></span>
-        <a id="messages-send-dialog-ok" href="#" class="text-link" style="margin-left: 15px">Ok</a>
+        <a id="messages-send-dialog-ok" href="#" class="text-link" style="float: right">[Ok]</a>
 	</p>
 </div>
 

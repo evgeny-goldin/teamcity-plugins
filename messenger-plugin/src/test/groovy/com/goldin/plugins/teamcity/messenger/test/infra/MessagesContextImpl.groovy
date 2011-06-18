@@ -19,5 +19,8 @@ class MessagesContextImpl implements MessagesContext
     SUser getUser ( String username ) { null }
 
     @Override
+    Locale getLocale () { Locale.US }
+
+    @Override
     Set<String> getUserGroups ( String username ) { [ Constants.TEST_GROUP ] }
 }

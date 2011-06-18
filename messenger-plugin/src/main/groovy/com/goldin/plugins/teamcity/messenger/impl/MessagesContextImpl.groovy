@@ -72,6 +72,10 @@ $beans"""   )
 
 
     @Override
+    Locale getLocale () { Locale.US }
+
+
+    @Override
     @Requires({ username })
     @Ensures({ ( result != null ) || ( result == null )})
     SUser getUser ( String username )

@@ -38,37 +38,70 @@ abstract class MessagesBaseController extends BaseController
     }
 
 
-    abstract ModelAndView handleRequest( HttpServletRequest request, SUser currentUser )
+    abstract ModelAndView handleRequest( Map<String, ?> requestParams, SUser currentUser, String username )
     
 
 //    @Requires({ request && name })
 //    @Ensures({ result })
-    String param( HttpServletRequest request, String name, boolean failIfMissing = true )
+    String param( Map<String, ?> requestParams,
+                  String         name,
+                  boolean        failIfMissing = true,
+                  boolean        trim          = true )
     {
-        String parameter = request.getParameter( name ) ?: ''
-        assert ( ! failIfMissing ) || parameter, \
-               "Requests contains no parameter [$name]. It contains paramaters ${ request.parameterMap.keySet() }"
-        parameter.trim()
+        if ( requestParams.containsKey( name ))
+        {
+            Object o = requestParams[ name ]
+            assert o instanceof String, "Requests contains parameter [$name], but it's not a String - [$o][${ o.class.name }]"
+            trim ? ( o as String ).trim() : o
+        }
+        else
+        {
+            assert ( ! failIfMissing ), "Requests contains no parameter [$name]. It contains paramaters ${ requestParams.keySet() }"
+            ''
+        }
     }
 
 
 //    @Requires({ request && name })
 //    @Ensures({ result })
-    List<String> params( HttpServletRequest request, String name, boolean failIfMissing = true )
+    List<String> params( Map<String, ?> requestParams,
+                         String         name,
+                         boolean        failIfMissing = true,
+                         boolean        trim          = true )
     {
-        Set<String> parameters = ( request.getParameterValues( name ) ?: [] ) as List
-        assert ( ! failIfMissing ) || parameters, \
-               "Requests contains no parameters [$name]. It contains paramaters ${ request.parameterMap.keySet() }"
-        parameters*.trim()
+        if ( requestParams.containsKey( name ))
+        {
+            Object       o    = requestParams[ name ]
+            List<String> list = ( o instanceof String ) ? [ o ]      :
+                                ( o instanceof List   ) ? ( List ) o : null
+
+            assert ( list != null ), \
+                   "Requests contains parameter [$name], but it's neither a String nor a List - [$o][${ o.class.name }]"
+
+            ( trim ? list*.trim() : list )
+        }
+        else
+        {
+            assert ( ! failIfMissing ), "Requests contains no parameter [$name]. It contains paramaters ${ requestParams.keySet() }"
+            []
+        }
     }
 
     
     @Override
+    @Requires({ request && response })
     protected ModelAndView doHandle ( HttpServletRequest request, HttpServletResponse response )
     {
         SUser  user = SessionUser.getUser( request )
         assert user, 'User is not logged in'
 
-        handleRequest( request, user )
+        Map<String, ?> requestParams = [:]
+        for ( String param in request.parameterNames )
+        {
+            String[] values        = request.getParameterValues( param )
+            requestParams[ param ] = ( values?.size() == 1 ) ? values[ 0 ] : values?.toList()
+        }
+
+        handleRequest( requestParams, user, user.username )
     }
 }

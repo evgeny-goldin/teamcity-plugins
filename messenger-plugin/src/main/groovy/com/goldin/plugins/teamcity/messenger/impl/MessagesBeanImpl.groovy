@@ -1,6 +1,5 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
 
@@ -26,8 +25,6 @@ class MessagesBeanImpl implements MessagesBean
 
 
     @Override
-    @Requires({ message && ( message.id < 0 )})
-    @Ensures({ result > 0 })
     long sendMessage ( Message message )
     {
         assert ( context.isTest() || context.getUser( message.sender )), "Sender [${ message.sender }] doesn't exist"
@@ -36,8 +33,6 @@ class MessagesBeanImpl implements MessagesBean
 
     
     @Override
-    @Requires({ username })
-    @Ensures({ result.isEmpty() || result.each{ it.forUser( username ) } })
     List<Message> getMessagesForUser ( String username )
     {
         List<Message> messages = []
@@ -54,8 +49,6 @@ class MessagesBeanImpl implements MessagesBean
 
     
     @Override
-    @Requires({ messageId > 0 })
-    @Ensures({ result && ( result.id == messageId ) && ( ! messagesTable.containsMessage( result.id )) })
     Message deleteMessage ( long messageId )
     {
         messagesTable.deleteMessage( messageId )
@@ -63,8 +56,6 @@ class MessagesBeanImpl implements MessagesBean
 
     
     @Override
-    @Requires({ ( messageId > 0  ) && username })
-    @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessageByUser ( long messageId, String username )
     {
         messagesTable.deleteMessageByUser( messageId, username )

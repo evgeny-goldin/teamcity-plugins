@@ -61,7 +61,14 @@
         * Message "Delete" button listener
         */
         j( '#messages-display-dialog-delete' ).click( function(){
-            
+            j( '#messages-display-progress' ).show();
+            j.get( '${action}',
+                   { id: '1111', timestamp: new Date().getTime() },
+                   function ( messages ) {
+
+                   },
+                   'text'
+            );
             messagesDisplay.dialogClose();
             return false;
         });
@@ -79,8 +86,8 @@
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>
         <br/>
-        <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">Close</a>
-        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">Delete</a>
+        <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">[Close]</a>
+        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 10px">[Delete]</a>
         <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
 	</p>
 </div>

@@ -12,24 +12,36 @@ import org.springframework.web.servlet.View
 class TextView implements View
 {
     private final String text
+    private final String mimeType
+    private final String charset
+    private final Locale locale
 
 
-    @Requires({ text })
-    TextView ( String text )
+    @Requires({ text && mimeType && charset && locale })
+    TextView ( String text, String mimeType = 'text/plain', String charset = 'UTF-8', Locale locale )
     {
-        this.text = text
+        this.text     = text
+        this.mimeType = mimeType
+        this.charset  = charset
+        this.locale   = locale
     }
 
     
     @Override
     @Ensures({ result })
-    String getContentType () { 'text/plain; charset=UTF-8' }
+    String getContentType () { "$mimeType;charset=$charset" }
 
     
     @Override
     @Requires({ response })
     void render ( Map model, HttpServletRequest request, HttpServletResponse response )
     {
+        response.contentType       = contentType
+        response.characterEncoding = charset
+        response.contentLength     = text.getBytes( charset ).size()
+        response.locale            = locale
+        
         response.writer.print( text )
+        response.writer.flush()
     }
 }

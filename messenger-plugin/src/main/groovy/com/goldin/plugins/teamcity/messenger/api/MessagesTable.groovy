@@ -1,6 +1,5 @@
 package com.goldin.plugins.teamcity.messenger.api
 
-
 /**
  * Messages storage
  */
@@ -11,7 +10,7 @@ interface MessagesTable
     Message getMessage( long messageId )
 
     Message deleteMessage( long messageId )
-    
+
     Message deleteMessageByUser ( long messageId, String username )
 
     List<Message> getAllMessages()

@@ -3,7 +3,6 @@ package com.goldin.plugins.teamcity.messenger.controller
 import groovy.json.JsonBuilder
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import javax.servlet.http.HttpServletRequest
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.web.openapi.WebControllerManager
@@ -17,6 +16,7 @@ import com.goldin.plugins.teamcity.messenger.api.*
  */
 class MessagesDisplayController extends MessagesBaseController
 {
+    private final Locale     locale
     private final DateFormat dateFormatter
     private final DateFormat timeFormatter
 
@@ -30,17 +30,17 @@ class MessagesDisplayController extends MessagesBaseController
                                 WebControllerManager  manager )
     {
         super( server, messagesBean, context, util )
-        this.dateFormatter = new SimpleDateFormat( config.dateFormatPattern, Locale.US )
-        this.timeFormatter = new SimpleDateFormat( config.timeFormatPattern, Locale.US )
+        this.locale        = context.locale
+        this.dateFormatter = new SimpleDateFormat( config.dateFormatPattern, context.locale )
+        this.timeFormatter = new SimpleDateFormat( config.timeFormatPattern, context.locale )
         manager.registerController( '/messagesDisplay.html', this )
     }
 
     
-    @Requires({ request && user })
+    @Requires({ requestParams && user && username })
     @Ensures({ result != null })
-    ModelAndView handleRequest ( HttpServletRequest request, SUser user )
+    ModelAndView handleRequest ( Map<String, ?> requestParams, SUser user, String username )
     {
-        def username = user.username
         def groups   = context.getUserGroups( username )
         def messages = messagesBean.getMessagesForUser( username ).collect {
             Message m ->
@@ -59,6 +59,6 @@ class MessagesDisplayController extends MessagesBaseController
               time      : timeFormatter.format( new Date( m.timestamp ))]
         }
 
-        new ModelAndView( new TextView( new JsonBuilder( messages ).toString()))
+        new ModelAndView( new TextView( new JsonBuilder( messages ).toString(), 'application/json', locale ))
     }
 }
