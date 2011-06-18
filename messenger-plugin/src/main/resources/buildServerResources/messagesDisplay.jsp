@@ -14,9 +14,14 @@
         /**
          * Template to be used for message title
          * See http://api.prototypejs.org/language/Template/
-         *     MessagesDisplayController.handleRequest()
          */
         titleTemplate : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
+
+       /**
+        * User messages and index of the message currently displayed
+        */
+        messages         : [],
+        messageDisplayed : 0,
 
         /**
          * Displays message and title specified in a dialog widget
@@ -59,9 +64,11 @@
                    { timestamp: new Date().getTime() },
                    function ( messages )
                    {   /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
-                       if ( messages.length > 0 ) {
-                           // Store all messages !!!
-                           messagesDisplay.dialogMessage( messages[ 0 ] )
+                       if ( messages.length > 0 )
+                       {
+                           messagesDisplay.messages         = messages.slice( 0 ); // Shallow copying messages array
+                           messagesDisplay.messageDisplayed = 0;
+                           messagesDisplay.dialogMessage( messagesDisplay.messages[ messagesDisplay.messageDisplayed ] );
                        }
                    },
                    'json'
@@ -73,8 +80,14 @@
          */
         dialogClose : function()
         {
-            // Display next message  !!!
-            j( '#messages-display-dialog' ).dialog( 'destroy' );
+            if ( messagesDisplay.messageDisplayed < ( messagesDisplay.messages.length - 1 ))
+            {
+                messagesDisplay.dialogMessage( messagesDisplay.messages[ ++ messagesDisplay.messageDisplayed ] );
+            }
+            else
+            {
+                j( '#messages-display-dialog' ).dialog( 'destroy' );
+            }
         }
     };
 
@@ -102,7 +115,7 @@
                      data     : { id : messageId },
                      dataType : 'text',
                      success  : function( response ) {
-                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', false, 2 );
+                         messagesDisplay.dialog( 'Message Deleted', 'Message "' + response + '" was deleted', false, 1 );
                      },
                      error    : function() {
                          messagesDisplay.dialog( 'Message not Deleted', 'Failed to delete message "' + messageId + '"', false, -1 );

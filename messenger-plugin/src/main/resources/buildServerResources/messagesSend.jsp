@@ -17,12 +17,20 @@
        /**
         * Opens the dialog with message specified
         */
-        dialog : function( message )
+        dialog : function( message, closeAfter )
         {
             j( '#messages-send-dialog-text' ).text( message );
             j( '#messages-send-dialog'      ).dialog({ height : 55,
                                                        width  : 240,
                                                        close  : messagesSend.dialogClose });
+            if ( closeAfter > 0 )
+            {
+                var timeoutId = window.setTimeout( function(){
+                    messagesSend.dialogClose();
+                    window.clearTimeout( timeoutId );
+                },
+                closeAfter * 1000 );
+            }
         },
         /**
          * Closes the dialog and enables "Send" button
@@ -89,8 +97,8 @@
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',  
-                     success  : function( response ) { messagesSend.dialog( 'Message "' + response + '" was sent' )},
-                     error    : function()           { messagesSend.dialog( 'Failed to send the message' )},
+                     success  : function( response ) { messagesSend.dialog( 'Message "' + response + '" was sent', 1 )},
+                     error    : function()           { messagesSend.dialog( 'Failed to send the message',         -1 )},
                      complete : function()           { j( '#messages-send-progress' ).hide()}
                     });
 
