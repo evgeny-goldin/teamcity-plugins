@@ -124,10 +124,11 @@
             messagesDisplay.messageDisplayed = messagesDisplay.nextIndex( messagesDisplay.messageDisplayed );
             if ( messagesDisplay.messageDisplayed == 0 )
             {
+                // User has cycled through all messages in the list, dialog is closed
                 j( '#messages-display-dialog' ).dialog( 'destroy' );
             }
             else
-            {
+            {   // Showing next message in a dialog
                 messagesDisplay.dialogMessage();
             }
         }
