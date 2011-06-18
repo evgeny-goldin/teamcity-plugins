@@ -36,11 +36,12 @@ class TextView implements View
     @Requires({ response })
     void render ( Map model, HttpServletRequest request, HttpServletResponse response )
     {
+        def bytes              = text.getBytes( charset )
         response.contentType   = contentType
-        response.contentLength = text.getBytes( charset ).size()
+        response.contentLength = bytes.size()
         response.locale        = locale
         
-        response.writer.print( text )
-        response.writer.flush()
+        response.outputStream.write( bytes )
+        response.outputStream.flush()
     }
 }
