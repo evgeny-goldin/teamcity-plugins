@@ -1,5 +1,12 @@
-<jsp:useBean id="intervalMs" scope="request" type="java.lang.Integer"/>
+<%@ include file="/include.jsp" %>
 
+<%-- MessagesDisplayExtension.fillModel() --%>
+<jsp:useBean id="intervalMs" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="action"     scope="request" type="java.lang.String"/>
+
+<style type="text/css">
+    .ui-dialog .ui-dialog-content { padding: 0 } /* Disabling widget-enforced text padding in dialog */
+</style>
 <script type="text/javascript">
     var j               = jQuery
     var messagesDisplay = {
@@ -13,17 +20,18 @@
         /**
          * Makes an Ajax request, retrieves messages for the current user and shows them in a dialog
          */
-        makeRequest   : function() {
-            j.get( 'messagesDisplay.html',
+        getMessages   : function() {
+            j.get( '${action}',
                    { timestamp: new Date().getTime() },
                    function ( messages )
                    {   /* JSON array of messages, as sent by MessagesDisplayController */
                        j.each( messages, function( index, m ) {
-                           j( '#messages-display-dialog'      ).attr({ title : messagesDisplay.titleTemplate.evaluate( m ) });
                            j( '#messages-display-dialog-text' ).text( m.text );
-                           j( '#messages-display-dialog'      ).dialog({ height : 150,
-                                                                         width  : 550,
-                                                                         close  : messagesDisplay.dialogClose });
+                           j( '#messages-display-dialog'      ).dialog({ height   : 80,
+                                                                         width    : 490,
+                                                                         position : 'top',
+                                                                         title    : messagesDisplay.titleTemplate.evaluate( m ),
+                                                                         close    : messagesDisplay.dialogClose });
                        });
                    },
                    'json'
@@ -41,18 +49,20 @@
 
     j( function() {
 
-        /**
-         * Message "Close" button listener
-         */
-         j( '#messages-display-dialog-close' ).click( messagesDisplay.dialogClose );
+       /**
+        * Message "Close" button listener
+        */
+        j( '#messages-display-dialog-close' ).click( function(){ messagesDisplay.dialogClose(); return false; });
 
-
-        window.setInterval( messagesDisplay.makeRequest, ${intervalMs} );
-        messagesDisplay.makeRequest();
+       /**
+        * Setting interval to fire up a periodic "Get Messages" request
+        */
+        window.setInterval( messagesDisplay.getMessages, ${intervalMs} );
+        messagesDisplay.getMessages();
     })
 </script>
 
-<div id="messages-display-dialog" title="" style="display:none; overflow:hidden;">
+<div id="messages-display-dialog" style="display:none; overflow:hidden;">
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>

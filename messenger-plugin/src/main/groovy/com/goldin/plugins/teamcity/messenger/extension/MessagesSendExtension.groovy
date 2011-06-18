@@ -46,7 +46,9 @@ class MessagesSendExtension extends SimplePageExtension implements CustomTab
         assert groups, 'No groups found on the server'
         assert users,  'No users found on the server'
 
-        model << [ groups: groups, users : users ]
+        model << [ groups : groups,
+                   users  : users,
+                   action : 'messagesSend.html' ]
     }
 
 

@@ -48,6 +48,7 @@ class MessagesDisplayExtension extends SimplePageExtension
     @Ensures({ model[ 'intervalMs' ] > 0 })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        model[ 'intervalMs' ] = ( ajaxRequestInterval * 1000 )
+        model << [ intervalMs : ( ajaxRequestInterval * 1000 ),
+                   action     : 'messagesDisplay.html' ]
     }
 }

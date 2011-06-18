@@ -1,12 +1,13 @@
 <%@ include file="/include.jsp" %>
 
-
-<jsp:useBean id="groups" scope="request" type="java.util.Collection"/>
-<jsp:useBean id="users"  scope="request" type="java.util.Collection"/>
+<%-- MessagesSendExtension.fillModel() --%>
+<jsp:useBean id="groups"  scope="request" type="java.util.Collection"/>
+<jsp:useBean id="users"   scope="request" type="java.util.Collection"/>
+<jsp:useBean id="action"  scope="request" type="java.lang.String"/>
 
 
 <style type="text/css">
-    .ui-dialog-titlebar{ display: none; } // Hiding dialog title
+    .ui-dialog-titlebar{ display: none } /* Hiding dialog title */
 </style>
 <script type="text/javascript">
 
@@ -41,7 +42,7 @@
        /**
         * "Message Sent" Ok button listener
         */
-        j( '#messages-send-dialog-ok' ).click( messagesSend.dialogClose );
+        j( '#messages-send-dialog-ok' ).click( function(){ messagesSend.dialogClose(); return false; });
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
@@ -109,7 +110,7 @@
 
 <div class="settingsBlock" style="">
     <div style="background-color:#fff; padding: 10px;">
-        <form action="messagesSend.html" method="post" id="messages-form">
+        <form action="${action}" method="post" id="messages-form">
 
             <p>
                 <label for="messages-urgency">Urgency: </label>
