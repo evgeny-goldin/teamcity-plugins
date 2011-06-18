@@ -121,20 +121,13 @@
          */
         dialogClose : function()
         {
-            var messageClosed = messagesDisplay.messageDisplayed;
-            var nextMessage   = messagesDisplay.nextIndex( messageClosed );
-
-            for ( ;
-                  messagesDisplay.messages[ nextMessage ].deleted && ( nextMessage != messageClosed );
-                  nextMessage = messagesDisplay.nextIndex( nextMessage )){}
-
-            if ( nextMessage == messageClosed )
-            {   // Same place: all messages in the list are deleted or there's a single message in the list
+            messagesDisplay.messageDisplayed = messagesDisplay.nextIndex( messagesDisplay.messageDisplayed );
+            if ( messagesDisplay.messageDisplayed == 0 )
+            {
                 j( '#messages-display-dialog' ).dialog( 'destroy' );
             }
             else
             {
-                messagesDisplay.messageDisplayed = nextMessage;
                 messagesDisplay.dialogMessage();
             }
         }
@@ -168,9 +161,10 @@
                          var displayedMessage = messagesDisplay.messages[ messagesDisplay.messageDisplayed ];
 
                          messagesDisplay.assert( messageId == displayedMessage.id,
-                                                 'delete() click: [' + messageId + '] != [' + displayedMessage.id + ']' );
-                         
-                         displayedMessage.deleted = true;
+                                                 'delete() click: [' + messageId + '] != [' + displayedMessage.id + '] (displayedMessage.id)' );
+
+                         messagesDisplay.assert( messageId == response,
+                                                 'delete() click: [' + messageId + '] != [' + response + '] (response)' );
 
                          messagesDisplay.dialog({ title      : 'Message Deleted',
                                                   text       : 'Message "' + response + '" was deleted',
