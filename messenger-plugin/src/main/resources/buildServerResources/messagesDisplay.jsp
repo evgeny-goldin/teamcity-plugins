@@ -41,12 +41,12 @@
 
             var title       = options.title;
             var text        = options.text;
-            var showDelete  = messagesDisplay.choose( options.showDelete,  true );
-            var closeAfter  = messagesDisplay.choose( options.closeAfter,  -1   );
-            var urgency     = messagesDisplay.choose( options.urgency,     ''   );
+            var showStatus  = messagesDisplay.choose( options.showStatus, true );
+            var closeAfter  = messagesDisplay.choose( options.closeAfter,  -1  );
+            var urgency     = messagesDisplay.choose( options.urgency,     ''  );
 
-            if ( showDelete ) { j( '#messages-display-dialog-delete' ).show(); }
-            else              { j( '#messages-display-dialog-delete' ).hide(); }
+            if ( showStatus ) { j( '#messages-display-dialog-status' ).show(); }
+            else              { j( '#messages-display-dialog-status' ).hide(); }
 
             j( '#messages-display-dialog-text' ).text( text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
@@ -172,14 +172,14 @@
 
                          messagesDisplay.dialog({ title      : 'Message Deleted',
                                                   text       : 'Message "' + response + '" was deleted',
-                                                  showDelete : false,
+                                                  showStatus : false,
                                                   closeAfter : 1 });
                      },
                      error    : function() {
-                         messagesDisplay.dialog({ title       : 'Message not Deleted',
-                                                  text        : 'Failed to delete message "' + messageId + '"',
-                                                  showDelete  : false,
-                                                  urgency     : 'critical' });
+                         messagesDisplay.dialog({ title      : 'Message not Deleted',
+                                                  text       : 'Failed to delete message "' + messageId + '"',
+                                                  showStatus : false,
+                                                  urgency    : 'critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
@@ -199,16 +199,19 @@
     })
 </script>
 
-
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
     <span id="messages-display-id" style="display:none;"></span>
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>
-        <div style="position: absolute;	bottom: 0; width:100%; margin-left: 5px;">
-            Message [<span id="messages-display-counter"></span>] of [<span id="messages-display-counter-total"></span>].
+        <div  id="messages-display-dialog-status" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px;">
+            <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
+            <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
+            <span style="margin-left: 20%">
+                Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>.
+            </span>
             <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
-            <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px; display: none">[Delete]</a>
+            <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">[Delete]</a>
             <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
         </div>
 	</p>
