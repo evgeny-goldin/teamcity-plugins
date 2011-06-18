@@ -36,10 +36,9 @@ class TextView implements View
     @Requires({ response })
     void render ( Map model, HttpServletRequest request, HttpServletResponse response )
     {
-        response.contentType       = contentType
-        response.characterEncoding = charset
-        response.contentLength     = text.getBytes( charset ).size()
-        response.locale            = locale
+        response.contentType   = contentType
+        response.contentLength = text.getBytes( charset ).size()
+        response.locale        = locale
         
         response.writer.print( text )
         response.writer.flush()
