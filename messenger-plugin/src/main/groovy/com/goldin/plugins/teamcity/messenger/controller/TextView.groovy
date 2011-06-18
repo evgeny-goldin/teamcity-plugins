@@ -29,7 +29,7 @@ class TextView implements View
     
     @Override
     @Ensures({ result })
-    String getContentType () { "$mimeType;charset=$charset" }
+    String getContentType () { "$mimeType; charset=$charset" }
 
     
     @Override
