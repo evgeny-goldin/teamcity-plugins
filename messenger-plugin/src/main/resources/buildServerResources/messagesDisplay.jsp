@@ -30,6 +30,11 @@
         choose : function ( o1, o2 ) { return ( o1 != null ) ? o1 : o2 },
 
         /**
+         * Assert condition specified holds true
+         */
+        assert : function ( condition, message ) { if ( ! condition ){ alert( message ) }},
+
+        /**
          * Displays message and title specified in a dialog widget
          */
         dialog : function( options ) {
@@ -38,7 +43,7 @@
             var text        = options.text;
             var showDelete  = messagesDisplay.choose( options.showDelete,  true );
             var closeAfter  = messagesDisplay.choose( options.closeAfter,  -1   );
-            var dialogClass = messagesDisplay.choose( options.dialogClass, ''   );
+            var urgency     = messagesDisplay.choose( options.urgency,     ''   );
 
             if ( showDelete ) { j( '#messages-display-dialog-delete' ).show(); }
             else              { j( '#messages-display-dialog-delete' ).hide(); }
@@ -48,9 +53,19 @@
             j( '#messages-display-dialog' ).dialog({ height      : 80,
                                                      width       : 490,
                                                      position    : 'top',
-                                                     dialogClass : dialogClass,
                                                      title       : title,
                                                      close       : messagesDisplay.dialogClose });
+            if ( urgency )
+            {
+                j( 'div.ui-widget-header' ).addClass( 'dialog-' + urgency );
+            }
+            else
+            {
+                j( 'div.ui-widget-header' ).removeClass( 'dialog-info' ).
+                                            removeClass( 'dialog-warning' ).
+                                            removeClass( 'dialog-critical' );
+            }
+
             if ( closeAfter > 0 )
             {
                 messagesDisplay.dialogClose.delay( closeAfter );
@@ -60,11 +75,17 @@
         /**
          * Displays message specified in a dialog widget
          */
-        dialogMessage : function( message ) {
+        dialogMessage : function() {
+
+            var message = messagesDisplay.messages[ messagesDisplay.messageDisplayed ];
+
+            messagesDisplay.assert( ! message.deleted,
+                                    'dialogMessage(): message [' + message.id + '] is deleted' );
+
             j( '#messages-display-id' ).text( message.id );
-            messagesDisplay.dialog({ title       : messagesDisplay.titleTemplate.evaluate( message ),
-                                     text        : message.text,
-                                     dialogClass : 'messages-display-dialog-' + message.urgency });
+            messagesDisplay.dialog({ title   : messagesDisplay.titleTemplate.evaluate( message ),
+                                     text    : message.text,
+                                     urgency : message.urgency });
         },
 
         /**
@@ -72,14 +93,14 @@
          */
         getMessages   : function() {
             j.get( '${action}',
-                   { timestamp: j.now() },
+                   { t: j.now() },
                    function ( messages )
                    {   /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
                        if ( messages.length > 0 )
                        {
-                           messagesDisplay.messages         = messages.slice( 0 ); // Shallow copying messages array
+                           messagesDisplay.messages         = messages.slice( 0 ); // Shallow copy of messages array
                            messagesDisplay.messageDisplayed = 0;
-                           messagesDisplay.dialogMessage( messagesDisplay.messages[ messagesDisplay.messageDisplayed ] );
+                           messagesDisplay.dialogMessage();
                        }
                    },
                    'json'
@@ -87,17 +108,34 @@
         },
 
         /**
+         * Retrieves next index of message in array of messages
+         */
+        nextIndex : function( index ) {
+            messagesDisplay.assert( messagesDisplay.messages.length > 0,
+                                    'nextIndex(): messages length is [' + messagesDisplay.messages.length + ']' );
+            return (( index < ( messagesDisplay.messages.length - 1 )) ? index + 1 : 0 );
+        },
+
+        /**
          * Closes the message
          */
         dialogClose : function()
         {
-            if ( messagesDisplay.messageDisplayed < ( messagesDisplay.messages.length - 1 ))
-            {
-                messagesDisplay.dialogMessage( messagesDisplay.messages[ ++ messagesDisplay.messageDisplayed ] );
+            var messageClosed = messagesDisplay.messageDisplayed;
+            var nextMessage   = messagesDisplay.nextIndex( messageClosed );
+
+            for ( ;
+                  messagesDisplay.messages[ nextMessage ].deleted && ( nextMessage != messageClosed );
+                  nextMessage = messagesDisplay.nextIndex( nextMessage )){}
+
+            if ( nextMessage == messageClosed )
+            {   // Same place: all messages in the list are deleted or there's a single message in the list
+                j( '#messages-display-dialog' ).dialog( 'destroy' );
             }
             else
             {
-                j( '#messages-display-dialog' ).dialog( 'destroy' );
+                messagesDisplay.messageDisplayed = nextMessage;
+                messagesDisplay.dialogMessage();
             }
         }
     };
@@ -126,6 +164,14 @@
                      data     : { id : messageId },
                      dataType : 'text',
                      success  : function( response ) {
+
+                         var displayedMessage = messagesDisplay.messages[ messagesDisplay.messageDisplayed ];
+
+                         messagesDisplay.assert( messageId == displayedMessage.id,
+                                                 'delete() click: [' + messageId + '] != [' + displayedMessage.id + ']' );
+                         
+                         displayedMessage.deleted = true;
+
                          messagesDisplay.dialog({ title      : 'Message Deleted',
                                                   text       : 'Message "' + response + '" was deleted',
                                                   showDelete : false,
@@ -135,7 +181,7 @@
                          messagesDisplay.dialog({ title       : 'Message not Deleted',
                                                   text        : 'Failed to delete message "' + messageId + '"',
                                                   showDelete  : false,
-                                                  dialogClass : 'messages-display-dialog-critical' });
+                                                  urgency     : 'critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();

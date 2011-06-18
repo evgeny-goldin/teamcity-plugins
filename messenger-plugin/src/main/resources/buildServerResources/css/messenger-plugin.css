@@ -13,17 +13,17 @@ a.text-link {
 }
 
 
-/**
- * Messages display dialog classes for each urgency level
- */
-.messages-display-dialog-info {
-    background-color: #f2f3f5
+.dialog-info {
+    background: #f2f3f5;
+    color:      #1564c2;
 }
 
-.messages-display-dialog-warning {
-    background-color: blue;
+.dialog-warning {
+    background: blue;
+    color:      green;
 }
 
-.messages-display-dialog-critical {
-    background-color: red;
+.dialog-critical {
+    background: red;
+    color:      yellow;
 }
