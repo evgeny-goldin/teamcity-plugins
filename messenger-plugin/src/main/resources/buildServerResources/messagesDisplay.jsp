@@ -8,8 +8,8 @@
          * Template to be used for message title
          * http://api.prototypejs.org/language/Template/
          */
-        titleTemplate : new Template( 'Message "#{id}", sent by "#{sender}" on #{date} at #{time}' ),
-        
+        titleTemplate : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
+
         /**
          * Makes an Ajax request, retrieves messages for the current user and shows them in a dialog
          */
@@ -22,15 +22,31 @@
                            j( '#messages-display-dialog'      ).attr({ title : messagesDisplay.titleTemplate.evaluate( m ) });
                            j( '#messages-display-dialog-text' ).text( m.text );
                            j( '#messages-display-dialog'      ).dialog({ height : 150,
-                                                                         width  : 550 });
+                                                                         width  : 550,
+                                                                         close  : messagesDisplay.dialogClose });
                        });
                    },
                    'json'
             );
+        },
+
+        /**
+         * Closes the message
+         */
+        dialogClose : function()
+        {
+            j( '#messages-display-dialog' ).dialog( 'destroy' );
         }
     };
 
     j( function() {
+
+        /**
+         * Message "Close" button listener
+         */
+         j( '#messages-display-dialog-close' ).click( messagesDisplay.dialogClose );
+
+
         window.setInterval( messagesDisplay.makeRequest, ${intervalMs} );
         messagesDisplay.makeRequest();
     })
@@ -40,7 +56,7 @@
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>
-        <a id="messages-display-dialog-close" href="#" style="margin-left: 15px; color: #1564c2">Close</a>
-        <a id="messages-display-dialog-delete" href="#" style="margin-left: 15px; color: #1564c2">Delete</a>
+        <a id="messages-display-dialog-close"  href="#" class="text-link">Close</a>
+        <a id="messages-display-dialog-delete" href="#" class="text-link">Delete</a>
 	</p>
 </div>

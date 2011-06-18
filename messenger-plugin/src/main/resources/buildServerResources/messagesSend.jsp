@@ -39,7 +39,7 @@
         j( '#messages-message' ).focus();
 
        /**
-        * "Message Sent" Ok buton listener
+        * "Message Sent" Ok button listener
         */
         j( '#messages-send-dialog-ok' ).click( messagesSend.dialogClose );
 
@@ -103,7 +103,7 @@
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-send-dialog-text"></span>
-        <a id="messages-send-dialog-ok" href="#" style="margin-left: 15px; color: #1564c2">Ok</a>
+        <a id="messages-send-dialog-ok" href="#" class="text-link" style="margin-left: 15px">Ok</a>
 	</p>
 </div>
 

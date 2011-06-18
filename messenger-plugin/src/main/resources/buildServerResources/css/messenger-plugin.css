@@ -1,0 +1,8 @@
+
+/**
+ * "messenger-plugin" custom CSS classes
+ */
+
+a.text-link {
+    color: #1564c2; /* Should be identical to "main.css:92" ! */
+}
