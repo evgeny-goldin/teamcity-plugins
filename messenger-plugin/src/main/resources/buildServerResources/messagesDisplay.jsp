@@ -50,7 +50,7 @@
 
             j( '#messages-display-dialog-text' ).text( text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
-            j( '#messages-display-dialog' ).dialog({ height      : 80,
+            j( '#messages-display-dialog' ).dialog({ height      : 115,
                                                      width       : 490,
                                                      position    : 'top',
                                                      title       : title,
@@ -73,7 +73,7 @@
         },
 
         /**
-         * Displays message specified in a dialog widget
+         * Opens a dialog with details of the message specified by "messagesDisplay.messageDisplayed"
          */
         dialogMessage : function() {
 
@@ -82,7 +82,10 @@
             messagesDisplay.assert( ! message.deleted,
                                     'dialogMessage(): message [' + message.id + '] is deleted' );
 
-            j( '#messages-display-id' ).text( message.id );
+            j( '#messages-display-counter'       ).text( messagesDisplay.messageDisplayed + 1 );
+            j( '#messages-display-counter-total' ).text( messagesDisplay.messages.length );
+            j( '#messages-display-id'            ).text( message.id );
+            
             messagesDisplay.dialog({ title   : messagesDisplay.titleTemplate.evaluate( message ),
                                      text    : message.text,
                                      urgency : message.urgency });
@@ -196,14 +199,17 @@
     })
 </script>
 
+
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
     <span id="messages-display-id" style="display:none;"></span>
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>
-        <br/>
-        <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">[Close]</a>
-        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 10px; display: none">[Delete]</a>
-        <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
+        <div style="position: absolute;	bottom: 0; width:100%; margin-left: 5px;">
+            Message [<span id="messages-display-counter"></span>] of [<span id="messages-display-counter-total"></span>].
+            <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
+            <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px; display: none">[Delete]</a>
+            <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
+        </div>
 	</p>
 </div>

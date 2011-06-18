@@ -14,16 +14,13 @@ a.text-link {
 
 
 .dialog-info {
-    background: #f2f3f5;
-    color:      #1564c2;
+    /* No changes made to dialog */
 }
 
 .dialog-warning {
-    background: blue;
-    color:      green;
+    border: 2px double orange;
 }
 
 .dialog-critical {
-    background: red;
-    color:      yellow;
+    border: 2px double red;
 }
