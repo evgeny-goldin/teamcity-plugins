@@ -16,7 +16,6 @@ import com.goldin.plugins.teamcity.messenger.api.*
  */
 class MessagesDisplayController extends MessagesBaseController
 {
-    private final Locale     locale
     private final DateFormat dateFormatter
     private final DateFormat timeFormatter
 
@@ -30,7 +29,6 @@ class MessagesDisplayController extends MessagesBaseController
                                 WebControllerManager  manager )
     {
         super( server, messagesBean, context, util )
-        this.locale        = context.locale
         this.dateFormatter = new SimpleDateFormat( config.dateFormatPattern, context.locale )
         this.timeFormatter = new SimpleDateFormat( config.timeFormatPattern, context.locale )
         manager.registerController( '/messagesDisplay.html', this )
@@ -52,6 +50,7 @@ class MessagesDisplayController extends MessagesBaseController
             assert recipient, "Can't determine recipient for [$m]"
 
             [ id        : m.id,
+              urgency   : m.urgency.toString().toLowerCase( context.locale ),
               sender    : context.getUser( m.sender ).descriptiveName,
               text      : m.message,
               recipient : recipient,
@@ -59,6 +58,6 @@ class MessagesDisplayController extends MessagesBaseController
               time      : timeFormatter.format( new Date( m.timestamp ))]
         }
 
-        new ModelAndView( new TextView( new JsonBuilder( messages ).toString(), 'application/json', locale ))
+        new ModelAndView( new TextView( new JsonBuilder( messages ).toString(), 'application/json', context.locale ))
     }
 }
