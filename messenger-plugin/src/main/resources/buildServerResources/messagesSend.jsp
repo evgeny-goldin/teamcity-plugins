@@ -29,15 +29,15 @@
          */
         dialogClose : function()
         {
-            j( '#messages-send-dialog' ).dialog( 'destroy' );
-            j( '#messages-message'     ).val( '' ).focus();
-            j( '#messages-send'        ).attr({ disabled: null });
+            j( '#messages-send-dialog'  ).dialog( 'destroy' );
+            j( '#messages-send-message' ).val( '' ).focus();
+            j( '#messages-send-button'  ).attr({ disabled: null });
         }
     };
 
     j( function() {
 
-        j( '#messages-message' ).focus();
+        j( '#messages-send-message' ).focus();
 
        /**
         * "Message Sent" Ok button listener
@@ -47,43 +47,43 @@
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
         */
-        j( '#messages-all' ).change( function() {
-            j( '#messages-groups' ).attr({ disabled: this.value });
-            j( '#messages-users'  ).attr({ disabled: this.value });
+        j( '#messages-send-all' ).change( function() {
+            j( '#messages-send-groups' ).attr({ disabled: this.value });
+            j( '#messages-send-users'  ).attr({ disabled: this.value });
         });
 
        /**
         * Listener submitting a request when form is submitted
         */
-        j( '#messages-form' ).submit( function() {
+        j( '#messages-send-form' ).submit( function() {
 
-            if ( ! j.trim( j( '#messages-message' ).val()))
+            if ( ! j.trim( j( '#messages-send-message' ).val()))
             {
-                j( '#messages-message'      ).addClass( 'errorField'   );
-                j( '#messages-errormessage' ).text( 'Message is empty' );
+                j( '#messages-send-message'       ).addClass( 'errorField'   );
+                j( '#messages-send-error-message' ).text( 'Message is empty' );
                 return false;
             }
             else
             {
-                j( '#messages-message' ).removeClass( 'errorField' );
-                j( '#messages-errormessage' ).text( '' );
+                j( '#messages-send-message'       ).removeClass( 'errorField' );
+                j( '#messages-send-error-message' ).text( '' );
             }
 
-            var    recipientsSelected = ( j( '#messages-all'    ).attr( 'checked' ) ||
-                                          j( '#messages-groups' ).val()          ||
-                                          j( '#messages-users'  ).val());
+            var    recipientsSelected = ( j( '#messages-send-all'    ).attr( 'checked' ) ||
+                                          j( '#messages-send-groups' ).val()             ||
+                                          j( '#messages-send-users'  ).val());
             if ( ! recipientsSelected )
             {
-                j( '#messages-errorselection' ).text( 'No recipients selected' );
+                j( '#messages-send-error-selection' ).text( 'No recipients selected' );
                 return false;
             }
             else
             {
-                j( '#messages-errorselection' ).text( '' );
+                j( '#messages-send-error-selection' ).text( '' );
             }
 
-            j( '#messages-send'     ).attr({ disabled: 'disabled' });
-            j( '#messages-progress' ).show();
+            j( '#messages-send-button'   ).attr({ disabled: 'disabled' });
+            j( '#messages-send-progress' ).show();
 
             j.ajax({ url      : this.action,
                      type     : 'POST',
@@ -91,7 +91,7 @@
                      dataType : 'text',  
                      success  : function( response ) { messagesSend.dialog( 'Message "' + response + '" was sent' )},
                      error    : function()           { messagesSend.dialog( 'Failed to send the message' )},
-                     complete : function()           { j( '#messages-progress' ).hide()}
+                     complete : function()           { j( '#messages-send-progress' ).hide()}
                     });
 
             return false;
@@ -110,11 +110,11 @@
 
 <div class="settingsBlock" style="">
     <div style="background-color:#fff; padding: 10px;">
-        <form action="${action}" method="post" id="messages-form">
+        <form action="${action}" method="post" id="messages-send-form">
 
             <p>
-                <label for="messages-urgency">Urgency: </label>
-                <select name="urgency" id="messages-urgency">
+                <label for="messages-send-urgency">Urgency: </label>
+                <select name="urgency" id="messages-send-urgency">
                     <option selected="selected">Info</option>
                     <option>Warning</option>
                     <option>Critical</option>
@@ -122,10 +122,10 @@
             </p>
 
             <p>
-                <label for="messages-longevity-number">Keep For: </label>
-                <input class="textfield1" id="messages-longevity-number" name="longevity-number" type="text" size="3"
+                <label for="messages-send-longevity-number">Keep For: </label>
+                <input class="textfield1" id="messages-send-longevity-number" name="longevity-number" type="text" size="3"
                        maxlength="3" value="7">
-                <select id="messages-longevity-unit" name="longevity-unit">
+                <select id="messages-send-longevity-unit" name="longevity-unit">
                     <option>hours</option>
                     <option selected="selected">days</option>
                     <option>weeks</option>
@@ -133,18 +133,18 @@
                 </select>
             </p>
 
-            <p><label for="messages-message">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
-                <textarea class="textfield" id="messages-message" name="message" cols="30" rows="12"></textarea>
-                <span class="error" id="messages-errormessage" style="margin-left: 10.5em;"></span>
+            <p><label for="messages-send-message">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
+                <textarea class="textfield" id="messages-send-message" name="message" cols="30" rows="12"></textarea>
+                <span class="error" id="messages-send-error-message" style="margin-left: 10.5em;"></span>
             </p>
 
-            <p><label for="messages-all">Send to All:</label>
-                <input style="margin:0" type="checkbox" id="messages-all" name="all" checked="checked">
+            <p><label for="messages-send-all">Send to All:</label>
+                <input style="margin:0" type="checkbox" id="messages-send-all" name="all" checked="checked">
             </p>
 
             <p>
-                <label for="messages-groups">Send to Groups:</label>
-                <select id="messages-groups" name="groups" multiple="multiple" size="2" disabled="disabled">
+                <label for="messages-send-groups">Send to Groups:</label>
+                <select id="messages-send-groups" name="groups" multiple="multiple" size="2" disabled="disabled">
                 <c:forEach items="${groups}" var="group">
                     <option>${group}</option>
                 </c:forEach>
@@ -152,17 +152,18 @@
             </p>
 
             <p>
-                <label for="messages-users">Send to Users:</label>
-                <select id="messages-users" name="users" multiple="multiple" size="2" disabled="disabled">
+                <label for="messages-send-users">Send to Users:</label>
+                <select id="messages-send-users" name="users" multiple="multiple" size="2" disabled="disabled">
                 <c:forEach items="${users}" var="user">
                     <option>${user}</option>
                 </c:forEach>
                 </select>
-                <span class="error" id="messages-errorselection" style="margin-left: 10.5em;"></span>
+                <span class="error" id="messages-send-error-selection" style="margin-left: 10.5em;"></span>
             </p>
 
             <p>
-                <input type="submit" value="Send" id="messages-send"> <img id="messages-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
+                <input type="submit" value="Send" id="messages-send-button">
+                <img id="messages-send-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
             </p>
         </form>
     </div>

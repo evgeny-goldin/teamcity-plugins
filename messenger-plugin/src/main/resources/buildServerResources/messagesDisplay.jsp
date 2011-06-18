@@ -52,7 +52,19 @@
        /**
         * Message "Close" button listener
         */
-        j( '#messages-display-dialog-close' ).click( function(){ messagesDisplay.dialogClose(); return false; });
+        j( '#messages-display-dialog-close' ).click( function(){
+            messagesDisplay.dialogClose();
+            return false;
+        });
+
+       /**
+        * Message "Delete" button listener
+        */
+        j( '#messages-display-dialog-delete' ).click( function(){
+            
+            messagesDisplay.dialogClose();
+            return false;
+        });
 
        /**
         * Setting interval to fire up a periodic "Get Messages" request
@@ -69,5 +81,7 @@
         <br/>
         <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">Close</a>
         <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">Delete</a>
+        <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
 	</p>
 </div>
+
