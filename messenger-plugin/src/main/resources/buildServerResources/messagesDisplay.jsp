@@ -66,7 +66,8 @@
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>
-        <a id="messages-display-dialog-close"  href="#" class="text-link">Close</a>
-        <a id="messages-display-dialog-delete" href="#" class="text-link">Delete</a>
+        <br/>
+        <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 5px">Close</a>
+        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">Delete</a>
 	</p>
 </div>
