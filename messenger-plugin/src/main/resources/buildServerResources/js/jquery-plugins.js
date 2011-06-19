@@ -32,9 +32,9 @@
      * Verifies that condition specified is true and displays an alert() if it's not
      */
     j.assert = function( condition, message ) {
-        if ( ! j.defined( condition )) { alert( 'alert(): condition is not defined' )}
-        if ( ! j.defined( message   )) { alert( 'alert(): message is not defined'   )}
-        if ( ! condition )             { alert( message ) }
+        if ( ! j.defined( condition )) { alert( 'alert(): condition is not specified'  ); return }
+        if ( ! j.defined( message   )) { alert( 'alert(): message is not specified'    ); return }
+        if ( ! condition )             { alert( 'Assertion Failure!\n[' + message + ']' ); }
     };
 
 

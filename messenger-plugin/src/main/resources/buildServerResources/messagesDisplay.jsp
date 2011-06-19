@@ -65,15 +65,19 @@
          */
         dialogMessage : function() {
 
-            var message        = md.messages[ md.messageDisplayed ];
-            var messageCounter = md.messageDisplayed + 1 -
-                                 j.count( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) });
-            var messagesTotal  = md.messages.length - md.messagesDeleted.length;
+            var message = md.messages[ md.messageDisplayed ];
+            var counter = md.messageDisplayed + 1 -
+                          j.count( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) });
+            var total   = md.messages.length - md.messagesDeleted.length;
 
-            j( '#messages-display-dialog-prev'   ).disable( messageCounter == 1             ).click( function(){ });
-            j( '#messages-display-dialog-next'   ).disable( messageCounter == messagesTotal ).click( function(){ });
-            j( '#messages-display-counter'       ).text( messageCounter );
-            j( '#messages-display-counter-total' ).text( messagesTotal  );
+            j.assert( counter > 0,      'dialogMessage(): [' + counter + '] (counter > 0)' );
+            j.assert( total   > 0,      'dialogMessage(): [' + total   + '] (total   > 0)' );
+            j.assert( counter <= total, 'dialogMessage(): [' + counter + '][' + total + '] (counter <= total)' );
+
+            j( '#messages-display-dialog-prev'   ).disable( counter == 1     ).click( function(){ });
+            j( '#messages-display-dialog-next'   ).disable( counter == total ).click( function(){ });
+            j( '#messages-display-counter'       ).text( counter );
+            j( '#messages-display-counter-total' ).text( total  );
 
             md.dialog({ title   : md.titleTemplate.evaluate( message ),
                         text    : message.text,
