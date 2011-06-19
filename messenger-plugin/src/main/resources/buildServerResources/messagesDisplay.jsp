@@ -36,11 +36,12 @@
             j.assert( options.title, 'dialog(): \'options.title\' is not specified' );
             j.assert( options.text,  'dialog(): \'options.text\' is not specified'  );
 
+            md.dialogClose();
+
             if ( options.showStatus ) { j( '#messages-display-dialog-status' ).show(); }
             else                      { j( '#messages-display-dialog-status' ).hide(); }
 
             j( '#messages-display-dialog-text' ).text( options.text );
-            j( '#messages-display-dialog' ).dialog( 'destroy' );
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
                                                      position : 'top',
@@ -119,13 +120,21 @@
             md.messageDisplayed = md.nextIndex( md.messageDisplayed );
             if ( md.messageDisplayed == 0 )
             {
-                // User has cycled through all messages in the list, dialog is closed
-                j( '#messages-display-dialog' ).dialog( 'destroy' );
+                // User has cycled through all messages in the list
+                md.dialogClose();
             }
             else
             {   // Showing next message in a dialog
                 md.dialogMessage();
             }
+        },
+
+        /**
+         * Closes the dialog
+         */
+        dialogClose : function()
+        {
+            j( '#messages-display-dialog' ).dialog( 'destroy' );
         }
     };
 
@@ -135,7 +144,7 @@
         * Message dialog "Close" button listener
         */
         j( '#messages-display-dialog-close' ).click( function(){
-            md.dialogNext();
+            md.dialogClose();
             return false;
         });
 
