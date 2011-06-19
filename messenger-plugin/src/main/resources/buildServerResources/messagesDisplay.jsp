@@ -10,7 +10,7 @@
 </style>
 <script type="text/javascript">
 
-    var j  = jQuery
+    var j  = jQuery;
     var md = { /* Shortcut for "messagesDisplay" */
 
         /**
@@ -27,39 +27,28 @@
         messageDisplayed : 0,
 
         /**
-         * Chooses first non-null object
-         */
-        choose : function ( o1, o2 ) { return ( o1 != null ) ? o1 : o2 },
-
-        /**
-         * Assert condition specified holds true
-         */
-        assert : function ( condition, message ) { if ( ! condition ){ alert( message ) }},
-
-        /**
          * Displays dialog widget according to options specified
          */
         dialog : function( options ) {
 
-            var title       = options.title;
-            var text        = options.text;
-            var showStatus  = md.choose( options.showStatus, true );
-            var closeAfter  = md.choose( options.closeAfter,  -1  );
-            var urgency     = md.choose( options.urgency,     ''  );
+            options = j.extend({ showStatus : true, closeAfter : -1, urgency : '' }, options );
 
-            if ( showStatus ) { j( '#messages-display-dialog-status' ).show(); }
-            else              { j( '#messages-display-dialog-status' ).hide(); }
+            j.assert( options.title, 'dialog(): \'options.title\' is not specified' );
+            j.assert( options.text,  'dialog(): \'options.text\' is not specified'  );
 
-            j( '#messages-display-dialog-text' ).text( text );
+            if ( options.showStatus ) { j( '#messages-display-dialog-status' ).show(); }
+            else                      { j( '#messages-display-dialog-status' ).hide(); }
+
+            j( '#messages-display-dialog-text' ).text( options.text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
                                                      position : 'top',
-                                                     title    : title,
+                                                     title    : options.title,
                                                      close    : md.dialogNext });
-            if ( urgency )
+            if ( options.urgency )
             {
-                j( 'div.ui-widget-header' ).addClass( 'dialog-' + urgency );
+                j( 'div.ui-widget-header' ).addClass( 'dialog-' + options.urgency );
             }
             else
             {
@@ -68,7 +57,7 @@
                                             removeClass( 'dialog-critical' );
             }
 
-            if ( closeAfter > 0 ){ md.dialogNext.delay( closeAfter ) }
+            if ( options.closeAfter > 0 ){ md.dialogNext.delay( options.closeAfter ) }
         },
 
         /**
@@ -81,7 +70,8 @@
                                  j.grep( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) }).length;
             var messagesTotal  = md.messages.length - md.messagesDeleted.length;
 
-
+            j( '#messages-display-dialog-prev'   ).disable( messageCounter == 1             ).click( function(){ });
+            j( '#messages-display-dialog-next'   ).disable( messageCounter == messagesTotal ).click( function(){ });
             j( '#messages-display-counter'       ).text( messageCounter );
             j( '#messages-display-counter-total' ).text( messagesTotal  );
 
@@ -113,7 +103,7 @@
          * Retrieves next index of message in array of messages
          */
         nextIndex : function( index ) {
-            md.assert( md.messages.length > 0, 'nextIndex(): messages length is [' + md.messages.length + ']' );
+            j.assert( md.messages.length > 0, 'nextIndex(): messages length is [' + md.messages.length + ']' );
             return (( index < ( md.messages.length - 1 )) ? index + 1 : 0 );
         },
 
@@ -160,8 +150,8 @@
                      dataType : 'text',
                      success  : function( response ) {
 
-                         md.assert( message.id == response,
-                                    'delete(): [' + message.id + '] != [' + response + ']' );
+                         j.assert( message.id == response,
+                                   'delete(): [' + message.id + '] != [' + response + ']' );
 
                          md.messagesDeleted.push( message );
 
@@ -188,7 +178,7 @@
          * Setting up periodic "get all messages" request
          * http://api.prototypejs.org/language/PeriodicalExecuter/
          */
-        md.assert(( ${intervalSec} > 0 ), 'intervalSec is [${intervalSec}]' );
+        j.assert(( ${intervalSec} > 0 ), 'intervalSec is [{intervalSec}]' );
         new PeriodicalExecuter( md.getMessages, ${intervalSec} );
         md.getMessages();
     })

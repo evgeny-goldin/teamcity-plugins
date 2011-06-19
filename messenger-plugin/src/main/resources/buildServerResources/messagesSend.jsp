@@ -11,7 +11,7 @@
 </style>
 <script type="text/javascript">
 
-    var j  = jQuery
+    var j  = jQuery;
     var ms = { /* Shortcut for "messagesSend" */
 
        /**
@@ -33,7 +33,7 @@
         {
             j( '#messages-send-dialog'  ).dialog( 'destroy' );
             j( '#messages-send-message' ).val( '' ).focus();
-            j( '#messages-send-button'  ).attr({ disabled: null });
+            j( '#messages-send-button'  ).enable();
         }
     };
 
@@ -50,10 +50,10 @@
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
         */
         j( '#messages-send-all' ).change( function() {
-            j( '#messages-send-groups' ).attr({ disabled: this.value });
-            j( '#messages-send-users'  ).attr({ disabled: this.value });
+            j( '#messages-send-groups, #messages-send-users' ).disable( this.value == 'on' );
         });
-
+        j( '#messages-send-all' ).click().change();
+        
        /**
         * Listener submitting a request when form is submitted
         */
@@ -84,7 +84,7 @@
                 j( '#messages-send-error-selection' ).text( '' );
             }
 
-            j( '#messages-send-button'   ).attr({ disabled: 'disabled' });
+            j( '#messages-send-button'   ).disable();
             j( '#messages-send-progress' ).show();
 
             j.ajax({ url      : this.action,
@@ -141,12 +141,12 @@
             </p>
 
             <p><label for="messages-send-all">Send to All:</label>
-                <input style="margin:0" type="checkbox" id="messages-send-all" name="all" checked="checked">
+                <input style="margin:0" type="checkbox" id="messages-send-all" name="all">
             </p>
 
             <p>
                 <label for="messages-send-groups">Send to Groups:</label>
-                <select id="messages-send-groups" name="groups" multiple="multiple" size="2" disabled="disabled">
+                <select id="messages-send-groups" name="groups" multiple="multiple" size="2">
                 <c:forEach items="${groups}" var="group">
                     <option>${group}</option>
                 </c:forEach>
@@ -155,7 +155,7 @@
 
             <p>
                 <label for="messages-send-users">Send to Users:</label>
-                <select id="messages-send-users" name="users" multiple="multiple" size="2" disabled="disabled">
+                <select id="messages-send-users" name="users" multiple="multiple" size="2">
                 <c:forEach items="${users}" var="user">
                     <option>${user}</option>
                 </c:forEach>

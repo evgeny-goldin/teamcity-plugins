@@ -30,6 +30,7 @@ class MessagesDisplayExtension extends SimplePageExtension
         register()
 
         addJsFile(  'js/jquery-ui-1.8.13.custom.min.js' )
+        addJsFile(  'js/jquery-plugins.js' )
         addCssFile( 'css/custom-theme/jquery-ui-1.8.13.custom.css' )
         addCssFile( 'css/messenger-plugin.css' )
     }
