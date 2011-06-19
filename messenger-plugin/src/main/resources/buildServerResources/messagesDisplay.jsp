@@ -76,10 +76,14 @@
          */
         dialogMessage : function() {
 
-            var message = md.messages[ md.messageDisplayed ];
+            var message        = md.messages[ md.messageDisplayed ];
+            var messageCounter = md.messageDisplayed + 1 - 
+                                 j.grep( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) }).length;
+            var messagesTotal  = md.messages.length - md.messagesDeleted.length;
 
-            j( '#messages-display-counter'       ).text( md.messageDisplayed + 1 );
-            j( '#messages-display-counter-total' ).text( md.messages.length );
+
+            j( '#messages-display-counter'       ).text( messageCounter );
+            j( '#messages-display-counter-total' ).text( messagesTotal  );
 
             md.dialog({ title   : md.titleTemplate.evaluate( message ),
                         text    : message.text,
@@ -158,6 +162,8 @@
 
                          md.assert( message.id == response,
                                     'delete(): [' + message.id + '] != [' + response + ']' );
+
+                         md.messagesDeleted.push( message );
 
                          md.dialog({ title      : 'Message Deleted',
                                      text       : 'Message "' + response + '" was deleted',
