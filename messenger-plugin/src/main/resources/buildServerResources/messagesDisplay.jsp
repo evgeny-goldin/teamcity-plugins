@@ -9,19 +9,21 @@
     .ui-dialog .ui-dialog-content { padding: 0 } /* Disabling widget-enforced text padding in dialog */
 </style>
 <script type="text/javascript">
-    var j               = jQuery
-    var messagesDisplay = {
+
+    var j  = jQuery
+    var md = { /* Shortcut for "messagesDisplay" */
 
         /**
-         * Template to be used for message title
-         * See http://api.prototypejs.org/language/Template/
+         * Template to be used for message dialog title
+         * http://api.prototypejs.org/language/Template/
          */
-        titleTemplate : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
+        titleTemplate    : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
 
        /**
-        * User messages and index of the message currently displayed
+        * User messages received, deleted and index of the message currently displayed
         */
         messages         : [],
+        messagesDeleted  : [],
         messageDisplayed : 0,
 
         /**
@@ -35,26 +37,26 @@
         assert : function ( condition, message ) { if ( ! condition ){ alert( message ) }},
 
         /**
-         * Displays message and title specified in a dialog widget
+         * Displays dialog widget according to options specified
          */
         dialog : function( options ) {
 
             var title       = options.title;
             var text        = options.text;
-            var showStatus  = messagesDisplay.choose( options.showStatus, true );
-            var closeAfter  = messagesDisplay.choose( options.closeAfter,  -1  );
-            var urgency     = messagesDisplay.choose( options.urgency,     ''  );
+            var showStatus  = md.choose( options.showStatus, true );
+            var closeAfter  = md.choose( options.closeAfter,  -1  );
+            var urgency     = md.choose( options.urgency,     ''  );
 
             if ( showStatus ) { j( '#messages-display-dialog-status' ).show(); }
             else              { j( '#messages-display-dialog-status' ).hide(); }
 
             j( '#messages-display-dialog-text' ).text( text );
             j( '#messages-display-dialog' ).dialog( 'destroy' );
-            j( '#messages-display-dialog' ).dialog({ height      : 115,
-                                                     width       : 490,
-                                                     position    : 'top',
-                                                     title       : title,
-                                                     close       : messagesDisplay.dialogClose });
+            j( '#messages-display-dialog' ).dialog({ height   : 115,
+                                                     width    : 490,
+                                                     position : 'top',
+                                                     title    : title,
+                                                     close    : md.dialogNext });
             if ( urgency )
             {
                 j( 'div.ui-widget-header' ).addClass( 'dialog-' + urgency );
@@ -66,29 +68,22 @@
                                             removeClass( 'dialog-critical' );
             }
 
-            if ( closeAfter > 0 )
-            {
-                messagesDisplay.dialogClose.delay( closeAfter );
-            }
+            if ( closeAfter > 0 ){ md.dialogNext.delay( closeAfter ) }
         },
 
         /**
-         * Opens a dialog with details of the message specified by "messagesDisplay.messageDisplayed"
+         * Opens a dialog with details of the message specified by "md.messageDisplayed"
          */
         dialogMessage : function() {
 
-            var message = messagesDisplay.messages[ messagesDisplay.messageDisplayed ];
+            var message = md.messages[ md.messageDisplayed ];
 
-            messagesDisplay.assert( ! message.deleted,
-                                    'dialogMessage(): message [' + message.id + '] is deleted' );
+            j( '#messages-display-counter'       ).text( md.messageDisplayed + 1 );
+            j( '#messages-display-counter-total' ).text( md.messages.length );
 
-            j( '#messages-display-counter'       ).text( messagesDisplay.messageDisplayed + 1 );
-            j( '#messages-display-counter-total' ).text( messagesDisplay.messages.length );
-            j( '#messages-display-id'            ).text( message.id );
-            
-            messagesDisplay.dialog({ title   : messagesDisplay.titleTemplate.evaluate( message ),
-                                     text    : message.text,
-                                     urgency : message.urgency });
+            md.dialog({ title   : md.titleTemplate.evaluate( message ),
+                        text    : message.text,
+                        urgency : message.urgency });
         },
 
         /**
@@ -97,13 +92,13 @@
         getMessages   : function() {
             j.get( '${action}',
                    { t: j.now() },
-                   function ( messages )
-                   {   /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
-                       if ( messages.length > 0 )
+                   function ( messages ) /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
+                   {
+                       if ( messages && messages.length )
                        {
-                           messagesDisplay.messages         = messages.slice( 0 ); // Shallow copy of messages array
-                           messagesDisplay.messageDisplayed = 0;
-                           messagesDisplay.dialogMessage();
+                           md.messages         = messages.slice( 0 ); // Shallow copy of messages array
+                           md.messageDisplayed = 0;
+                           md.dialogMessage();
                        }
                    },
                    'json'
@@ -114,25 +109,24 @@
          * Retrieves next index of message in array of messages
          */
         nextIndex : function( index ) {
-            messagesDisplay.assert( messagesDisplay.messages.length > 0,
-                                    'nextIndex(): messages length is [' + messagesDisplay.messages.length + ']' );
-            return (( index < ( messagesDisplay.messages.length - 1 )) ? index + 1 : 0 );
+            md.assert( md.messages.length > 0, 'nextIndex(): messages length is [' + md.messages.length + ']' );
+            return (( index < ( md.messages.length - 1 )) ? index + 1 : 0 );
         },
 
         /**
-         * Closes the message
+         * Shows the next message or closes the dialog if there are no messages left to show
          */
-        dialogClose : function()
+        dialogNext : function()
         {
-            messagesDisplay.messageDisplayed = messagesDisplay.nextIndex( messagesDisplay.messageDisplayed );
-            if ( messagesDisplay.messageDisplayed == 0 )
+            md.messageDisplayed = md.nextIndex( md.messageDisplayed );
+            if ( md.messageDisplayed == 0 )
             {
                 // User has cycled through all messages in the list, dialog is closed
                 j( '#messages-display-dialog' ).dialog( 'destroy' );
             }
             else
             {   // Showing next message in a dialog
-                messagesDisplay.dialogMessage();
+                md.dialogMessage();
             }
         }
     };
@@ -140,67 +134,61 @@
     j( function() {
 
        /**
-        * Message "Close" button listener
+        * Message dialog "Close" button listener
         */
         j( '#messages-display-dialog-close' ).click( function(){
-            messagesDisplay.dialogClose();
+            md.dialogNext();
             return false;
         });
 
        /**
-        * Message "Delete" button listener
+        * Message dialog "Delete" button listener
         */
         j( '#messages-display-dialog-delete' ).click( function(){
 
-            var messageId = j( '#messages-display-id' ).text();
-
             j( '#messages-display-progress' ).show();
-            
+
+            var message = md.messages[ md.messageDisplayed ];
+
             j.ajax({ url      : '${action}',
                      type     : 'POST',
-                     data     : { id : messageId },
+                     data     : { id : message.id },
                      dataType : 'text',
                      success  : function( response ) {
 
-                         var displayedMessage = messagesDisplay.messages[ messagesDisplay.messageDisplayed ];
+                         md.assert( message.id == response,
+                                    'delete(): [' + message.id + '] != [' + response + ']' );
 
-                         messagesDisplay.assert( messageId == displayedMessage.id,
-                                                 'delete() click: [' + messageId + '] != [' + displayedMessage.id + '] (displayedMessage.id)' );
-
-                         messagesDisplay.assert( messageId == response,
-                                                 'delete() click: [' + messageId + '] != [' + response + '] (response)' );
-
-                         messagesDisplay.dialog({ title      : 'Message Deleted',
-                                                  text       : 'Message "' + response + '" was deleted',
-                                                  showStatus : false,
-                                                  closeAfter : 1 });
+                         md.dialog({ title      : 'Message Deleted',
+                                     text       : 'Message "' + response + '" was deleted',
+                                     showStatus : false,
+                                     closeAfter : 1 });
                      },
                      error    : function() {
-                         messagesDisplay.dialog({ title      : 'Message not Deleted',
-                                                  text       : 'Failed to delete message "' + messageId + '"',
-                                                  showStatus : false,
-                                                  urgency    : 'critical' });
+                         md.dialog({ title      : 'Message not Deleted',
+                                     text       : 'Failed to delete message "' + messageId + '"',
+                                     showStatus : false,
+                                     urgency    : 'critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
                      }
-                    });
-            
+                   });
+
             return false;
         });
 
-
         /**
-         * Setting an interval to fire up a periodic "Get Messages" request
+         * Setting up periodic "get all messages" request
          * http://api.prototypejs.org/language/PeriodicalExecuter/
          */
-        new PeriodicalExecuter( messagesDisplay.getMessages, ${intervalSec} );
-        messagesDisplay.getMessages();
+        md.assert(( ${intervalSec} > 0 ), 'intervalSec is [${intervalSec}]' );
+        new PeriodicalExecuter( md.getMessages, ${intervalSec} );
+        md.getMessages();
     })
 </script>
 
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
-    <span id="messages-display-id" style="display:none;"></span>
 	<p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
         <span id="messages-display-dialog-text"></span>

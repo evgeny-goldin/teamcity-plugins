@@ -11,8 +11,8 @@
 </style>
 <script type="text/javascript">
 
-    var j            = jQuery
-    var messagesSend = {
+    var j  = jQuery
+    var ms = { /* Shortcut for "messagesSend" */
 
        /**
         * Opens the dialog with message specified
@@ -22,11 +22,9 @@
             j( '#messages-send-dialog-text' ).text( message );
             j( '#messages-send-dialog'      ).dialog({ height : 55,
                                                        width  : 240,
-                                                       close  : messagesSend.dialogClose });
-            if ( closeAfter > 0 )
-            {
-                messagesSend.dialogClose.delay( closeAfter );
-            }
+                                                       close  : ms.dialogClose });
+
+            if ( closeAfter > 0 ) { ms.dialogClose.delay( closeAfter ) }
         },
         /**
          * Closes the dialog and enables "Send" button
@@ -46,7 +44,7 @@
        /**
         * "Message Sent" Ok button listener
         */
-        j( '#messages-send-dialog-ok' ).click( function(){ messagesSend.dialogClose(); return false; });
+        j( '#messages-send-dialog-ok' ).click( function(){ ms.dialogClose(); return false; });
 
        /**
         * Listener enabling and disabling groups and users according to "Send to All" checkbox
@@ -92,9 +90,9 @@
             j.ajax({ url      : this.action,
                      type     : 'POST',
                      data     : j( this ).serialize(),
-                     dataType : 'text',  
-                     success  : function( response ) { messagesSend.dialog( 'Message "' + response + '" was sent', 1 )},
-                     error    : function()           { messagesSend.dialog( 'Failed to send the message',         -1 )},
+                     dataType : 'text',
+                     success  : function( response ) { ms.dialog( 'Message "' + response + '" was sent', 1 )},
+                     error    : function()           { ms.dialog( 'Failed to send the message',         -1 )},
                      complete : function()           { j( '#messages-send-progress' ).hide()}
                     });
 
