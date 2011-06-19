@@ -8,6 +8,18 @@
 
 ( function( j ){
 
+    /**
+     * Alerts, logs and throws execution fatal error
+     */
+    j.error = function( message )
+    {
+        var errorMessage = 'Assertion Failure!\n[' + message + ']';
+        alert         ( errorMessage );
+        console.error ( errorMessage );
+        throw         ( errorMessage );
+    };
+
+    
    /**
     * Determines if object specified is defined and not null
     */
@@ -28,13 +40,14 @@
         return counter;
     };
 
+    
     /**
      * Verifies that condition specified is true and displays an alert() if it's not
      */
     j.assert = function( condition, message ) {
-        if ( ! j.defined( condition )) { alert( 'alert(): condition is not specified'  ); return }
-        if ( ! j.defined( message   )) { alert( 'alert(): message is not specified'    ); return }
-        if ( ! condition )             { alert( 'Assertion Failure!\n[' + message + ']' ); }
+        if ( ! j.defined( condition )) { j.error( 'alert(): condition is not specified'   )}
+        if ( ! j.defined( message   )) { j.error( 'alert(): message is not specified'     )}
+        if ( ! condition )             { j.error( message )}
     };
 
 

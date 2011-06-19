@@ -196,7 +196,7 @@
             <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
             <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
             <span style="margin-left: 20%">
-                Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>.
+                Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>
             </span>
             <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
             <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">[Delete]</a>
