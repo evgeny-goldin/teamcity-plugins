@@ -66,8 +66,8 @@
         dialogMessage : function() {
 
             var message        = md.messages[ md.messageDisplayed ];
-            var messageCounter = md.messageDisplayed + 1 - 
-                                 j.grep( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) }).length;
+            var messageCounter = md.messageDisplayed + 1 -
+                                 j.count( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) });
             var messagesTotal  = md.messages.length - md.messagesDeleted.length;
 
             j( '#messages-display-dialog-prev'   ).disable( messageCounter == 1             ).click( function(){ });
