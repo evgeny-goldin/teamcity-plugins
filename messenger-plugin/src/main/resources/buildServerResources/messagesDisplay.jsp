@@ -23,6 +23,7 @@
         * User messages retrieved and index of the message being displayed currently
         */
         messages         : [],
+        messagesTotal    : 0,
         messageDisplayed : 0,
 
         /**
@@ -70,7 +71,7 @@
          */
         dialogMessage : function() {
 
-            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messages.length ),
+            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messagesTotal ),
                      'dialogMessage(): [' + md.messageDisplayed + '] (md.messageDisplayed)' );
             
             var message = md.messages[ md.messageDisplayed ];
@@ -83,7 +84,7 @@
             */
             var counter = md.messageDisplayed + 1 - j.count( md.messages, md.isDeleted, 0, md.messageDisplayed );
 
-            var total   = md.messages.length -
+            var total   = md.messagesTotal -
                           ( md.messageDisplayed + 1 - counter ) -                        // messages deleted *before* current message
                           j.count( md.messages, md.isDeleted, md.messageDisplayed + 1 ); // messages deleted *after*  current message
 
@@ -116,7 +117,8 @@
                        if ( messages && messages.length )
                        {
                            md.messages         = messages.slice( 0 ); // Shallow copy of messages array
-                           md.messageDisplayed = 0;
+                           md.messagesTotal    = md.messages.length;
+                           md.messageDisplayed = 0;                   // TODO: reset messages viewing only when really new messages have arrived
                            md.dialogMessage();
                        }
                    },
@@ -130,20 +132,24 @@
          */
         dialogNext : function()
         {
-            md.messageDisplayed++;
-            
-            for ( ;
-                  ( md.messageDisplayed < md.messages.length ) && ( md.messages[ md.messageDisplayed ].deleted );
-                  md.messageDisplayed++ ){}
-
-            if ( md.messageDisplayed == md.messages.length )
+            if ( j.count( md.messages, md.isDeleted ) == md.messagesTotal )
             {
-                // User has cycled through all messages in the list
-                md.messageDisplayed = 0;
+                // All messages in the list are deleted
                 md.dialogClose();
             }
             else
-            {   // Showing next message in a dialog
+            {
+                // Searches for the next available message to show, there is one!
+                md.messageDisplayed++;
+                if ( md.messageDisplayed == md.messagesTotal ){ md.messageDisplayed = 0 }
+
+                for ( ;
+                      ( md.messageDisplayed < md.messagesTotal ) && ( md.messages[ md.messageDisplayed ].deleted );
+                      md.messageDisplayed++ )
+                {
+                    if ( md.messageDisplayed == md.messagesTotal ){ md.messageDisplayed = 0 }
+                }
+
                 md.dialogMessage();
             }
         },
@@ -183,12 +189,12 @@
          */
         j( '#messages-display-dialog-next' ).click( function(){
 
-            j.assert( md.messageDisplayed < ( md.messages.length - 1 ), '"Next" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+            j.assert( md.messageDisplayed < ( md.messagesTotal - 1 ), '"Next" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
 
             var nextMessage = md.messageDisplayed + 1;
             while( md.messages[ nextMessage ].deleted ){ nextMessage++ }
 
-            j.assert(( nextMessage < md.messages.length ) && ( nextMessage > md.messageDisplayed ) && ( ! md.messages[ nextMessage ].deleted ),
+            j.assert(( nextMessage < md.messagesTotal ) && ( nextMessage > md.messageDisplayed ) && ( ! md.messages[ nextMessage ].deleted ),
                      '"Next" click: [' + nextMessage + '] (nextMessage)' );
 
             md.messageDisplayed = nextMessage;
@@ -212,7 +218,7 @@
 
             j( '#messages-display-progress' ).show();
 
-            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messages.length ),
+            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messagesTotal ),
                      '"Delete" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
             
             var message = md.messages[ md.messageDisplayed ];
