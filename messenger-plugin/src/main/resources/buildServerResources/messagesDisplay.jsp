@@ -20,10 +20,9 @@
         titleTemplate    : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
 
        /**
-        * User messages received, deleted and index of the message currently displayed
+        * User messages retrieved and index of the message being displayed currently
         */
         messages         : [],
-        messagesDeleted  : [],
         messageDisplayed : 0,
 
         /**
@@ -62,23 +61,44 @@
         },
 
         /**
+         * Determines if message specified is deleted
+         */
+        isDeleted : function( message ) { return j.choose( message.deleted, false )},
+
+        /**
          * Opens a dialog with details of the message specified by "md.messageDisplayed"
          */
         dialogMessage : function() {
 
+            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messages.length ),
+                     'dialogMessage(): [' + md.messageDisplayed + '] (md.messageDisplayed)' );
             var message = md.messages[ md.messageDisplayed ];
-            var counter = md.messageDisplayed + 1 -
-                          j.count( md.messagesDeleted, function( m, index ){ return ( index < md.messageDisplayed ) });
-            var total   = md.messages.length - md.messagesDeleted.length;
+
+           /**
+            * "Message x of y" dialog status - counter is 'x', total is 'y'
+            */
+            var counter = md.messageDisplayed + 1 - j.count( md.messages, md.isDeleted, 0, md.messageDisplayed );
+
+            var total   = md.messages.length -
+                          ( md.messageDisplayed + 1 - counter ) -                        // messages deleted *before* current message
+                          j.count( md.messages, md.isDeleted, md.messageDisplayed + 1 ); // messages deleted *after*  current message
 
             j.assert( counter > 0,      'dialogMessage(): [' + counter + '] (counter > 0)' );
             j.assert( total   > 0,      'dialogMessage(): [' + total   + '] (total   > 0)' );
             j.assert( counter <= total, 'dialogMessage(): [' + counter + '][' + total + '] (counter <= total)' );
 
-            j( '#messages-display-dialog-prev'   ).disable( counter == 1     ).click( function(){ });
-            j( '#messages-display-dialog-next'   ).disable( counter == total ).click( function(){ });
             j( '#messages-display-counter'       ).text( counter );
-            j( '#messages-display-counter-total' ).text( total  );
+            j( '#messages-display-counter-total' ).text( total   );
+
+            // "Prev" button
+            j( '#messages-display-dialog-prev'   ).disable( counter == 1     ).click( function(){
+                
+            });
+
+            // "Next" button
+            j( '#messages-display-dialog-next'   ).disable( counter == total ).click( function(){
+                
+            });
 
             md.dialog({ title   : md.titleTemplate.evaluate( message ),
                         text    : message.text,
@@ -166,7 +186,7 @@
                          j.assert( message.id == response,
                                    'delete(): [' + message.id + '] != [' + response + ']' );
 
-                         md.messagesDeleted.push( message );
+                         message.deleted = true;
 
                          md.dialog({ title      : 'Message Deleted',
                                      text       : 'Message "' + response + '" was deleted',
