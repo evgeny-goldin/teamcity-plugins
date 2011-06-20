@@ -75,6 +75,9 @@
             
             var message = md.messages[ md.messageDisplayed ];
 
+            j.assert( ! message.deleted,
+                     'dialogMessage(): [' + md.messageDisplayed + '] (message deleted)' );
+
            /**
             * "Message x of y" dialog status - counter is 'x', total is 'y'
             */
@@ -121,25 +124,22 @@
             );
         },
 
-        
-        /**
-         * Retrieves next index of message in array of messages
-         */
-        nextIndex : function( index ) {
-            j.assert( md.messages.length > 0, 'nextIndex(): messages length is [' + md.messages.length + ']' );
-            return (( index < ( md.messages.length - 1 )) ? index + 1 : 0 );
-        },
-
 
         /**
          * Shows the next message or closes the dialog if there are no messages left to show
          */
         dialogNext : function()
         {
-            md.messageDisplayed = md.nextIndex( md.messageDisplayed );
-            if ( md.messageDisplayed == 0 )
+            md.messageDisplayed++;
+            
+            for ( ;
+                  ( md.messageDisplayed < md.messages.length ) && ( md.messages[ md.messageDisplayed ].deleted );
+                  md.messageDisplayed++ ){}
+
+            if ( md.messageDisplayed == md.messages.length )
             {
                 // User has cycled through all messages in the list
+                md.messageDisplayed = 0;
                 md.dialogClose();
             }
             else
