@@ -72,6 +72,7 @@
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messages.length ),
                      'dialogMessage(): [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+            
             var message = md.messages[ md.messageDisplayed ];
 
            /**
@@ -91,14 +92,10 @@
             j( '#messages-display-counter-total' ).text( total   );
 
             // "Prev" button
-            j( '#messages-display-dialog-prev'   ).disable( counter == 1     ).click( function(){
-                
-            });
+            j( '#messages-display-dialog-prev' ).enable( counter > 1 );
 
             // "Next" button
-            j( '#messages-display-dialog-next'   ).disable( counter == total ).click( function(){
-                
-            });
+            j( '#messages-display-dialog-next' ).enable( counter < total );
 
             md.dialog({ title   : md.titleTemplate.evaluate( message ),
                         text    : message.text,
@@ -124,6 +121,7 @@
             );
         },
 
+        
         /**
          * Retrieves next index of message in array of messages
          */
@@ -131,6 +129,7 @@
             j.assert( md.messages.length > 0, 'nextIndex(): messages length is [' + md.messages.length + ']' );
             return (( index < ( md.messages.length - 1 )) ? index + 1 : 0 );
         },
+
 
         /**
          * Shows the next message or closes the dialog if there are no messages left to show
@@ -149,6 +148,7 @@
             }
         },
 
+
         /**
          * Closes the dialog
          */
@@ -160,21 +160,61 @@
 
     j( function() {
 
+        /**
+         * "Prev" button listener
+         */
+        j( '#messages-display-dialog-prev' ).click( function(){
+
+            j.assert( md.messageDisplayed > 0, '"Prev" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+
+            var prevMessage = md.messageDisplayed - 1;
+            while( md.messages[ prevMessage ].deleted ){ prevMessage-- }
+
+            j.assert(( prevMessage > -1 ) && ( prevMessage < md.messageDisplayed ) && ( ! md.messages[ prevMessage ].deleted ),
+                     '"Prev" click: [' + prevMessage + '] (prevMessage)' );
+
+            md.messageDisplayed = prevMessage;
+            md.dialogMessage();
+        });
+
+
+        /**
+         * "Next" button listener
+         */
+        j( '#messages-display-dialog-next' ).click( function(){
+
+            j.assert( md.messageDisplayed < ( md.messages.length - 1 ), '"Next" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+
+            var nextMessage = md.messageDisplayed + 1;
+            while( md.messages[ nextMessage ].deleted ){ nextMessage++ }
+
+            j.assert(( nextMessage < md.messages.length ) && ( nextMessage > md.messageDisplayed ) && ( ! md.messages[ nextMessage ].deleted ),
+                     '"Next" click: [' + nextMessage + '] (nextMessage)' );
+
+            md.messageDisplayed = nextMessage;
+            md.dialogMessage();
+        });
+
+        
        /**
-        * Message dialog "Close" button listener
+        * "Close" button listener
         */
         j( '#messages-display-dialog-close' ).click( function(){
             md.dialogClose();
             return false;
         });
 
+
        /**
-        * Message dialog "Delete" button listener
+        * "Delete" button listener
         */
         j( '#messages-display-dialog-delete' ).click( function(){
 
             j( '#messages-display-progress' ).show();
 
+            j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messages.length ),
+                     '"Delete" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+            
             var message = md.messages[ md.messageDisplayed ];
 
             j.ajax({ url      : '${action}',
@@ -189,7 +229,7 @@
                          message.deleted = true;
 
                          md.dialog({ title      : 'Message Deleted',
-                                     text       : 'Message "' + response + '" was deleted',
+                                     text       : 'Message "' + response + '" deleted',
                                      showStatus : false,
                                      closeAfter : 1 });
                      },
@@ -206,6 +246,7 @@
 
             return false;
         });
+
 
         /**
          * Setting up periodic "get all messages" request
