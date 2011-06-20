@@ -117,7 +117,7 @@
                        if ( messages && messages.length )
                        {
                            md.messages         = messages.slice( 0 ); // Shallow copy of messages array
-                           md.messagesTotal    = md.messages.length;
+                           md.messagesTotal    = messages.length;
                            md.messageDisplayed = 0;                   // TODO: reset messages viewing only when really new messages have arrived
                            md.dialogMessage();
                        }
