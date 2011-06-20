@@ -20,18 +20,52 @@
         titleTemplate    : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
 
        /**
-        * User messages retrieved and index of the message being displayed currently
+        * Current state
         */
-        messages         : [],
-        messagesTotal    : 0,
-        messageDisplayed : 0,
+        newMessages      : null,  // Array of new messages retrieved with last update
+        messages         : null,  // Array of current messages displayed
+        messagesTotal    : -1,    // Amount of messages currently displayed ( = messages.length )
+        messageDisplayed : -1,    // Index of the message being displayed currently
+
+
+        /**
+         * Checks whether new messages were received and updates the current state
+         */
+        checkForUpdates : function() {
+
+            if ( md.newMessages == null ) { return false }
+
+            j.assert( j.isArray( md.newMessages ), 'checkForUpdates(): md.newMessages is not an array' )
+
+            var updateRequired =
+                ( md.messages == null )                         || // No existing messages, first update
+                ( md.newMessages.length != md.messages.length ) || // Different number of new messages
+                ( j.count( md.newMessages, function( m ){ return md.messages.indexOf( m ) < 0 } )); // Unknown new messages found
+
+            if ( updateRequired )
+            {
+                console.log( 'Update!' );
+
+                md.messages         = md.newMessages;
+                md.messagesTotal    = md.newMessages.length;
+                md.messageDisplayed = 0;
+            }
+            else
+            {
+                console.log( 'No update!' );
+            }
+
+            md.newMessages = null;
+            return updateRequired;
+        },
+
 
         /**
          * Displays dialog widget according to options specified
          */
         dialog : function( options ) {
 
-            options = j.extend({ showStatus : true, closeAfter : -1, urgency : '' }, options );
+            options = j.extend({ showStatus : true, nextAfter : -1, urgency : '' }, options );
 
             j.assert( options.title, 'dialog(): \'options.title\' is not specified' );
             j.assert( options.text,  'dialog(): \'options.text\' is not specified'  );
@@ -58,7 +92,7 @@
                                             removeClass( 'dialog-critical' );
             }
 
-            if ( options.closeAfter > 0 ){ md.dialogNext.delay( options.closeAfter ) }
+            if ( options.nextAfter > 0 ){ md.dialogNext.delay( options.nextAfter ) }
         },
 
         /**
@@ -72,12 +106,12 @@
         dialogMessage : function() {
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messagesTotal ),
-                     'dialogMessage(): [' + md.messageDisplayed + '] (md.messageDisplayed)' );
-            
+                     'dialogMessage(): [' + md.messageDisplayed + '][' + md.messagesTotal + '] (md.messageDisplayed, md.messagesTotal)' );
+
             var message = md.messages[ md.messageDisplayed ];
 
             j.assert( ! message.deleted,
-                     'dialogMessage(): [' + md.messageDisplayed + '] (message deleted)' );
+                     'dialogMessage(): [' + md.messageDisplayed + '][' + message.id + '] (md.messageDisplayed, message.id - deleted message)' );
 
            /**
             * "Message x of y" dialog status - counter is 'x', total is 'y'
@@ -116,10 +150,8 @@
                    {
                        if ( messages && messages.length )
                        {
-                           md.messages         = messages.slice( 0 ); // Shallow copy of messages array
-                           md.messagesTotal    = messages.length;
-                           md.messageDisplayed = 0;                   // TODO: reset messages viewing only when really new messages have arrived
-                           md.dialogMessage();
+                           md.newMessages = messages.slice( 0 ); // Shallow copy of messages array
+                           if ( md.checkForUpdates()) { md.dialogMessage(); }
                        }
                    },
                    'json'
@@ -132,6 +164,11 @@
          */
         dialogNext : function()
         {
+            if ( ! md.checkForUpdates())
+            {
+
+            }
+
             if ( j.count( md.messages, md.isDeleted ) == md.messagesTotal )
             {
                 // All messages in the list are deleted
@@ -201,7 +238,7 @@
             md.dialogMessage();
         });
 
-        
+
        /**
         * "Close" button listener
         */
@@ -220,7 +257,7 @@
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.messagesTotal ),
                      '"Delete" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
-            
+
             var message = md.messages[ md.messageDisplayed ];
 
             j.ajax({ url      : '${action}',
@@ -237,7 +274,7 @@
                          md.dialog({ title      : 'Message Deleted',
                                      text       : 'Message "' + response + '" deleted',
                                      showStatus : false,
-                                     closeAfter : 1 });
+                                     nextAfter  : 1 });
                      },
                      error    : function() {
                          md.dialog({ title      : 'Message not Deleted',
