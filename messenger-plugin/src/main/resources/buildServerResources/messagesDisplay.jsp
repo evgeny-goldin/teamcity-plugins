@@ -41,7 +41,9 @@
             if ( options.showStatus ) { j( '#messages-display-dialog-status' ).show(); }
             else                      { j( '#messages-display-dialog-status' ).hide(); }
 
-            j( '#messages-display-dialog-text' ).text( options.text );
+            j( '#messages-display-dialog-text' ).text( options.text.length > 250 ?
+                                                       options.text.substring( 0, 250 ) + ' ..' :
+                                                       options.text );
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
                                                      position : 'top',
@@ -107,23 +109,25 @@
         /**
          * Makes an Ajax request, retrieves messages for the current user and shows the first one in a dialog
          */
-        getMessages   : function() {
+        unknownMessage : function( message ) { return ( ! md.messages.contains( function( m ){ return ( m.id == message.id ) } )) },
+        getMessages    : function() {
             j.get( '${action}',
                    { t: j.now() },
                    function ( newMessages ) /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
                    {
-                       var isUpdate = newMessages && newMessages.length &&
-                                      (( md.messages.length < 1 ) || newMessages.any( function( nm ){
-                                          // Is there any new message that isn't found in existing messages?
-                                          return ( ! md.messages.contains( function( m ){ return ( m.id == nm.id ) } ));
-                                      }));
+                       if ( ! ( newMessages && newMessages.length )) { return }
+
+                       var isUpdate =
+                           (( md.nMessages() < 1 )                   || // No existing message yet
+                            ( md.nMessages() != newMessages.length ) || // There are more or less messages on the server
+                            ( newMessages.any( md.unknownMessage )));   // Is there any new message that is unknown ?
 
                        if ( isUpdate )
                        {
                            md.messageDisplayed = 0;
                            md.messages         = newMessages.slice( 0 ); // Shallow copy of messages array
 
-                           j.assert( md.messages.length, 'getMessages(): [' + md.messages.length + '] (md.messages.length)' );
+                           j.assert( md.nMessages(), 'getMessages(): [' + md.nMessages() + '] (md.nMessages())' );
                            
                            md.dialogMessage();
                        }
@@ -268,18 +272,16 @@
 </script>
 
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
-	<p>
-		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        <span id="messages-display-dialog-text"></span>
-        <div  id="messages-display-dialog-status" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px;">
-            <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
-            <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
-            <span style="margin-left: 20%">
-                Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>
-            </span>
-            <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
-            <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">[Delete]</a>
-            <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
-        </div>
-	</p>
+    <div id="messages-display-dialog-text" style="margin:5px; margin-top: 2px; margin-bottom: -5px;"></div>
+    <hr style="border: 0.1em ridge"/>
+    <div  id="messages-display-dialog-status" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px; margin-top: 5px">
+        <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
+        <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
+        <span style="margin-left: 20%">
+            Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>
+        </span>
+        <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
+        <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">[Delete]</a>
+        <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
+    </div>
 </div>

@@ -68,7 +68,7 @@ final class Message
         this.timestamp    = message.timestamp
         this.sender       = message.sender
         this.urgency      = message.urgency
-        this.message      = util.htmlEscape( message.message )
+        this.message      = message.message
         this.longevity    = message.longevity
         this.sendToUsers  = message.sendToUsers
         this.sendToGroups = message.sendToGroups
