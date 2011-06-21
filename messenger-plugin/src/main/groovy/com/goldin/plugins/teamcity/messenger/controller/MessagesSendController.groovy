@@ -45,7 +45,7 @@ class MessagesSendController extends MessagesBaseController
         Message      message       = new Message( username, urgency, messageText, longevity, sendToAll, sendToGroups, sendToUsers )
         long         messageId     = messagesBean.sendMessage( message )
 
-        new ModelAndView( new TextView( messageId as String, context.locale ))
+        new TextModelAndView( messageId as String, context.locale )
     }
 
 

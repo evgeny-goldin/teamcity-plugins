@@ -24,18 +24,20 @@ class MessagesDisplayExtension extends SimplePageExtension
     MessagesDisplayExtension ( PagePlaces pagePlaces, MessagesContext context, MessagesConfiguration config )
     {
         super( pagePlaces, PlaceId.ALL_PAGES_HEADER, context.pluginName, 'messagesDisplay.jsp' )
-        
+
         this.position            = PositionConstraint.first()
         this.ajaxRequestInterval = config.ajaxRequestInterval
         register()
 
         addJsFile(  'js/jquery-ui-1.8.13.custom.min.js' )
-        addJsFile(  'js/jquery-plugins.js' )
+        addJsFile(  'js/jquery-plugins.min.js' )
+        addJsFile(  'js/messages-display.min.js' )
+
         addCssFile( 'css/custom-theme/jquery-ui-1.8.13.custom.css' )
         addCssFile( 'css/messenger-plugin.css' )
     }
 
-    
+
     @Override
     @Requires({ request })
     boolean isAvailable ( final HttpServletRequest request )

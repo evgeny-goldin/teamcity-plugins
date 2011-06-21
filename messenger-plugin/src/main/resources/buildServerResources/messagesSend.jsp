@@ -1,3 +1,4 @@
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesSendExtension.fillModel() --%>
@@ -9,103 +10,10 @@
 <style type="text/css">
     .ui-dialog-titlebar{ display: none } /* Hiding dialog title */
 </style>
-<script type="text/javascript">
-
-    var j  = jQuery;
-    var ms = { /* Shortcut for "messagesSend" */
-
-       /**
-        * Opens the dialog with message specified
-        */
-        dialog : function( message, closeAfter )
-        {
-            j( '#messages-send-dialog-text' ).text( message );
-            j( '#messages-send-dialog'      ).dialog({ height : 55,
-                                                       width  : 240,
-                                                       close  : ms.dialogClose });
-
-            if ( closeAfter > 0 ) { ms.dialogClose.delay( closeAfter ) }
-        },
-        /**
-         * Closes the dialog and enables "Send" button
-         */
-        dialogClose : function()
-        {
-            j( '#messages-send-dialog'  ).dialog( 'destroy' );
-            j( '#messages-send-message' ).val( '' ).focus();
-            j( '#messages-send-button'  ).enable();
-        }
-    };
-
-    j( function() {
-
-        j( '#messages-send-message' ).focus();
-
-       /**
-        * "Message Sent" Ok button listener
-        */
-        j( '#messages-send-dialog-ok' ).click( function(){ ms.dialogClose(); return false; });
-
-       /**
-        * Listener enabling and disabling groups and users according to "Send to All" checkbox
-        */
-        j( '#messages-send-all' ).change( function() {
-            j( '#messages-send-groups, #messages-send-users' ).disable( this.value == 'on' );
-        });
-        j( '#messages-send-all' ).click().change();
-        
-       /**
-        * Listener submitting a request when form is submitted
-        */
-        j( '#messages-send-form' ).submit( function() {
-
-            if ( ! j.trim( j( '#messages-send-message' ).val()))
-            {
-                j( '#messages-send-message'       ).addClass( 'errorField'   );
-                j( '#messages-send-error-message' ).text( 'Message is empty' );
-                return false;
-            }
-            else
-            {
-                j( '#messages-send-message'       ).removeClass( 'errorField' );
-                j( '#messages-send-error-message' ).text( '' );
-            }
-
-            var    recipientsSelected = ( j( '#messages-send-all'    ).attr( 'checked' ) ||
-                                          j( '#messages-send-groups' ).val()             ||
-                                          j( '#messages-send-users'  ).val());
-            if ( ! recipientsSelected )
-            {
-                j( '#messages-send-error-selection' ).text( 'No recipients selected' );
-                return false;
-            }
-            else
-            {
-                j( '#messages-send-error-selection' ).text( '' );
-            }
-
-            j( '#messages-send-button'   ).disable();
-            j( '#messages-send-progress' ).show();
-
-            j.ajax({ url      : this.action,
-                     type     : 'POST',
-                     data     : j( this ).serialize(),
-                     dataType : 'text',
-                     success  : function( response ) { ms.dialog( 'Message "' + response + '" was sent', 1 )},
-                     error    : function()           { ms.dialog( 'Failed to send the message',         -1 )},
-                     complete : function()           { j( '#messages-send-progress' ).hide()}
-                    });
-
-            return false;
-        });
-    })
-</script>
-
 
 <div id="messages-send-dialog" style="display:none; overflow:hidden;">
 	<p>
-		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-        <span id="messages-send-dialog-text"></span>
+        <div id="messages-send-dialog-text" style="float:left;"></div>
         <a id="messages-send-dialog-ok" href="#" class="text-link" style="float: right">[Ok]</a>
 	</p>
 </div>

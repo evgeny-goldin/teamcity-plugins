@@ -1,9 +1,10 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.Message
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesPersistency
+import jetbrains.buildServer.serverSide.ServerPaths
 import org.gcontracts.annotations.Requires
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 
 /**
  * {@link MessagesPersistency} implementation
@@ -11,17 +12,19 @@ import org.gcontracts.annotations.Requires
 class MessagesPersistencyImpl implements MessagesPersistency
 {
 
-    final MessagesContext context
+    private final File directory
 
-    @Requires({ context })
-    MessagesPersistencyImpl ( MessagesContext context )
+
+    @Requires({ context && paths })
+    MessagesPersistencyImpl ( MessagesContext context, ServerPaths paths )
     {
-        this.context = context
+        directory = new File( paths.pluginDataDirectory, context.pluginName );
+        assert ( directory.isDirectory() || directory.mkdirs());
     }
 
-    
+
     @Override
-    void persist (List<Message> messages)
+    void persist ( List<Message> messages )
     {
 
     }

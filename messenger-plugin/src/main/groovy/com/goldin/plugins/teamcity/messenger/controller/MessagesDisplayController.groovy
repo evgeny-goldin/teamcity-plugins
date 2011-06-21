@@ -36,43 +36,36 @@ class MessagesDisplayController extends MessagesBaseController
         manager.registerController( "/$MAPPING", this )
     }
 
-    
+
     @Requires({ requestParams && user && username })
     @Ensures({ result != null })
     ModelAndView handleRequest ( Map<String, ?> requestParams, SUser user, String username )
     {
         String messageId = requestParams[ 'id' ]
-        
+
         if ( messageId )
         {   /**
              * User deletes message displayed
              */
             messagesBean.deleteMessageByUser( messageId as long, username )
-            return new ModelAndView( new TextView( messageId, context.locale ))
+            new TextModelAndView( messageId, context.locale )
         }
+        else
+        {
+            /**
+             * User retrieves all his messages
+             */
+            def messages = messagesBean.getMessagesForUser( username ).collect {
+                Message m ->
 
-        /**
-         * User retrieves all his messages
-         */
-        def groups   = context.getUserGroups( username )
-        def messages = messagesBean.getMessagesForUser( username ).collect {
-            Message m ->
+                def data  = m.displayData()
+                def date  = new Date( data[ 'timestamp' ] as long )
 
-            def recipient = m.sendToAll                              ? 'all' :
-                            m.sendToUsers.contains( username )       ? "user $username" :
-                            util.intersect( m.sendToGroups, groups ) ? "groups ${ m.sendToGroups.intersect( groups )}" :
-                                                                       ''
-            assert recipient, "Can't determine recipient for [$m]"
+                data << [ date : dateFormatter.format( date ),
+                          time : timeFormatter.format( date )]
+            }
 
-            [ id        : m.id,
-              urgency   : m.urgency.toString().toLowerCase( context.locale ),
-              sender    : context.getUser( m.sender ).descriptiveName,
-              text      : m.message,
-              recipient : recipient,
-              date      : dateFormatter.format( new Date( m.timestamp )),
-              time      : timeFormatter.format( new Date( m.timestamp ))]
+            new TextModelAndView( new JsonBuilder( messages ).toString(), 'application/json', context.locale )
         }
-
-        new ModelAndView( new TextView( new JsonBuilder( messages ).toString(), 'application/json', context.locale ))
     }
 }

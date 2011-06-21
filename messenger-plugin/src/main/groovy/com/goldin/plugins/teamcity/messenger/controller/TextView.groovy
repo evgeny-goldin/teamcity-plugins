@@ -6,6 +6,7 @@ import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.web.servlet.View
 
+
 /**
  * Textual {@link View} implementation.
  */
@@ -18,7 +19,7 @@ class TextView implements View
 
 
     @Requires({ text && mimeType && charset && locale })
-    TextView ( String text, String mimeType = 'text/plain', String charset = 'UTF-8', Locale locale )
+    TextView ( String text, String mimeType, String charset, Locale locale )
     {
         this.text     = text
         this.mimeType = mimeType
@@ -26,12 +27,12 @@ class TextView implements View
         this.locale   = locale
     }
 
-    
+
     @Override
     @Ensures({ result })
     String getContentType () { "$mimeType; charset=$charset" }
 
-    
+
     @Override
     @Requires({ response })
     void render ( Map model, HttpServletRequest request, HttpServletResponse response )
@@ -40,7 +41,7 @@ class TextView implements View
         response.contentType   = contentType
         response.contentLength = bytes.size()
         response.locale        = locale
-        
+
         response.outputStream.write( bytes )
         response.outputStream.flush()
     }

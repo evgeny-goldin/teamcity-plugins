@@ -14,10 +14,10 @@ final class Message
     */
     public enum Urgency { CRITICAL, WARNING, INFO }
 
-    final long            id            // Message id, assigned when added to messages table: MessagesTable.addMessage()
-    final MessagesContext context       // Context instance
-    final MessagesUtil    util          // Util instance
+    private final MessagesContext context // Context instance
+    private final MessagesUtil    util    // Util instance
 
+    final long            id            // Message id, assigned when added to messages table: MessagesTable.addMessage()
     final long            timestamp     // Message creation timestamp
     final String          sender        // Message sender, a username
     final Urgency         urgency       // Message urgency
@@ -42,7 +42,7 @@ final class Message
         this.id           = -1
         this.context      = null
         this.util         = null
-        
+
         this.timestamp    = System.currentTimeMillis()
         this.sender       = sender
         this.urgency      = urgency
@@ -64,7 +64,7 @@ final class Message
         this.id           = id
         this.context      = context
         this.util         = util
-        
+
         this.timestamp    = message.timestamp
         this.sender       = message.sender
         this.urgency      = message.urgency
@@ -79,15 +79,31 @@ final class Message
 
     @Override
     int hashCode () { id.hashCode() }
-    
+
 
     @Override
     boolean equals ( Object object ) { ( object instanceof Message ) && (( Message ) object ).id == id }
 
 
     /**
+     * Retrieves {@link Message} data to be sent over JSON to display it to user.
+     * @return {@link Message} data to be sent over JSON to display it to user
+     * @see com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController#handleRequest
+     */
+    @Requires({ ( this.id > 0 ) && this.context })
+    @Ensures({ result && result.id && result.text })
+    Map<String, String> displayData()
+    {
+        [ id        : id as String,
+          urgency   : urgency.toString().toLowerCase( context.locale ),
+          sender    : context.getUser( sender ).descriptiveName,
+          text      : message,
+          timestamp : timestamp as String ]
+    }
+
+    /**
      * Determines if message should be delivered to the group specified.
-     * 
+     *
      * @param groupName message recipient group name
      * @return true if message should be delivered to the group specified,
      *         false otherwise
