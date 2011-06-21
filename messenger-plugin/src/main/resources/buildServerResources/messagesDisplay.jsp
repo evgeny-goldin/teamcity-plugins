@@ -31,15 +31,23 @@
          */
         dialog : function( options ) {
 
-            options = j.extend({ showStatus : true, urgency : '' }, options );
+            options = j.extend({ statusMessage : false, urgency : '' }, options );
 
             j.assert( options.title, 'dialog(): \'options.title\' is not specified' );
             j.assert( options.text,  'dialog(): \'options.text\' is not specified'  );
 
             md.dialogClose();
 
-            if ( options.showStatus ) { j( '#messages-display-dialog-status' ).show(); }
-            else                      { j( '#messages-display-dialog-status' ).hide(); }
+            if ( options.statusMessage ) {
+                j( '#messages-display-dialog-buttons' ).hide();
+                j( '#messages-display-dialog-text'    ).css({ 'margin-top' : '30px',
+                                                              'text-align' : 'center' });
+            }
+            else {
+                j( '#messages-display-dialog-buttons' ).show();
+                j( '#messages-display-dialog-text'    ).css({ 'margin-top' : '2px',
+                                                              'text-align' : 'left' });
+            }
 
             j( '#messages-display-dialog-text' ).text( options.text.length > 250 ?
                                                        options.text.substring( 0, 250 ) + ' ..' :
@@ -218,9 +226,9 @@
 
                          message.deleted = true;
 
-                         md.dialog({ title      : 'Message Deleted',
-                                     text       : 'Message "' + response + '" deleted',
-                                     showStatus : false });
+                         md.dialog({ title         : 'Message Deleted',
+                                     text          : 'Message "' + response + '" deleted',
+                                     statusMessage : true });
                         /**
                          * Invoked in one second, displays next message after the current one is deleted
                          * or closes the dialog if all messages are deleted
@@ -247,10 +255,10 @@
                          }).delay( 1 );
                      },
                      error    : function() {
-                         md.dialog({ title      : 'Message not Deleted',
-                                     text       : 'Failed to delete message "' + messageId + '"',
-                                     showStatus : false,
-                                     urgency    : 'critical' });
+                         md.dialog({ title         : 'Message not Deleted',
+                                     text          : 'Failed to delete message "' + messageId + '"',
+                                     statusMessage : true,
+                                     urgency       : 'critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
@@ -259,6 +267,7 @@
 
             return false;
         });
+
 
 
         /**
@@ -272,8 +281,8 @@
 </script>
 
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
-    <div id="messages-display-dialog-text" style="margin:5px; margin-top: 2px; margin-bottom: -5px;"></div>
-    <div  id="messages-display-dialog-status" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px; margin-top: 5px">
+    <div id="messages-display-dialog-text" style="margin:5px; margin-bottom: -5px"></div>
+    <div  id="messages-display-dialog-buttons" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px; margin-top: 5px">
         <hr style="border: 0.1em ridge; margin-bottom: 1px"/>
         <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
         <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
