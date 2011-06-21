@@ -52,7 +52,7 @@
             j( '#messages-display-dialog-text' ).text( options.text.length > 250 ?
                                                        options.text.substring( 0, 250 ) + ' ..' :
                                                        options.text );
-            
+
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
                                                      position : 'top',
@@ -70,10 +70,18 @@
             }
         },
 
+
         /**
          * Determines if message specified is deleted
          */
         isDeleted : function( message ) { return j.choose( message.deleted, false )},
+
+
+        /**
+         * Determines if message specified is unknown, i.e., it doesn't exist in md.messages
+         */
+        unknownMessage : function( message ) { return ( ! md.messages.contains( function( m ){ return ( m.id == message.id ) } )) },
+
 
         /**
          * Opens a dialog with details of the message specified by "md.messageDisplayed"
@@ -82,24 +90,24 @@
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.nMessages()),
                      'dialogMessage(): [' + md.messageDisplayed + '][' + md.nMessages() + '] (md.messageDisplayed, md.nMessages())' );
-            
+
             var message = md.messages[ md.messageDisplayed ];
 
             j.assert( ! message.deleted,
                      'dialogMessage(): [' + md.messageDisplayed + '][' + message.id + '] (md.messageDisplayed, message.id - deleted)' );
 
            /**
-            * "Message x of y" dialog status - counter is 'x', total is 'y'
+            * "Message <counter> of <total>" dialog status
             */
-            var counter = md.messageDisplayed + 1 - md.messages.count( md.isDeleted, 0, md.messageDisplayed );
+            var messagesDeletedBefore = md.messages.count( md.isDeleted, 0, md.messageDisplayed  );
+            var messagesDeletedAfter  = md.messages.count( md.isDeleted, md.messageDisplayed + 1 );
+            var counter               = md.messageDisplayed + 1 - messagesDeletedBefore;
+            var total                 = md.nMessages() - messagesDeletedBefore - messagesDeletedAfter;
 
-            var total   = md.nMessages() -
-                          ( md.messageDisplayed + 1 - counter ) -                     // messages deleted *before* current message
-                          md.messages.count( md.isDeleted, md.messageDisplayed + 1 ); // messages deleted *after*  current message
-
-            j.assert( counter > 0,      'dialogMessage(): [' + counter + '] (counter > 0)' );
-            j.assert( total   > 0,      'dialogMessage(): [' + total   + '] (total   > 0)' );
-            j.assert( counter <= total, 'dialogMessage(): [' + counter + '][' + total + '] (counter <= total)' );
+            j.assert( counter > 0,               'dialogMessage(): [' + counter + '] (counter)' );
+            j.assert( total   > 0,               'dialogMessage(): [' + total   + '] (total)' );
+            j.assert( counter <= total,          'dialogMessage(): [' + counter + '][' + total + '] (counter, total)' );
+            j.assert( total   <= md.nMessages(), 'dialogMessage(): [' + total   + '][' + md.nMessages() + '] (total, md.nMessages())' );
 
             j( '#messages-display-counter'       ).text( counter );
             j( '#messages-display-counter-total' ).text( total   );
@@ -118,7 +126,6 @@
         /**
          * Makes an Ajax request, retrieves messages for the current user and shows the first one in a dialog
          */
-        unknownMessage : function( message ) { return ( ! md.messages.contains( function( m ){ return ( m.id == message.id ) } )) },
         getMessages    : function() {
             j.get( '${action}',
                    { t: j.now() },
@@ -128,16 +135,16 @@
 
                        var isUpdate =
                            (( md.nMessages() < 1 )                   || // No existing message yet
-                            ( md.nMessages() != newMessages.length ) || // There are more or less messages on the server
-                            ( newMessages.any( md.unknownMessage )));   // Is there any new message that is unknown ?
+                            ( md.nMessages() != newMessages.length ) || // Number of messages on the server has changed
+                            ( newMessages.any( md.unknownMessage )));   // Some of new messages are new
 
                        if ( isUpdate )
                        {
                            md.messageDisplayed = 0;
-                           md.messages         = newMessages.slice( 0 ); // Shallow copy of messages array
+                           md.messages         = newMessages.slice( 0 ); // Shallow copy of the messages array
 
                            j.assert( md.nMessages(), 'getMessages(): [' + md.nMessages() + '] (md.nMessages())' );
-                           
+
                            md.dialogMessage();
                        }
                    },
@@ -194,7 +201,7 @@
             md.dialogMessage();
         });
 
-        
+
        /**
         * "Close" button listener
         */
@@ -213,7 +220,7 @@
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.nMessages()),
                      '"Delete" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
-            
+
             var message = md.messages[ md.messageDisplayed ];
 
             j.ajax({ url      : '${action}',
@@ -252,7 +259,7 @@
                                  md.messageDisplayed = nextMessage;
                                  md.dialogMessage();
                              }
-                             
+
                          }).delay( 1 );
                      },
                      error    : function() {
