@@ -2,12 +2,15 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+import jetbrains.buildServer.serverSide.MainConfigProcessor
 import org.gcontracts.annotations.Requires
+import org.jdom.Element
+
 
 /**
  * {@link MessagesConfiguration} implementation
  */
-class MessagesConfigurationImpl implements MessagesConfiguration
+class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProcessor
 {
     final MessagesContext context
 
@@ -17,7 +20,9 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         this.context = context
     }
 
-    
+    @Override
+    boolean minify () { true }
+
     @Override
     int getAjaxRequestInterval () { 20 }
 
@@ -35,5 +40,19 @@ class MessagesConfigurationImpl implements MessagesConfiguration
 
     @Override
     String getTimeFormatPattern () { 'HH:mm' }                    // "17:03"
+
+    
+    @Override
+    void readFrom ( Element rootElement )
+    {
+        System.out.println( 'readFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFrom' );
+    }
+
+
+    @Override
+    void writeTo ( Element parentElement )
+    {
+        System.out.println( 'writeTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTo' );
+    }
 }
 

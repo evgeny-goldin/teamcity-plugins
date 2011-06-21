@@ -87,6 +87,7 @@ subprojects {
         provided    "jetbrains:teamcity-openapi:$teamCityVersion",
                     "jetbrains:teamcity-openapi.util:$teamCityVersion",
                     "org.springframework:spring-webmvc:$springVersion",
+                    'org.jdom:jdom:1.1', // For reading configuration
                     'javax.servlet:servlet-api:2.5'
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
         testRuntime "org.apache.ant:ant:$antVersion"

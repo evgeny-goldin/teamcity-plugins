@@ -9,7 +9,7 @@
         dialog : function( message, closeAfter )
         {
             j( '#messages-send-dialog-text' ).text( message );
-            j( '#messages-send-dialog'      ).dialog({ height : 48,
+            j( '#messages-send-dialog'      ).dialog({ height : 40,
                                                        width  : 180,
                                                        close  : ms.dialogClose });
 
@@ -81,7 +81,7 @@
                      data     : j( this ).serialize(),
                      dataType : 'text',
                      success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 )},
-                     error    : function()           { ms.dialog( 'Failed to send the message',     -1 )},
+                     error    : function()           { ms.dialog( 'Failed to send message',         -1 )},
                      complete : function()           { j( '#messages-send-progress' ).hide()}
                     });
 

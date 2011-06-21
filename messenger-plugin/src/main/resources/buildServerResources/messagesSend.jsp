@@ -12,10 +12,8 @@
 </style>
 
 <div id="messages-send-dialog" style="display:none; overflow:hidden;">
-	<p>
-        <div id="messages-send-dialog-text" style="float:left;"></div>
-        <a id="messages-send-dialog-ok" href="#" class="text-link" style="float: right">[Ok]</a>
-	</p>
+    <div id="messages-send-dialog-text" style="float:left; margin-top:3px"></div>
+    <a id="messages-send-dialog-ok" href="#" class="text-link" style="float: right; margin-top:3px">[Ok]</a>
 </div>
 
 <div class="settingsBlock" style="">

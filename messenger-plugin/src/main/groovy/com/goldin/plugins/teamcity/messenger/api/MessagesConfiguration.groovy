@@ -7,6 +7,10 @@ import org.gcontracts.annotations.Ensures
  */
 interface MessagesConfiguration
 {
+
+    boolean minify ()
+
+    
     @Ensures({ result > 0 })
     int    getAjaxRequestInterval()
 
