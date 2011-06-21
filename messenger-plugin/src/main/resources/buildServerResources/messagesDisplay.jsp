@@ -52,6 +52,7 @@
             j( '#messages-display-dialog-text' ).text( options.text.length > 250 ?
                                                        options.text.substring( 0, 250 ) + ' ..' :
                                                        options.text );
+            
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
                                                      position : 'top',
