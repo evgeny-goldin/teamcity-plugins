@@ -273,8 +273,8 @@
 
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
     <div id="messages-display-dialog-text" style="margin:5px; margin-top: 2px; margin-bottom: -5px;"></div>
-    <hr style="border: 0.1em ridge"/>
     <div  id="messages-display-dialog-status" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px; margin-top: 5px">
+        <hr style="border: 0.1em ridge; margin-bottom: 1px"/>
         <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
         <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
         <span style="margin-left: 20%">
