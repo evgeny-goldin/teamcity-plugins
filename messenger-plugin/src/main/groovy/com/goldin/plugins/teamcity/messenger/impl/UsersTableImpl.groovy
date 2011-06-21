@@ -1,10 +1,8 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import java.util.concurrent.ConcurrentHashMap
-import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
-
 
 /**
  * {@link UsersTable} implementation
@@ -28,9 +26,8 @@ class UsersTableImpl implements UsersTable
         this.util          = util
     }
 
-    
+
     @Override
-    @Requires({ messages != null })
     void init ( List<Message> messages )
     {
         messages.each{ addMessage( it ) }
@@ -43,10 +40,8 @@ class UsersTableImpl implements UsersTable
         for ( username  in users.keySet())  { util.sortForUser ( users[ username   ], username  ) }
     }
 
-    
+
     @Override
-    @Requires({ username })
-    @Ensures({ result != null })
     List<Message> getMessagesForUser ( String username )
     {
         new ArrayList( users[ username ] ).asImmutable()
@@ -54,8 +49,6 @@ class UsersTableImpl implements UsersTable
 
 
     @Override
-    @Requires({ groupName })
-    @Ensures({ result != null })
     List<Message> getMessagesForGroup ( String groupName )
     {
         new ArrayList( groups[ groupName ] ).asImmutable()
@@ -63,7 +56,6 @@ class UsersTableImpl implements UsersTable
 
 
     @Override
-    @Ensures({ result != null })
     List<Message> getMessagesForAll ()
     {
         new ArrayList( all ).asImmutable()
@@ -71,13 +63,11 @@ class UsersTableImpl implements UsersTable
 
 
     @Override
-    @Requires({ m && ( m.id > 0 ) })
-    @Ensures({ ( result > 0 ) && ( result == m.id ) })
-    long addMessage ( Message m )
+    long addMessage ( Message message)
     {
-        if ( m.sendToAll )  { all          << m }
-        m.sendToGroups.each { groups[ it ] << m }
-        m.sendToUsers. each { users [ it ] << m }
-        m.id
+        if ( message.sendToAll )  { all          << message }
+        message.sendToGroups.each { groups[ it ] << message }
+        message.sendToUsers. each { users [ it ] << message }
+        message.id
     }
 }

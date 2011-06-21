@@ -14,12 +14,15 @@ interface MessagesContext
     @Ensures({ result })
     String getPluginName()
 
+
     @Requires({ username })
     @Ensures({ result })
     SUser getUser( String username )
 
+
     @Ensures({ result })
     Locale getLocale()
+
 
     @Requires({ username })
     @Ensures({ result })

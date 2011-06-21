@@ -38,8 +38,7 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ message && ( message.id < 0 ) && message.usersDeleted.isEmpty() })
-    @Ensures({  result  && ( result.id  > 0 ) && ( result.timestamp == message.timestamp ) })
+    @Requires({ message.usersDeleted.isEmpty() })
     Message addMessage ( Message message )
     {
         long    messageId  = nextMessageId()
@@ -52,8 +51,7 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ ( messageId > 0 ) && messages.containsKey( messageId ) })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Requires({ messages.containsKey( messageId ) })
     Message getMessage ( long messageId )
     {
         messages[ messageId ]
@@ -61,8 +59,8 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ ( messageId > 0 ) && messages.containsKey( messageId ) })
-    @Ensures({ result && ( result.id == messageId ) && ( ! messages.containsKey( messageId )) })
+    @Requires({  messages.containsKey( messageId ) })
+    @Ensures({ ! messages.containsKey( messageId ) })
     Message deleteMessage ( long messageId )
     {
         messages.remove( messageId )
@@ -70,13 +68,13 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ ( messageId > 0 ) && messages.containsKey( messageId ) && username })
-    @Ensures({ result && ( result.id == messageId ) && result.usersDeleted.contains( username ) })
+    @Requires({ messages.containsKey( messageId ) && username })
+    @Ensures({ result.usersDeleted.contains( username ) })
     Message deleteMessageByUser ( long messageId, String username )
     {
         Message m = messages[ messageId ]
         assert  m.forUser( username ), "[$m] is not for user [$username], can not be deleted by him"
-        
+
         m.usersDeleted << username
         if (( ! m.sendToAll ) && ( ! m.sendToGroups ) && ( m.usersDeleted.containsAll( m.sendToUsers )))
         {
@@ -85,7 +83,7 @@ class MessagesTableImpl implements MessagesTable
         m
     }
 
-    
+
     @Override
     void deleteAllMessages ()
     {
@@ -94,21 +92,19 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Ensures({ result != null })
     List<Message> getAllMessages ()
     {
         new ArrayList<Message>( messages.values())
     }
 
-    
+
     @Override
-    @Requires({ messageId > 0 })
     boolean containsMessage ( long messageId )
     {
         messages.containsKey( messageId )
     }
 
-    
+
     @Override
     int getNumberOfMessages ()
     {
@@ -123,7 +119,7 @@ class MessagesTableImpl implements MessagesTable
         // Save nextMessageId
     }
 
-    
+
     @Override
     void restore ()
     {
