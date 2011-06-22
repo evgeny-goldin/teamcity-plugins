@@ -67,7 +67,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
      * @param o object to convert
      * @return object's mapping
      */
-    @Requires({ o })
+    @Requires({( o instanceof Node ) || ( o instanceof Element )})
     @Ensures({ result != null })
     private Map<String, String> map ( Object o )
     {
@@ -81,7 +81,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
                 m
             }
         }
-        else if ( o instanceof Element )
+        else
         {
             (( Element ) o ).children.inject( [:] ){ Map<String, String> m, Element childElement ->
 
@@ -90,10 +90,6 @@ class MessagesConfigurationImpl implements MessagesConfiguration
                 if ( text ){ m[ childElement.name ] = text }
                 m
             }
-        }
-        else
-        {
-            assert false, "Conversion to Map for class [${ o.class.name }] is not supported"
         }
     }
 
