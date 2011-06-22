@@ -69,7 +69,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
      */
     @Requires({ o })
     @Ensures({ result != null })
-    private static Map<String, String> map ( Object o )
+    private Map<String, String> map ( Object o )
     {
         if ( o instanceof Node )
         {
