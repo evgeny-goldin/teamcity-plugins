@@ -48,8 +48,8 @@
                                                               'text-align' : 'left' });
             }
 
-            j( '#messages-display-dialog-text' ).text( options.text.length > messageLengthLimit ?
-                                                       options.text.substring( 0, messageLengthLimit ) + ' ..' :
+            j( '#messages-display-dialog-text' ).text( options.text.length > md.messageLengthLimit ?
+                                                       options.text.substring( 0, md.messageLengthLimit ) + ' ..' :
                                                        options.text );
 
             j( '#messages-display-dialog' ).dialog({ height   : 115,
