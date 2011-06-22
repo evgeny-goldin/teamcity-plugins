@@ -30,14 +30,17 @@ class UsersTableImpl implements UsersTable
     @Override
     void init ( List<Message> messages )
     {
-        messages.each{ addMessage( it ) }
+        if ( messages )
+        {
+            messages.each{ addMessage( it ) }
 
-        /**
-         * Ordering messages for possible "over-the-limit" cleanup
-         */
-        util.sortForAll( all )
-        for ( groupName in groups.keySet()) { util.sortForGroup( groups[ groupName ], groupName ) }
-        for ( username  in users.keySet())  { util.sortForUser ( users[ username   ], username  ) }
+            /**
+             * Ordering messages for possible "over-the-limit" cleanup
+             */
+            util.sortForAll( all )
+            for ( groupName in groups.keySet()) { util.sortForGroup( groups[ groupName ], groupName ) }
+            for ( username  in users.keySet())  { util.sortForUser ( users[ username   ], username  ) }
+        }
     }
 
 

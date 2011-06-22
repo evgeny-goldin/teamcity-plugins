@@ -6,15 +6,15 @@
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <!-- Utility beans -->
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
 
     <!-- UI Controllers -->
     <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>

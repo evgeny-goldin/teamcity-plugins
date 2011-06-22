@@ -20,12 +20,12 @@ class MessagesSendController extends MessagesBaseController
     static final String MAPPING = 'messagesSend.html'
 
 
-    @Requires({ server && messagesBean && context && util && manager })
+    @Requires({ server && manager && messagesBean && context && util })
     MessagesSendController ( SBuildServer         server,
+                             WebControllerManager manager,
                              MessagesBean         messagesBean,
                              MessagesContext      context,
-                             MessagesUtil         util,
-                             WebControllerManager manager )
+                             MessagesUtil         util )
     {
         super( server, messagesBean, context, util )
         manager.registerController( "/$MAPPING", this )

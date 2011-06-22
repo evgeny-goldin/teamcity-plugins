@@ -20,11 +20,6 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
     String  timeFormatPattern
 
 
-    MessagesConfigurationImpl ()
-    {
-    }
-
-
     @Override
     @Requires({ root })
     void readFrom ( Element root )

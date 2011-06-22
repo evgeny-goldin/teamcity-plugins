@@ -22,13 +22,13 @@ class MessagesDisplayController extends MessagesBaseController
     private final DateFormat timeFormatter
 
 
-    @Requires({ server && messagesBean && context && config && util && manager })
+    @Requires({ server && manager && messagesBean && context && config && util })
     MessagesDisplayController ( SBuildServer          server,
+                                WebControllerManager  manager,
                                 MessagesBean          messagesBean,
                                 MessagesContext       context,
                                 MessagesConfiguration config,
-                                MessagesUtil          util,
-                                WebControllerManager  manager )
+                                MessagesUtil          util )
     {
         super( server, messagesBean, context, util )
         this.dateFormatter = new SimpleDateFormat( config.dateFormatPattern, context.locale )

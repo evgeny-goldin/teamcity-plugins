@@ -9,10 +9,10 @@ import org.gcontracts.annotations.Requires
 interface MessagesPersistency
 {
 
-    @Requires({ data })
+    @Requires({ data != null })
     void persist( Map data )
 
 
-    @Ensures({ result })
+    @Ensures({ result != null })
     Map restore()
 }
