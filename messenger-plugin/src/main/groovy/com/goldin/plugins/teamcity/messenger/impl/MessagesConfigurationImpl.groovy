@@ -33,39 +33,47 @@ class MessagesConfigurationImpl implements MessagesConfiguration
 
     @Requires({ paramName && ( config != null ) && defaults })
     @Ensures({ result })
-    private String param ( String paramName, Map config = [:] )
+    private String param ( String paramName, Map<String, String> config = [:] ) { config[ paramName ] ?: defaults[ paramName ] }
+
+
+    /**
+     * Initializes configuration parameters using a config Map provided or default parameters.
+     * @param config co
+     */
+    private void readParams ( Map<String, String> config = [:] )
     {
-        config[ paramName ] ?: defaults[ paramName ]
+        this.minify               = Boolean.valueOf( param( 'minify', config ))
+        this.ajaxRequestInterval  = param( 'ajaxRequestInterval',     config ) as int
+        this.persistencyInterval  = param( 'persistencyInterval',     config ) as int
+        this.messagesLimitPerUser = param( 'messagesLimitPerUser',    config ) as int
+        this.messageLengthLimit   = param( 'messageLengthLimit',      config ) as int
+        this.dateFormatPattern    = param( 'dateFormatPattern',       config )
+        this.timeFormatPattern    = param( 'timeFormatPattern',       config )
     }
 
-
+    
     MessagesConfigurationImpl ( MessagesContext context )
     {
-        this.context              = context
-        this.defaults             = map( new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))).asImmutable()
-        this.minify               = Boolean.valueOf( param( 'minify' ))
-        this.ajaxRequestInterval  = param( 'ajaxRequestInterval'  ) as int
-        this.persistencyInterval  = param( 'persistencyInterval'  ) as int
-        this.messagesLimitPerUser = param( 'messagesLimitPerUser' ) as int
-        this.messageLengthLimit   = param( 'messageLengthLimit'   ) as int
-        this.dateFormatPattern    = param( 'dateFormatPattern'    )
-        this.timeFormatPattern    = param( 'timeFormatPattern'    )
+        this.context  = context
+        this.defaults = map( new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))).asImmutable()
+        readParams()
     }
 
 
     /**
-     * Converts {@link Node} or {@link Element} to {@code Map<String, String>}.
+     * Converts {@link Node} or {@link Element} to {@code Map<String, String>}
+     * of its elements for easier reading of data.
      *
      * @param o object to convert
      * @return object's mapping
      */
     @Requires({ o })
     @Ensures({ result != null })
-    private Map<String, String> map ( Object o )
+    private static Map<String, String> map ( Object o )
     {
         if ( o instanceof Node )
         {
-            (( Node ) o ).children().inject( [:] ){ Map m, Node childNode ->
+            (( Node ) o ).children().inject( [:] ){ Map<String, String> m, Node childNode ->
 
                 String text = childNode.text().trim()
                 assert childNode.name() && text
@@ -76,7 +84,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         }
         else if ( o instanceof Element )
         {
-            (( Element ) o ).children.inject( [:] ){ Map m, Element childElement ->
+            (( Element ) o ).children.inject( [:] ){ Map<String, String> m, Element childElement ->
 
                 String text = childElement.text.trim()
                 assert childElement.name && text
@@ -85,7 +93,8 @@ class MessagesConfigurationImpl implements MessagesConfiguration
                 m
             }
         }
-        else {
+        else
+        {
             assert false, "Conversion to Map for class [${ o.class.name }] is not supported"
         }
     }
@@ -96,17 +105,6 @@ class MessagesConfigurationImpl implements MessagesConfiguration
     void readFrom ( Element root )
     {
         Element rootNode = root.getChild( context.pluginName )
-
-        if ( rootNode )
-        {
-            Map<String, String> config = map( rootNode )
-            this.minify                = Boolean.valueOf( param( 'minify', config ))
-            this.ajaxRequestInterval   = param( 'ajaxRequestInterval',  config ) as int
-            this.persistencyInterval   = param( 'persistencyInterval',  config ) as int
-            this.messagesLimitPerUser  = param( 'messagesLimitPerUser', config ) as int
-            this.messageLengthLimit    = param( 'messageLengthLimit',   config ) as int
-            this.dateFormatPattern     = param( 'dateFormatPattern',    config )
-            this.timeFormatPattern     = param( 'timeFormatPattern',    config )
-        }
+        if ( rootNode ) { readParams( map( rootNode )) }
     }
 }

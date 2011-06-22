@@ -156,7 +156,7 @@ ruleset {
     RequiredRegex
     RequiredString
     StatelessClass {
-        ignoreFieldNames = 'counter'
+        ignoreFieldNames = 'counter, minify, ajaxRequestInterval, persistencyInterval, messagesLimitPerUser, messageLengthLimit, dateFormatPattern, timeFormatPattern, data'
     }
 
     // rulesets/imports.xml

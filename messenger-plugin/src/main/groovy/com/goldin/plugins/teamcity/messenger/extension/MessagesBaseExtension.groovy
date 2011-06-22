@@ -24,8 +24,8 @@ abstract class MessagesBaseExtension extends SimplePageExtension implements Main
 
 
     @Requires({ pagePlaces && placeId && includeUrl && position && context && config })
-    MessagesBaseExtension ( PagePlaces pagePlaces, PlaceId placeId, String includeUrl, PositionConstraint position,
-                            MessagesContext context, MessagesConfiguration config )
+    protected MessagesBaseExtension ( PagePlaces pagePlaces, PlaceId placeId, String includeUrl, PositionConstraint position,
+                                      MessagesContext context, MessagesConfiguration config )
     {
         super( pagePlaces, placeId, context.pluginName, includeUrl )
 
@@ -45,8 +45,7 @@ abstract class MessagesBaseExtension extends SimplePageExtension implements Main
         jsPaths.clear()
         cssPaths.clear()
 
-        for ( String fileName in ( [ 'jquery-ui-1.8.13.js',  'jquery-plugins.js',
-                                     'jquery-ui-1.8.13.css', 'messenger-plugin.css' ] +
+        for ( String fileName in ( [ 'jquery-ui-1.8.13.js', 'jquery-plugins.js', 'jquery-ui-1.8.13.css', 'messenger-plugin.css' ] +
                                    filesToAdd ))
         {
             if ( fileName.endsWith( '.js' ))
@@ -66,5 +65,5 @@ abstract class MessagesBaseExtension extends SimplePageExtension implements Main
 
 
     @Override
-    void writeTo ( Element parentElement ) {}
+    void writeTo ( Element parentElement ) { /* Keep CodeNarc happy */ true }
 }
