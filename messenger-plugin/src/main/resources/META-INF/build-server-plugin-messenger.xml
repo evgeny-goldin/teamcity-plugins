@@ -6,8 +6,8 @@
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <!-- Utility beans -->
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
