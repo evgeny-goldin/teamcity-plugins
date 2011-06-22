@@ -45,7 +45,7 @@ class MessagesBeanImpl implements MessagesBean
      */
     private void persistMessages ()
     {
-        executor.execute({ persistency.persist( messagesTable.persistencyData )} as Runnable )
+        executor.submit({ persistency.persist( messagesTable.persistencyData )} as Runnable )
     }
 
 

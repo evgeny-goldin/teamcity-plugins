@@ -119,7 +119,8 @@ class MessagesTableImpl implements MessagesTable
     Map getPersistencyData()
     {
         [ messageId : messageIdGenerator.get(),
-          messages  : allMessages*.messagePersistencyData ] // List of Maps, one Map per Message
+          // 'messages' is List of Maps, one Map per Message
+          messages  : allMessages.sort{ Message m1, Message m2 -> m1.timestamp <=> m2.timestamp }*.messagePersistencyData ]
     }
 
 
