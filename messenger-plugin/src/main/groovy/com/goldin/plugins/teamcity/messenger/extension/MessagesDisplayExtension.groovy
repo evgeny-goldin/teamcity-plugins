@@ -21,7 +21,7 @@ class MessagesDisplayExtension extends MessagesBaseExtension
         super( pagePlaces, PlaceId.ALL_PAGES_HEADER, 'messagesDisplay.jsp', PositionConstraint.first(), context, config )
     }
 
-    
+
     @Override
 //    @Ensures({ result })
     List<String> getFilesToAdd () { [ 'messages-display.js' ] }
@@ -41,7 +41,8 @@ class MessagesDisplayExtension extends MessagesBaseExtension
 //    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        model << [ intervalSec : config.ajaxRequestInterval,
-                   action      : MessagesDisplayController.MAPPING ]
+        model << [ messageLengthLimit  : config.messageLengthLimit,
+                   ajaxRequestInterval : config.ajaxRequestInterval,
+                   action              : MessagesDisplayController.MAPPING ]
     }
 }

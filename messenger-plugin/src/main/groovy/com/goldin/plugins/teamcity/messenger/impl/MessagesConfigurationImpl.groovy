@@ -12,7 +12,8 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link MessagesConfiguration} implementation
  */
-@Invariant({ ( this.ajaxRequestInterval  > 0 ) &&
+@Invariant({ ( this.context && this.defaults ) &&
+             ( this.ajaxRequestInterval  > 0 ) &&
              ( this.persistencyInterval  > 0 ) &&
              ( this.messagesLimitPerUser > 0 ) &&
              ( this.messageLengthLimit   > 0 ) &&

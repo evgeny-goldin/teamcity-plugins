@@ -6,10 +6,13 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import jetbrains.buildServer.serverSide.ServerPaths
 import org.gcontracts.annotations.Requires
+import org.gcontracts.annotations.Invariant
+
 
 /**
  * {@link MessagesPersistency} implementation
  */
+@Invariant({ this.dataFile != null })
 class MessagesPersistencyImpl implements MessagesPersistency
 {
 
@@ -29,7 +32,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         dataFile.write( new JsonBuilder( data ).toString())
     }
 
-    
+
     @Override
     Map restore ()
     {

@@ -2,8 +2,9 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesDisplayExtension.fillModel() --%>
-<jsp:useBean id="action"      scope="request" type="java.lang.String"/>
-<jsp:useBean id="intervalSec" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="messageLengthLimit"  scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="ajaxRequestInterval" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="action"              scope="request" type="java.lang.String"/>
 
 
 <style type="text/css">
@@ -13,10 +14,11 @@
 <script type="text/javascript">
 
     jQuery.assert( '${action}', 'action is [${action}]' );
-    md.action = '${action}';
+    md.action             = '${action}';
+    md.messageLengthLimit = ${messageLengthLimit};
 
-    jQuery.assert(( ${intervalSec} > 0 ), 'intervalSec is [${intervalSec}]' );
-    new PeriodicalExecuter( md.getMessages, ${intervalSec} );
+    jQuery.assert(( ${ajaxRequestInterval} > 0 ), 'ajaxRequestInterval is [${ajaxRequestInterval}]' );
+    new PeriodicalExecuter( md.getMessages, ${ajaxRequestInterval} );
     md.getMessages();
 
 </script>

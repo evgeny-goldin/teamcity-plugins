@@ -2,11 +2,21 @@ package com.goldin.plugins.teamcity.messenger.api
 
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
+import org.gcontracts.annotations.Invariant
 
 
 /**
  * Message data container
  */
+@Invariant({
+    ( this.timestamp > 0 )        &&
+    ( this.longevity > 0 )        &&
+    ( this.sender                 &&
+      this.urgency                &&
+      this.text )                 &&
+    ( this.sendToGroups != null ) &&
+    ( this.sendToUsers  != null ) &&
+    ( this.usersDeleted != null )})
 final class Message
 {
    /**
@@ -29,8 +39,8 @@ final class Message
     final Set<String>     usersDeleted  // Users who deleted this message, usernames
 
 
-    @Requires({ sender && urgency && text && ( sendToGroups != null ) && ( sendToUsers != null ) })
-    @Ensures({ ( this.id == -1 ) && ( this.sendToGroups != null ) && ( this.sendToUsers != null ) && ( this.usersDeleted != null ) })
+    @Requires({ sender && urgency && text && ( sendToGroups != null ) && ( sendToUsers != null )})
+    @Ensures({ this.id == -1 })
     Message ( String       sender,
               Urgency      urgency,
               String       text,
@@ -58,7 +68,7 @@ final class Message
 
 
     @Requires({( id > 0 ) && context && util && message })
-    @Ensures({ ( this.id == id ) && this.context.is( context ) && this.util.is( util ) })
+    @Ensures({ this.id == id })
     Message ( long id, MessagesContext context, MessagesUtil util, Message message )
     {
         this.id           = id
@@ -74,6 +84,25 @@ final class Message
         this.sendToGroups = message.sendToGroups
         this.sendToUsers  = message.sendToUsers
         this.usersDeleted = message.usersDeleted
+    }
+
+
+    @Requires({ persistencyData && context && util && persistencyData[ 'id' ] && persistencyData[ 'timestamp' ] })
+    Message ( Map persistencyData, MessagesContext context, MessagesUtil util )
+    {
+        this.id           = persistencyData[ 'id' ] as long
+        this.context      = context
+        this.util         = util
+
+        this.timestamp    = persistencyData[ 'timestamp' ] as long
+        this.sender       = persistencyData[ 'sender'    ]
+        this.urgency      = (( String ) persistencyData[ 'urgency' ] ).toUpperCase() as Urgency
+        this.text         = persistencyData[ 'text'      ]
+        this.longevity    = persistencyData[ 'longevity' ] as long
+        this.sendToAll    = persistencyData[ 'sendToAll' ] as boolean
+        this.sendToGroups = ( List ) persistencyData[ 'sendToGroups' ]
+        this.sendToUsers  = ( List ) persistencyData[ 'sendToUsers'  ]
+        this.usersDeleted = ( List ) persistencyData[ 'usersDeleted' ]
     }
 
 
@@ -109,7 +138,7 @@ final class Message
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result.id && result.text && result.sender })
-    Map<String, String> getPersistencyData ()
+    Map<String, String> getMessagePersistencyData ()
     {
         displayData << [ sender       : sender,
                          longevity    : longevity,
@@ -119,7 +148,7 @@ final class Message
                          usersDeleted : usersDeleted ]
     }
 
-    
+
     /**
      * Determines if message should be delivered to the group specified.
      *

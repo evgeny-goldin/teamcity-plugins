@@ -5,27 +5,31 @@ import java.util.concurrent.atomic.AtomicLong
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
+import org.gcontracts.annotations.Invariant
 
 
 /**
  * {@link MessagesTable} implementation
  */
+@Invariant({ this.configuration && this.context && this.util &&
+             ( this.messages != null ) && ( this.messageIdGenerator != null )})
 class MessagesTableImpl implements MessagesTable
 {
-    final MessagesConfiguration configuration
-    final MessagesContext       context
-    final MessagesUtil          util
-
-    final private Map<Long, Message> messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
-    final private AtomicLong         messageIdGenerator = new AtomicLong( 1000  )
+    private final MessagesConfiguration configuration
+    private final MessagesContext       context
+    private final MessagesUtil          util
+    private final Map<Long, Message>    messages
+    private final AtomicLong            messageIdGenerator
 
 
     @Requires({ configuration && context && util })
     MessagesTableImpl ( MessagesConfiguration configuration, MessagesContext context, MessagesUtil util )
     {
-        this.configuration = configuration
-        this.context       = context
-        this.util          = util
+        this.configuration      = configuration
+        this.context            = context
+        this.util               = util
+        this.messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
+        this.messageIdGenerator = new AtomicLong( 1000 )
     }
 
 
@@ -114,37 +118,23 @@ class MessagesTableImpl implements MessagesTable
 
     Map getPersistencyData()
     {
-        [ nextMessageId : nextMessageId,
-          messages      : allMessages*.persistencyData ] // List of Maps, one Map per Message
+        [ messageId : messageIdGenerator.get(),
+          messages  : allMessages*.messagePersistencyData ] // List of Maps, one Map per Message
     }
 
-    
+
     @Override
-    @Requires({ data.isEmpty() || ( data[ 'nextMessageId' ] && data[ 'messages' ] ) })
+    @Requires({ data.isEmpty() || ( data[ 'messageId' ] && ( data[ 'messages' ] != null )) })
     void readPersistencyData( Map data )
     {
         if ( data )
         {
-            messageIdGenerator.set( data[ 'nextMessageId' ] as long )
+            messageIdGenerator.set( data[ 'messageId' ] as long )
 
-            for ( Map m in data[ 'messages' ] )
+            for ( Map messagePersistencyData in data[ 'messages' ] )
             {
-                /**
-                 * As written by {@link Message#getPersistencyData}
-                 */
-                
-                def messageId    = m[ 'id'           ] as long
-                def timestamp    = m[ 'timestamp'    ]
-                def sender       = m[ 'sender'       ]
-                def urgency      = m[ 'urgency'      ]
-                def text         = m[ 'text'         ]
-                def longevity    = m[ 'longevity'    ]
-                def sendToAll    = m[ 'sendToAll'    ]
-                def sendToGroups = m[ 'sendToGroups' ]
-                def sendToUsers  = m[ 'sendToUsers'  ]
-                def usersDeleted = m[ 'usersDeleted' ]
-
-                int j = 5
+                long      messageId   = messagePersistencyData[ 'id' ] as long
+                messages[ messageId ] = new Message( data )
             }
         }
     }

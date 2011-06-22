@@ -4,18 +4,21 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
+import org.gcontracts.annotations.Invariant
+
 
 /**
  * {@link MessagesBean} implementation
  */
+@Invariant({ this.messagesTable && this.usersTable && this.persistency && this.context && this.util && this.executor })
 class MessagesBeanImpl implements MessagesBean
 {
-    final MessagesTable       messagesTable
-    final UsersTable          usersTable
-    final MessagesPersistency persistency
-    final MessagesContext     context
-    final MessagesUtil        util
-    final ExecutorService     executor
+    private final MessagesTable       messagesTable
+    private final UsersTable          usersTable
+    private final MessagesPersistency persistency
+    private final MessagesContext     context
+    private final MessagesUtil        util
+    private final ExecutorService     executor
 
 
     @Requires({ messagesTable && usersTable && persistency && context && util })
@@ -29,6 +32,9 @@ class MessagesBeanImpl implements MessagesBean
         this.util          = util
         this.executor      = Executors.newFixedThreadPool( 1 )
 
+        /**
+         * Restoring data from persistent storage
+         */
         messagesTable.readPersistencyData( persistency.restore())
         usersTable.init( messagesTable.allMessages )
     }
@@ -53,7 +59,7 @@ class MessagesBeanImpl implements MessagesBean
         messageId
     }
 
-    
+
     @Override
     List<Message> getMessagesForUser ( String username )
     {
@@ -69,7 +75,7 @@ class MessagesBeanImpl implements MessagesBean
                           username )
     }
 
-    
+
     @Override
     Message deleteMessage ( long messageId )
     {
@@ -79,7 +85,7 @@ class MessagesBeanImpl implements MessagesBean
         message
     }
 
-    
+
     @Override
     Message deleteMessageByUser ( long messageId, String username )
     {

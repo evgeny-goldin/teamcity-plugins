@@ -9,19 +9,22 @@ import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
+import org.gcontracts.annotations.Invariant
+
 
 /**
  * {@link MessagesContext} implementation
  */
+@Invariant({ this.server && this.descriptor && this.pluginName && this.springContext })
 class MessagesContextImpl implements InitializingBean, MessagesContext
 {
-    static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
-    static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
+    private static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
+    private static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
 
-    final SBuildServer       server
-    final PluginDescriptor   descriptor
-    final String             pluginName
-    final ApplicationContext springContext
+    private final SBuildServer       server
+    private final PluginDescriptor   descriptor
+            final String             pluginName
+    private final ApplicationContext springContext
 
 
     @Requires({ server && descriptor && springContext })
@@ -91,7 +94,7 @@ $beans"""   )
     {
         SUser user = getUser( username )
         if ( ! user ) { return [] }
-        
+
         user.allUserGroups*.name as Set
     }
 }

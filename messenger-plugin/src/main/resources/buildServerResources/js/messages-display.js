@@ -8,6 +8,11 @@
         action : null,
 
         /**
+         * Limit of message text length, set by hosting page
+         */
+        messageLengthLimit : null,
+
+        /**
          * Template to be used for message dialog title
          * http://api.prototypejs.org/language/Template/
          */
@@ -43,8 +48,8 @@
                                                               'text-align' : 'left' });
             }
 
-            j( '#messages-display-dialog-text' ).text( options.text.length > 250 ?
-                                                       options.text.substring( 0, 250 ) + ' ..' :
+            j( '#messages-display-dialog-text' ).text( options.text.length > messageLengthLimit ?
+                                                       options.text.substring( 0, messageLengthLimit ) + ' ..' :
                                                        options.text );
 
             j( '#messages-display-dialog' ).dialog({ height   : 115,

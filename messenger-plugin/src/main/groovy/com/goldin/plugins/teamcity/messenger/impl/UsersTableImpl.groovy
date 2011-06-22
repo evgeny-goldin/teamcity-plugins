@@ -3,19 +3,22 @@ package com.goldin.plugins.teamcity.messenger.impl
 import java.util.concurrent.ConcurrentHashMap
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
+import org.gcontracts.annotations.Invariant
+
 
 /**
  * {@link UsersTable} implementation
  */
+@Invariant({ this.configuration && this.context && this.util &&
+             ( this.all != null ) && ( this.groups != null ) && ( this.users != null ) })
 class UsersTableImpl implements UsersTable
 {
-    final MessagesConfiguration configuration
-    final MessagesContext       context
-    final MessagesUtil          util
-
-    final private             List<Message>  all    = new ArrayList<Message>( 16 )
-    final private Map<String, List<Message>> groups = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
-    final private Map<String, List<Message>> users  = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
+    private final MessagesConfiguration      configuration
+    private final MessagesContext            context
+    private final MessagesUtil               util
+    private final List<Message>              all
+    private final Map<String, List<Message>> groups
+    private final Map<String, List<Message>> users
 
 
     @Requires({ configuration && context && util })
@@ -24,6 +27,9 @@ class UsersTableImpl implements UsersTable
         this.configuration = configuration
         this.context       = context
         this.util          = util
+        this.all           = new ArrayList<Message>( 16 )
+        this.groups        = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
+        this.users         = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
     }
 
 
