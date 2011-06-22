@@ -44,7 +44,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
     {
         this.context              = context
         this.defaults             = map( new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))).asImmutable()
-        this.minify               = param( 'minify'               ) as boolean
+        this.minify               = Boolean.valueOf( param( 'minify' ))
         this.ajaxRequestInterval  = param( 'ajaxRequestInterval'  ) as int
         this.persistencyInterval  = param( 'persistencyInterval'  ) as int
         this.messagesLimitPerUser = param( 'messagesLimitPerUser' ) as int
@@ -101,7 +101,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
         if ( rootNode )
         {
             Map<String, String> config = map( rootNode )
-            this.minify                = param( 'minify',               config ) as boolean
+            this.minify                = Boolean.valueOf( param( 'minify', config ))
             this.ajaxRequestInterval   = param( 'ajaxRequestInterval',  config ) as int
             this.persistencyInterval   = param( 'persistencyInterval',  config ) as int
             this.messagesLimitPerUser  = param( 'messagesLimitPerUser', config ) as int

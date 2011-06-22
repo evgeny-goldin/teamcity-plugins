@@ -98,7 +98,7 @@ final class Message
         this.urgency      = (( String ) persistencyData[ 'urgency' ] ).toUpperCase() as Urgency
         this.text         = persistencyData[ 'text'      ]
         this.longevity    = persistencyData[ 'longevity' ] as long
-        this.sendToAll    = persistencyData[ 'sendToAll' ] as boolean
+        this.sendToAll    = Boolean.valueOf( persistencyData[ 'sendToAll' ])
         this.sendToGroups = new HashSet<String>(( Set ) persistencyData[ 'sendToGroups' ] ).asImmutable()
         this.sendToUsers  = new HashSet<String>(( Set ) persistencyData[ 'sendToUsers'  ] ).asImmutable()
         this.usersDeleted = new HashSet<String>(( Set ) persistencyData[ 'usersDeleted' ] )
