@@ -1,12 +1,11 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
-import jetbrains.buildServer.serverSide.MainConfigProcessor
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import org.jdom.Element
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
-import org.gcontracts.annotations.Invariant
 
 
 /**
@@ -18,7 +17,7 @@ import org.gcontracts.annotations.Invariant
              ( this.messagesLimitPerUser > 0 ) &&
              ( this.messageLengthLimit   > 0 ) &&
              ( this.dateFormatPattern && this.timeFormatPattern ) })
-class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProcessor
+class MessagesConfigurationImpl implements MessagesConfiguration
 {
     private final MessagesContext     context
     private final Map<String, String> defaults
@@ -109,11 +108,5 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
             this.dateFormatPattern     = param( 'dateFormatPattern',    config )
             this.timeFormatPattern     = param( 'timeFormatPattern',    config )
         }
-    }
-
-
-    @Override
-    void writeTo ( Element root )
-    {
     }
 }

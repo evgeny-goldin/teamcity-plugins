@@ -2,16 +2,18 @@ package com.goldin.plugins.teamcity.messenger.extension
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+import jetbrains.buildServer.serverSide.MainConfigProcessor
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.PositionConstraint
 import jetbrains.buildServer.web.openapi.SimplePageExtension
 import org.gcontracts.annotations.Requires
+import org.jdom.Element
 
 /**
  * Base class for all extensions
  */
-abstract class MessagesBaseExtension extends SimplePageExtension
+abstract class MessagesBaseExtension extends SimplePageExtension implements MainConfigProcessor
 {
     final MessagesContext       context
     final MessagesConfiguration config
@@ -27,12 +29,18 @@ abstract class MessagesBaseExtension extends SimplePageExtension
     {
         super( pagePlaces, placeId, context.pluginName, includeUrl )
 
-        setPosition( position )
-        
-        this.context = context
-        this.config  = config
-        
+        this.position = position
+        this.context  = context
+        this.config   = config
+
         register()
+    }
+
+
+    @Override
+    void readFrom ( Element rootElement )
+    {
+        config.readFrom( rootElement )
 
         for ( String fileName in ( [ 'jquery-ui-1.8.13.js',  'jquery-plugins.js',
                                      'jquery-ui-1.8.13.css', 'messenger-plugin.css' ] +
@@ -52,4 +60,8 @@ abstract class MessagesBaseExtension extends SimplePageExtension
             }
         }
     }
+
+
+    @Override
+    void writeTo ( Element parentElement ) {}
 }
