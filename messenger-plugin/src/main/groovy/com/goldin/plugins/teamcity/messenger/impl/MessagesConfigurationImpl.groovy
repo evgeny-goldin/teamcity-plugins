@@ -48,6 +48,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
         this.ajaxRequestInterval  = param( 'ajaxRequestInterval'  ) as int
         this.persistencyInterval  = param( 'persistencyInterval'  ) as int
         this.messagesLimitPerUser = param( 'messagesLimitPerUser' ) as int
+        this.messageLengthLimit   = param( 'messageLengthLimit'   ) as int
         this.dateFormatPattern    = param( 'dateFormatPattern'    )
         this.timeFormatPattern    = param( 'timeFormatPattern'    )
     }
@@ -104,6 +105,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
             this.ajaxRequestInterval   = param( 'ajaxRequestInterval',  config ) as int
             this.persistencyInterval   = param( 'persistencyInterval',  config ) as int
             this.messagesLimitPerUser  = param( 'messagesLimitPerUser', config ) as int
+            this.messageLengthLimit    = param( 'messageLengthLimit',   config ) as int
             this.dateFormatPattern     = param( 'dateFormatPattern',    config )
             this.timeFormatPattern     = param( 'timeFormatPattern',    config )
         }

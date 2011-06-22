@@ -134,7 +134,7 @@ class MessagesTableImpl implements MessagesTable
             for ( Map messagePersistencyData in data[ 'messages' ] )
             {
                 long      messageId   = messagePersistencyData[ 'id' ] as long
-                messages[ messageId ] = new Message( data )
+                messages[ messageId ] = new Message( messagePersistencyData, context, util )
             }
         }
     }

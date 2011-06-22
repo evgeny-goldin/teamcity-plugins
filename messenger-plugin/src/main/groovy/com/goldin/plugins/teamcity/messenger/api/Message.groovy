@@ -10,7 +10,6 @@ import org.gcontracts.annotations.Invariant
  */
 @Invariant({
     ( this.timestamp > 0 )        &&
-    ( this.longevity > 0 )        &&
     ( this.sender                 &&
       this.urgency                &&
       this.text )                 &&
@@ -100,9 +99,9 @@ final class Message
         this.text         = persistencyData[ 'text'      ]
         this.longevity    = persistencyData[ 'longevity' ] as long
         this.sendToAll    = persistencyData[ 'sendToAll' ] as boolean
-        this.sendToGroups = ( List ) persistencyData[ 'sendToGroups' ]
-        this.sendToUsers  = ( List ) persistencyData[ 'sendToUsers'  ]
-        this.usersDeleted = ( List ) persistencyData[ 'usersDeleted' ]
+        this.sendToGroups = new HashSet<String>(( Set ) persistencyData[ 'sendToGroups' ] ).asImmutable()
+        this.sendToUsers  = new HashSet<String>(( Set ) persistencyData[ 'sendToUsers'  ] ).asImmutable()
+        this.usersDeleted = new HashSet<String>(( Set ) persistencyData[ 'usersDeleted' ] )
     }
 
 
