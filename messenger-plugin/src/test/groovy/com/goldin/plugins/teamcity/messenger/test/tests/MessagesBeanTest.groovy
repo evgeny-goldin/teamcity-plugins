@@ -36,7 +36,7 @@ class MessagesBeanTest extends BaseSpecification
         messageId > 0
         m2.id        == messageId
         m1.timestamp == m2.timestamp
-        m1.message   == m2.message
+        m1.text      == m2.text
     }
 
 
@@ -52,7 +52,7 @@ class MessagesBeanTest extends BaseSpecification
 
         then:
         ! messages1.isEmpty()
-        messages1.first().with{ ( timestamp == m1.timestamp ) && ( message == m1.message ) }
+        messages1.first().with{ ( timestamp == m1.timestamp ) && ( text == m1.text ) }
         messages2.isEmpty()
         ! messagesTable.containsMessage( messageId )
     }
@@ -98,7 +98,7 @@ class MessagesBeanTest extends BaseSpecification
 
         then:
         ! messages1.isEmpty()
-        messages1.first().with{ ( timestamp == m1.timestamp ) && ( message == m1.message ) }
+        messages1.first().with{ ( timestamp == m1.timestamp ) && ( text == m1.text ) }
         messages2.isEmpty()
         ! messagesTable.containsMessage( messageId )
     }

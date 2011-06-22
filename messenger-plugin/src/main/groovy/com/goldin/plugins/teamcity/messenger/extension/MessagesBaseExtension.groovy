@@ -40,11 +40,11 @@ abstract class MessagesBaseExtension extends SimplePageExtension
         {
             if ( fileName.endsWith( '.js' ))
             {
-                addJsFile( "js/${ config.minify()   ? fileName.replace( '.js',  '.min.js'  ) : fileName }" )
+                addJsFile(  "js/${ config.minify  ? fileName.replace( '.js',  '.min.js'  ) : fileName }" )
             }
             else if ( fileName.endsWith( '.css' ))
             {
-                addCssFile( "css/${ config.minify() ? fileName.replace( '.css', '.min.css' ) : fileName }" )
+                addCssFile( "css/${ config.minify ? fileName.replace( '.css', '.min.css' ) : fileName }" )
             }
             else
             {

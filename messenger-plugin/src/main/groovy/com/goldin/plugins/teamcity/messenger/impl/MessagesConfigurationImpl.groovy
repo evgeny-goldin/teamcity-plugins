@@ -1,58 +1,59 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import jetbrains.buildServer.serverSide.MainConfigProcessor
 import org.gcontracts.annotations.Requires
 import org.jdom.Element
-
+import org.jdom.Text
 
 /**
  * {@link MessagesConfiguration} implementation
  */
 class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProcessor
 {
-    final MessagesContext context
+    boolean minify
+    int     ajaxRequestInterval
+    int     persistencyInterval
+    int     messagesLimitPerUser
+    int     messageLengthLimit
+    String  dateFormatPattern
+    String  timeFormatPattern
 
-    @Requires({ context })
-    MessagesConfigurationImpl ( MessagesContext context )
+
+    MessagesConfigurationImpl ()
     {
-        this.context = context
-    }
-
-    @Override
-    boolean minify () { true }
-
-    @Override
-    int getAjaxRequestInterval () { 20 }
-
-    @Override
-    int getPersistencyInterval () { 600 }
-
-    @Override
-    int getMessagesLimitPerUser () { 100 }
-
-    @Override
-    int getMessageLengthLimit () { 100 }
-
-    @Override
-    String getDateFormatPattern () { 'EEEEEEE, MMMMMM dd, yyyy' } // "Wed, Jun 15, 2011"
-
-    @Override
-    String getTimeFormatPattern () { 'HH:mm' }                    // "17:03"
-
-    
-    @Override
-    void readFrom ( Element rootElement )
-    {
-        System.out.println( 'readFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFromreadFrom' );
     }
 
 
     @Override
-    void writeTo ( Element parentElement )
+    @Requires({ root })
+    void readFrom ( Element root )
     {
-        System.out.println( 'writeTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTowriteTo' );
+        Node   defaults = new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))
+        assert defaults
+
+        def configMap = root.children.inject( [:] ){ Map m, Element node -> m[ node.name ] = node.textTrim; m }
+        def get       = { String paramName -> ( configMap[ paramName ] ?: defaults.get( paramName ).text()) }
+        
+        minify               = get( 'minify'               ) as boolean
+        ajaxRequestInterval  = get( 'ajaxRequestInterval'  ) as int
+        persistencyInterval  = get( 'persistencyInterval'  ) as int
+        messagesLimitPerUser = get( 'messagesLimitPerUser' ) as int
+        dateFormatPattern    = get( 'dateFormatPattern'    )
+        timeFormatPattern    = get( 'timeFormatPattern'    )
+    }
+
+
+    @Override
+    void writeTo ( Element root )
+    {
+        def  element = { String tagName, String tagValue -> new Element( tagName ).setContent( new Text( tagValue )) }
+        root.content = [ element( 'minify',               minify as String ),
+                         element( 'ajaxRequestInterval',  ajaxRequestInterval as String ),
+                         element( 'persistencyInterval',  persistencyInterval as String ),
+                         element( 'messagesLimitPerUser', messagesLimitPerUser as String ),
+                         element( 'dateFormatPattern',    dateFormatPattern ),
+                         element( 'timeFormatPattern',    timeFormatPattern )]
     }
 }
 

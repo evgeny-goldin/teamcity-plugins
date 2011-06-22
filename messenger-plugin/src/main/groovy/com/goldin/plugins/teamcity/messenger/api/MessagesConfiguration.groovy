@@ -8,7 +8,7 @@ import org.gcontracts.annotations.Ensures
 interface MessagesConfiguration
 {
 
-    boolean minify ()
+    boolean isMinify ()
 
     
     @Ensures({ result > 0 })

@@ -1,10 +1,11 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.goldin.plugins.teamcity.messenger.api.Message
+import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesPersistency
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import jetbrains.buildServer.serverSide.ServerPaths
 import org.gcontracts.annotations.Requires
-import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 
 /**
  * {@link MessagesPersistency} implementation
@@ -12,27 +13,26 @@ import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 class MessagesPersistencyImpl implements MessagesPersistency
 {
 
-    private final File directory
+    private final File dataFile
 
 
     @Requires({ context && paths })
-    MessagesPersistencyImpl ( MessagesContext context, ServerPaths paths )
+    MessagesPersistencyImpl ( ServerPaths paths, MessagesContext context )
     {
-        directory = new File( paths.pluginDataDirectory, context.pluginName );
-        assert ( directory.isDirectory() || directory.mkdirs());
+        dataFile = new File( paths.pluginDataDirectory, "${ context.pluginName }/messages.json" )
     }
 
 
     @Override
-    void persist ( List<Message> messages )
+    void persist ( Map data )
     {
-
+        dataFile.write( new JsonBuilder( data ).toString())
     }
 
+    
     @Override
-    List<Message> restore ()
+    Map restore ()
     {
-        []
+        ( dataFile.isFile() ? ( Map ) new JsonSlurper().parseText( dataFile.text ) : [:] )
     }
-
 }

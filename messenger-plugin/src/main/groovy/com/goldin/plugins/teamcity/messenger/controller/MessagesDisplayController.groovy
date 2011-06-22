@@ -58,8 +58,8 @@ class MessagesDisplayController extends MessagesBaseController
             def messages = messagesBean.getMessagesForUser( username ).collect {
                 Message m ->
 
-                def data  = m.displayData()
-                def date  = new Date( data[ 'timestamp' ] as long )
+                def data = m.displayData
+                def date = new Date( data[ 'timestamp' ] as long )
 
                 data << [ date : dateFormatter.format( date ),
                           time : timeFormatter.format( date )]

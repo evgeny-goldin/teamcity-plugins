@@ -8,6 +8,7 @@ import org.gcontracts.annotations.Requires
  */
 interface MessagesTable
 {
+
     @Requires({ message && ( message.id < 0 ) })
     @Ensures({ ( result.id > 0 ) && ( result.timestamp == message.timestamp ) })
     Message addMessage( Message message )
@@ -43,8 +44,10 @@ interface MessagesTable
     void deleteAllMessages()
 
 
-    void persist()
+    @Ensures({ result })
+    Map getPersistencyData()
 
-
-    void restore()
+    
+    @Requires({ data })
+    void readPersistencyData( Map data )
 }

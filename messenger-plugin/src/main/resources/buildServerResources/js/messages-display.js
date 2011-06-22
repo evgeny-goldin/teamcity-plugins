@@ -11,7 +11,7 @@
          * Template to be used for message dialog title
          * http://api.prototypejs.org/language/Template/
          */
-        titleTemplate    : new Template( 'Message "#{id}", sent by #{sender} on #{date} at #{time}' ),
+        titleTemplate    : new Template( 'Message "#{id}", sent by #{senderName} on #{date} at #{time}' ),
 
        /**
         * User messages retrieved and index of the message being displayed currently

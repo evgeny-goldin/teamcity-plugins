@@ -16,7 +16,7 @@ interface MessagesContext
 
 
     @Requires({ username })
-    @Ensures({ result })
+    @Ensures({ isTest() || result })
     SUser getUser( String username )
 
 

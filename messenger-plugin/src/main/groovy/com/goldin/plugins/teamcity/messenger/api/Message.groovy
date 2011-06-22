@@ -21,7 +21,7 @@ final class Message
     final long            timestamp     // Message creation timestamp
     final String          sender        // Message sender, a username
     final Urgency         urgency       // Message urgency
-    final String          message       // Message text
+    final String          text          // Message text
     final long            longevity     // Message "longevity", for how many hours should it be kept alive
     final boolean         sendToAll     // Whether message should be sent to all users
     final Set<String>     sendToGroups  // Groups message should be sent to
@@ -29,11 +29,11 @@ final class Message
     final Set<String>     usersDeleted  // Users who deleted this message, usernames
 
 
-    @Requires({ sender && urgency && message && ( sendToGroups != null ) && ( sendToUsers != null ) })
+    @Requires({ sender && urgency && text && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ ( this.id == -1 ) && ( this.sendToGroups != null ) && ( this.sendToUsers != null ) && ( this.usersDeleted != null ) })
     Message ( String       sender,
               Urgency      urgency,
-              String       message,
+              String       text,
               long         longevity    = -1,
               boolean      sendToAll    = true,
               List<String> sendToGroups = [],
@@ -46,7 +46,7 @@ final class Message
         this.timestamp    = System.currentTimeMillis()
         this.sender       = sender
         this.urgency      = urgency
-        this.message      = message
+        this.text         = text
         this.longevity    = longevity
         this.sendToAll    = sendToAll
         this.sendToGroups = new HashSet<String>( sendToGroups ).asImmutable()
@@ -68,11 +68,11 @@ final class Message
         this.timestamp    = message.timestamp
         this.sender       = message.sender
         this.urgency      = message.urgency
-        this.message      = message.message
+        this.text         = message.text
         this.longevity    = message.longevity
-        this.sendToUsers  = message.sendToUsers
-        this.sendToGroups = message.sendToGroups
         this.sendToAll    = message.sendToAll
+        this.sendToGroups = message.sendToGroups
+        this.sendToUsers  = message.sendToUsers
         this.usersDeleted = message.usersDeleted
     }
 
@@ -86,21 +86,40 @@ final class Message
 
 
     /**
-     * Retrieves {@link Message} data to be sent over JSON to display it to user.
-     * @return {@link Message} data to be sent over JSON to display it to user
+     * Retrieves {@link Message} data to be sent over network to display it to user.
+     * @return {@link Message} data to be sent over network to display it to user
      * @see com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController#handleRequest
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result.id && result.text })
-    Map<String, String> displayData()
+    Map<String, String> getDisplayData ()
     {
-        [ id        : id as String,
-          urgency   : urgency.toString().toLowerCase( context.locale ),
-          sender    : context.getUser( sender ).descriptiveName,
-          text      : message,
-          timestamp : timestamp as String ]
+        [ id         : id as String,
+          urgency    : urgency.toString().toLowerCase( context.locale ),
+          senderName : context.getUser( sender )?.descriptiveName ?: 'Test Sender',
+          text       : text,
+          timestamp  : timestamp as String ]
     }
 
+
+    /**
+     * Retrieves {@link Message} data to be sent to persistency storage.
+     * @return {@link Message} data to be sent to persistency storage
+     * @see com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl#persist
+     */
+    @Requires({ ( this.id > 0 ) && this.context })
+    @Ensures({ result && result.id && result.text && result.sender })
+    Map<String, String> getPersistencyData ()
+    {
+        displayData << [ sender       : sender,
+                         longevity    : longevity,
+                         sendToAll    : sendToAll,
+                         sendToGroups : sendToGroups,
+                         sendToUsers  : sendToUsers,
+                         usersDeleted : usersDeleted ]
+    }
+
+    
     /**
      * Determines if message should be delivered to the group specified.
      *

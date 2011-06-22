@@ -34,14 +34,14 @@ class MessagesTableImpl implements MessagesTable
      * @return new message id
      */
     @Ensures({ ( result > 0 ) && ( ! messages.containsKey( result )) })
-    private long nextMessageId() { messageIdGenerator.incrementAndGet() }
+    private long getNextMessageId () { messageIdGenerator.incrementAndGet() }
 
 
     @Override
     @Requires({ message.usersDeleted.isEmpty() })
     Message addMessage ( Message message )
     {
-        long    messageId  = nextMessageId()
+        long    messageId  = nextMessageId
         Message newMessage = new Message( messageId, context, util, message )
         Message previous   = messages.put( messageId, newMessage )
         assert  previous  == null, "Message with new id [$messageId] already existed: [$previous]"
@@ -112,19 +112,40 @@ class MessagesTableImpl implements MessagesTable
     }
 
 
-    @Override
-    void persist ()
+    Map getPersistencyData()
     {
-        // Save messages table
-        // Save nextMessageId
+        [ nextMessageId : nextMessageId,
+          messages      : allMessages*.persistencyData ] // List of Maps, one Map per Message
     }
 
-
+    
     @Override
-    void restore ()
+    @Requires({ data.isEmpty() || ( data[ 'nextMessageId' ] && data[ 'messages' ] ) })
+    void readPersistencyData( Map data )
     {
-        // Restore messages table
-        // Restore nextMessageId
-        // UsersTable.init()
+        if ( data )
+        {
+            messageIdGenerator.set( data[ 'nextMessageId' ] as long )
+
+            for ( Map m in data[ 'messages' ] )
+            {
+                /**
+                 * As written by {@link Message#getPersistencyData}
+                 */
+                
+                def messageId    = m[ 'id'           ] as long
+                def timestamp    = m[ 'timestamp'    ]
+                def sender       = m[ 'sender'       ]
+                def urgency      = m[ 'urgency'      ]
+                def text         = m[ 'text'         ]
+                def longevity    = m[ 'longevity'    ]
+                def sendToAll    = m[ 'sendToAll'    ]
+                def sendToGroups = m[ 'sendToGroups' ]
+                def sendToUsers  = m[ 'sendToUsers'  ]
+                def usersDeleted = m[ 'usersDeleted' ]
+
+                int j = 5
+            }
+        }
     }
 }
