@@ -75,10 +75,9 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         {
             (( Node ) o ).children().inject( [:] ){ Map<String, String> m, Node childNode ->
 
+                assert childNode.name()
                 String text = childNode.text().trim()
-                assert childNode.name() && text
-
-                m[ childNode.name() ] = text
+                if ( text ){ m[ childNode.name() ] = text }
                 m
             }
         }
@@ -86,10 +85,9 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         {
             (( Element ) o ).children.inject( [:] ){ Map<String, String> m, Element childElement ->
 
+                assert childElement.name
                 String text = childElement.text.trim()
-                assert childElement.name && text
-
-                m[ childElement.name ] = text
+                if ( text ){ m[ childElement.name ] = text }
                 m
             }
         }
