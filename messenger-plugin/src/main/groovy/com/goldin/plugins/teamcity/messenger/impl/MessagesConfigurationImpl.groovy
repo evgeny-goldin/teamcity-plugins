@@ -34,7 +34,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
 
         def configMap = root.children.inject( [:] ){ Map m, Element node -> m[ node.name ] = node.textTrim; m }
         def get       = { String paramName -> ( configMap[ paramName ] ?: defaults.get( paramName ).text()) }
-        
+
         minify               = get( 'minify'               ) as boolean
         ajaxRequestInterval  = get( 'ajaxRequestInterval'  ) as int
         persistencyInterval  = get( 'persistencyInterval'  ) as int
@@ -48,9 +48,9 @@ class MessagesConfigurationImpl implements MessagesConfiguration, MainConfigProc
     void writeTo ( Element root )
     {
         def  element = { String tagName, String tagValue -> new Element( tagName ).setContent( new Text( tagValue )) }
-        root.content = [ element( 'minify',               minify as String ),
-                         element( 'ajaxRequestInterval',  ajaxRequestInterval as String ),
-                         element( 'persistencyInterval',  persistencyInterval as String ),
+        root.content = [ element( 'minify',               minify               as String ),
+                         element( 'ajaxRequestInterval',  ajaxRequestInterval  as String ),
+                         element( 'persistencyInterval',  persistencyInterval  as String ),
                          element( 'messagesLimitPerUser', messagesLimitPerUser as String ),
                          element( 'dateFormatPattern',    dateFormatPattern ),
                          element( 'timeFormatPattern',    timeFormatPattern )]
