@@ -3,6 +3,7 @@ package com.goldin.plugins.teamcity.messenger.api
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.gcontracts.annotations.Invariant
+import groovy.transform.ToString
 
 
 /**
@@ -15,7 +16,9 @@ import org.gcontracts.annotations.Invariant
       this.text )                 &&
     ( this.sendToGroups != null ) &&
     ( this.sendToUsers  != null ) &&
-    ( this.usersDeleted != null )})
+    ( this.usersDeleted != null )
+})
+@ToString
 final class Message
 {
    /**
@@ -186,11 +189,5 @@ final class Message
         ( sendToAll ||
           sendToUsers.contains( username ) ||
           util.intersect ( sendToGroups, context.getUserGroups( username )))
-    }
-
-    @Override
-    String toString ()
-    {
-        "Message [$id]"
     }
 }

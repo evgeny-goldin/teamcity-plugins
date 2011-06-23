@@ -66,10 +66,13 @@ class MessagesBeanImpl implements MessagesBean
     long sendMessage ( Message message )
     {
         assert ( context.isTest() || context.getUser( message.sender )), "Sender [${ message.sender }] doesn't exist"
-        long messageId = usersTable.addMessage( messagesTable.addMessage( message ))
+        Message newMessage = messagesTable.addMessage( message ) // New Message is a copy of the sent one but with "id" set
+        usersTable.addMessage( newMessage )
 
         persistMessages()
-        messageId
+
+        context.log.info( "[$newMessage] sent" )
+        newMessage.id
     }
 
 
