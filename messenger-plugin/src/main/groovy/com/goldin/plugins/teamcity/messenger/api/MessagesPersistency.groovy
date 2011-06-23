@@ -10,7 +10,7 @@ interface MessagesPersistency
 {
 
     @Requires({ data != null })
-    void persist( Map data )
+    void save ( Map data )
 
 
     @Ensures({ result != null })

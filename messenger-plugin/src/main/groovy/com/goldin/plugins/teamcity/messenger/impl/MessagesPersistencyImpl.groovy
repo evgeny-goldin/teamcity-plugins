@@ -30,7 +30,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
 
 
     @Override
-    void persist ( Map data )
+    void save ( Map data )
     {
         try
         {

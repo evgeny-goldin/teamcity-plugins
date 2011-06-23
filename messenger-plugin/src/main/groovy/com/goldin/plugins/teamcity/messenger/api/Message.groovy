@@ -143,7 +143,7 @@ final class Message
     /**
      * Retrieves {@link Message} data to be sent to persistency storage.
      * @return {@link Message} data to be sent to persistency storage
-     * @see com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl#persist
+     * @see com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl#save
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result.id && result.text && result.sender })

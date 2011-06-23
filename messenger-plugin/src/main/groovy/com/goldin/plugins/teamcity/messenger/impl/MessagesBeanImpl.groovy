@@ -35,7 +35,7 @@ class MessagesBeanImpl implements MessagesBean
         /**
          * Restoring data from persistent storage
          */
-        messagesTable.readPersistencyData( persistency.restore())
+        messagesTable.persistencyData = persistency.restore()
         usersTable.init( messagesTable.allMessages )
     }
 
@@ -45,7 +45,7 @@ class MessagesBeanImpl implements MessagesBean
      */
     private void persistMessages ()
     {
-        executor.submit({ persistency.persist( messagesTable.persistencyData )} as Runnable )
+        executor.submit({ persistency.save( messagesTable.persistencyData )} as Runnable )
     }
 
 

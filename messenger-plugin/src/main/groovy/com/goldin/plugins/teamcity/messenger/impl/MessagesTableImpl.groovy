@@ -119,14 +119,15 @@ class MessagesTableImpl implements MessagesTable
     Map getPersistencyData()
     {
         [ messageId : messageIdGenerator.get(),
-          // 'messages' is List of Maps, one Map per Message
-          messages  : allMessages.sort{ Message m1, Message m2 -> m1.timestamp <=> m2.timestamp }*.messagePersistencyData ]
+          // 'messages' is List of Maps (one Map per Message), sorted chronologically
+          messages  : allMessages.sort{ Message m1, Message m2 -> m1.timestamp <=> m2.timestamp }*.
+                                  messagePersistencyData ]
     }
 
 
     @Override
     @Requires({ data.isEmpty() || ( data[ 'messageId' ] && ( data[ 'messages' ] != null )) })
-    void readPersistencyData( Map data )
+    void setPersistencyData ( Map data )
     {
         if ( data )
         {

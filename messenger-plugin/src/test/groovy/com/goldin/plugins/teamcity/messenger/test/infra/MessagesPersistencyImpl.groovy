@@ -23,7 +23,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
 
 
     @Override
-    void persist ( Map data ) { this.data = data }
+    void save ( Map data ) { this.data = data }
 
 
     @Override

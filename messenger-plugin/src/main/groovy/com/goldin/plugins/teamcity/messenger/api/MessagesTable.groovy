@@ -47,7 +47,7 @@ interface MessagesTable
     @Ensures({ result })
     Map getPersistencyData()
 
-    
+
     @Requires({ data })
-    void readPersistencyData( Map data )
+    void setPersistencyData ( Map data )
 }
