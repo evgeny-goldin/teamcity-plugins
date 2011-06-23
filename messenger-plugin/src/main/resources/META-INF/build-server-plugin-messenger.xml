@@ -6,21 +6,29 @@
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <!-- Utility beans -->
-    <bean name="messagesContext"           class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
-    <bean name="messagesConfiguration"     class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
-    <bean name="messagesUtil"              class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
+    <bean id="messagesContext"           class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
+    <bean id="messagesConfiguration"     class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
+    <bean id="messagesUtil"              class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
-    <bean name="messagesTable"             class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
-    <bean name="usersTable"                class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
-    <bean name="messagesPersistency"       class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
-    <bean name="messagesBean"              class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
+    <bean id="messagesTable"             class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
+    <bean id="usersTable"                class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+    <bean id="messagesPersistency"       class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
+    <bean id="messagesBean"              class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
 
     <!-- UI Controllers -->
-    <bean name="messagesDisplayController" class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
-    <bean name="messagesSendController"    class="com.goldin.plugins.teamcity.messenger.controller.MessagesSendController"/>
+    <bean id="messagesDisplayController" class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
+    <bean id="messagesSendController"    class="com.goldin.plugins.teamcity.messenger.controller.MessagesSendController"/>
 
     <!-- UI Extensions -->
-    <bean name="messagesDisplayExtension"  class="com.goldin.plugins.teamcity.messenger.extension.MessagesDisplayExtension"/>
-    <bean name="messagesSendExtension"     class="com.goldin.plugins.teamcity.messenger.extension.MessagesSendExtension"/>
+    <bean id="messagesDisplayExtension"  class="com.goldin.plugins.teamcity.messenger.extension.MessagesDisplayExtension"/>
+    <bean id="messagesSendExtension"     class="com.goldin.plugins.teamcity.messenger.extension.MessagesSendExtension"/>
+
+    <!-- Longevity cleanup timer task -->
+    <bean id="longevityCleanupTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <!-- Run every hour -->
+        <property name="period"    value="3600000"/>
+        <property name="timerTask" ref="messagesTable"/>
+    </bean>
+
 </beans>

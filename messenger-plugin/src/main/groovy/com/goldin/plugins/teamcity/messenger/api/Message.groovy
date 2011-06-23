@@ -32,7 +32,7 @@ final class Message
     final String          sender        // Message sender, a username
     final Urgency         urgency       // Message urgency
     final String          text          // Message text
-    final long            longevity     // Message "longevity", for how many hours should it be kept alive
+    final long            longevity     // Message "longevity" in hours - for how long should it be kept
     final boolean         sendToAll     // Whether message should be sent to all users
     final Set<String>     sendToGroups  // Groups message should be sent to
     final Set<String>     sendToUsers   // Users message should be sent to

@@ -51,6 +51,12 @@ class MessagesSendController extends MessagesBaseController
     }
 
 
+    /**
+     * Retrieves message "longevity" in hours, for how long should it be kept in the system.
+     *
+     * @param requestParams current request parameters
+     * @return message "longevity" in hours
+     */
     @Requires({ requestParams })
     @Ensures({ result > 0 })
     private long longevity ( Map<String, ?> requestParams)
@@ -58,10 +64,12 @@ class MessagesSendController extends MessagesBaseController
         long   number = param( requestParams, 'longevity-number' ) as long
         String unit   = param( requestParams, 'longevity-unit'   )
 
+        assert number > 0
+
         number * (( 'hours'  == unit ) ? 1       :
                   ( 'days'   == unit ) ? 24      :
                   ( 'weeks'  == unit ) ? 24 * 7  :
                   ( 'months' == unit ) ? 24 * 30 :
-                                         24 * 365 )
+                                         24 * 365 ) // One year if not specified
     }
 }
