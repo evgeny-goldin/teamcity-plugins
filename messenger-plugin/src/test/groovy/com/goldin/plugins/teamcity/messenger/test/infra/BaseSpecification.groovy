@@ -10,7 +10,7 @@ import org.gcontracts.annotations.Requires
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 
 /**
  * Super class for all tests
@@ -19,14 +19,18 @@ import spock.lang.Specification
 class BaseSpecification extends Specification
 {
     @Autowired
-    final MessagesUtil    util
-
-    @Autowired
     final MessagesContext context
 
-    private counter = 1
+    @Autowired
+    final MessagesConfiguration config
 
-    
+    @Autowired
+    final MessagesUtil    util
+
+
+    private long counter = 1
+
+
     final Random random = new SecureRandom()
 
 
@@ -59,7 +63,7 @@ class BaseSpecification extends Specification
         c.eachPermutation { List l -> counter++; call( l )}
         counter
     }
-    
+
 
     /**
      * Runs closure specified through all permutations of collections specified, passing each pair of permutation
@@ -89,10 +93,10 @@ class BaseSpecification extends Specification
     @Ensures({ result.id > 0 })
     Message messageWithId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
-        new Message( counter++, context, util, messageNoId( urgency, sendToAll, sendToGroups, sendToUsers ))
+        new Message( counter++, context, config, util, messageNoId( urgency, sendToAll, sendToGroups, sendToUsers ))
     }
 
-    
+
     /**
      * Retrieves test message without 'id' assigned.
      */

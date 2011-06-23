@@ -2,11 +2,12 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import org.jdom.Element
-
 
 /**
  * {@link MessagesConfiguration} implementation
@@ -26,14 +27,24 @@ class MessagesConfigurationImpl implements MessagesConfiguration
     private final MessagesContext     context
     private final Map<String, String> defaults
 
-    boolean minify
-    int     ajaxRequestInterval
-    int     persistencyInterval
-    int     messagesLimitPerUser
-    int     messageLengthLimit
-    String  logCategory
-    String  dateFormatPattern
-    String  timeFormatPattern
+    boolean    minify
+    int        ajaxRequestInterval
+    int        persistencyInterval
+    int        messagesLimitPerUser
+    int        messageLengthLimit
+    String     logCategory
+    String     dateFormatPattern
+    String     timeFormatPattern
+    DateFormat dateFormatter
+    DateFormat timeFormatter
+
+
+    MessagesConfigurationImpl ( MessagesContext context )
+    {
+        this.context  = context
+        this.defaults = map( new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))).asImmutable()
+        readParams()
+    }
 
 
     @Requires({ paramName && ( config != null ) && defaults })
@@ -45,6 +56,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
      * Initializes configuration parameters using a config Map provided or default parameters.
      * @param config co
      */
+    @Requires({ config != null })
     private void readParams ( Map<String, String> config = [:] )
     {
         this.minify               = Boolean.valueOf( param( 'minify', config ))
@@ -55,14 +67,8 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         this.logCategory          = param( 'logCategory',             config )
         this.dateFormatPattern    = param( 'dateFormatPattern',       config )
         this.timeFormatPattern    = param( 'timeFormatPattern',       config )
-    }
-
-
-    MessagesConfigurationImpl ( MessagesContext context )
-    {
-        this.context  = context
-        this.defaults = map( new XmlParser().parse( getClass().getResourceAsStream( '/default-config.xml' ))).asImmutable()
-        readParams()
+        this.dateFormatter        = new SimpleDateFormat( dateFormatPattern, context.locale )
+        this.timeFormatter        = new SimpleDateFormat( timeFormatPattern, context.locale )
     }
 
 

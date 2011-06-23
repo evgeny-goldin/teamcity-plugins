@@ -12,34 +12,41 @@ import jetbrains.buildServer.web.util.SessionUser
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.web.servlet.ModelAndView
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
+import org.gcontracts.annotations.Invariant
+
 
 /**
  * Base class for all controllers
  */
+@Invariant({ this.messagesBean && this.context && this.config && this.util })
 abstract class MessagesBaseController extends BaseController
 {
-    final MessagesBean    messagesBean
-    final MessagesContext context
-    final MessagesUtil    util
+    protected final MessagesBean          messagesBean
+    protected final MessagesContext       context
+    protected final MessagesConfiguration config
+    protected final MessagesUtil          util
 
-    
-    @Requires({ server && messagesBean && context && util })
+
+    @Requires({ server && messagesBean && context && config && util })
     @Ensures({ this.messagesBean == messagesBean })
-    protected MessagesBaseController ( SBuildServer    server,
-                                       MessagesBean    messagesBean,
-                                       MessagesContext context,
-                                       MessagesUtil    util )
+    protected MessagesBaseController ( SBuildServer          server,
+                                       MessagesBean          messagesBean,
+                                       MessagesContext       context,
+                                       MessagesConfiguration config,
+                                       MessagesUtil          util )
     {
         super( server )
-        
+
         this.messagesBean = messagesBean
         this.context      = context
+        this.config       = config
         this.util         = util
     }
 
 
     abstract ModelAndView handleRequest( Map<String, ?> requestParams, SUser currentUser, String username )
-    
+
 
 //    @Requires({ request && name })
 //    @Ensures({ result })
@@ -87,7 +94,7 @@ abstract class MessagesBaseController extends BaseController
         }
     }
 
-    
+
     @Override
     @Requires({ request && response })
     protected ModelAndView doHandle ( HttpServletRequest request, HttpServletResponse response )

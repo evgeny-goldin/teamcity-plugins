@@ -23,8 +23,9 @@ final class Message
     */
     public enum Urgency { CRITICAL, WARNING, INFO }
 
-    private final MessagesContext context // Context instance
-    private final MessagesUtil    util    // Util instance
+    private final MessagesContext       context // Context instance
+    private final MessagesConfiguration config  // Configuration instance
+    private final MessagesUtil          util    // Util instance
 
     final long            id            // Message id, assigned when added to messages table: MessagesTable.addMessage()
     final long            timestamp     // Message creation timestamp
@@ -50,6 +51,7 @@ final class Message
     {
         this.id           = -1
         this.context      = null
+        this.config       = null
         this.util         = null
 
         this.timestamp    = System.currentTimeMillis()
@@ -66,12 +68,13 @@ final class Message
     }
 
 
-    @Requires({( id > 0 ) && context && util && message })
+    @Requires({( id > 0 ) && context && config && util && message })
     @Ensures({ this.id == id })
-    Message ( long id, MessagesContext context, MessagesUtil util, Message message )
+    Message ( long id, MessagesContext context, MessagesConfiguration config, MessagesUtil util, Message message )
     {
         this.id           = id
         this.context      = context
+        this.config       = config
         this.util         = util
 
         this.timestamp    = message.timestamp
@@ -86,11 +89,12 @@ final class Message
     }
 
 
-    @Requires({ persistencyData && context && util && persistencyData[ 'id' ] && persistencyData[ 'timestamp' ] })
-    Message ( Map persistencyData, MessagesContext context, MessagesUtil util )
+    @Requires({ persistencyData && context && config && util && persistencyData[ 'id' ] && persistencyData[ 'timestamp' ] })
+    Message ( Map persistencyData, MessagesContext context, MessagesConfiguration config, MessagesUtil util )
     {
         this.id           = persistencyData[ 'id' ] as long
         this.context      = context
+        this.config       = config
         this.util         = util
 
         this.timestamp    = persistencyData[ 'timestamp' ] as long
@@ -119,14 +123,20 @@ final class Message
      * @see com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController#handleRequest
      */
     @Requires({ ( this.id > 0 ) && this.context })
-    @Ensures({ result && result.id && result.text })
-    Map<String, String> getDisplayData ()
+    @Ensures({ result && result[ 'id' ] && result[ 'text' ] })
+    Map<String, String> getDisplayData ( boolean truncateText )
     {
+        def date = new Date( timestamp )
+
         [ id         : id as String,
           urgency    : urgency.toString().toLowerCase( context.locale ),
           senderName : context.getUser( sender )?.descriptiveName ?: 'Test Sender',
-          text       : text,
-          timestamp  : timestamp as String ]
+          date       : config.dateFormatter.format( date ),
+          time       : config.timeFormatter.format( date ),
+          text       : ( truncateText && text.size() > config.messageLengthLimit ) ?
+                           text.substring( 0, config.messageLengthLimit ) + ' ..' :
+                           text
+        ]
     }
 
 
@@ -139,12 +149,13 @@ final class Message
     @Ensures({ result && result.id && result.text && result.sender })
     Map<String, String> getMessagePersistencyData ()
     {
-        displayData << [ sender       : sender,
-                         longevity    : longevity,
-                         sendToAll    : sendToAll,
-                         sendToGroups : sendToGroups,
-                         sendToUsers  : sendToUsers,
-                         usersDeleted : usersDeleted ]
+        getDisplayData( false ) << [ sender       : sender,
+                                     timestamp    : timestamp as String,
+                                     longevity    : longevity,
+                                     sendToAll    : sendToAll,
+                                     sendToGroups : sendToGroups,
+                                     sendToUsers  : sendToUsers,
+                                     usersDeleted : usersDeleted ]
     }
 
 

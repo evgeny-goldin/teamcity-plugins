@@ -11,22 +11,22 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link MessagesTable} implementation
  */
-@Invariant({ this.configuration && this.context && this.util &&
+@Invariant({ this.context && this.config && this.util &&
              ( this.messages != null ) && ( this.messageIdGenerator != null )})
 class MessagesTableImpl implements MessagesTable
 {
-    private final MessagesConfiguration configuration
     private final MessagesContext       context
+    private final MessagesConfiguration config
     private final MessagesUtil          util
     private final Map<Long, Message>    messages
     private final AtomicLong            messageIdGenerator
 
 
-    @Requires({ configuration && context && util })
-    MessagesTableImpl ( MessagesConfiguration configuration, MessagesContext context, MessagesUtil util )
+    @Requires({ context && config && util })
+    MessagesTableImpl ( MessagesContext context, MessagesConfiguration config, MessagesUtil util )
     {
-        this.configuration      = configuration
         this.context            = context
+        this.config             = config
         this.util               = util
         this.messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
         this.messageIdGenerator = new AtomicLong( 1000 )
@@ -46,7 +46,7 @@ class MessagesTableImpl implements MessagesTable
     Message addMessage ( Message message )
     {
         long    messageId  = nextMessageId
-        Message newMessage = new Message( messageId, context, util, message )
+        Message newMessage = new Message( messageId, context, config, util, message )
         Message previous   = messages.put( messageId, newMessage )
         assert  previous  == null, "Message with new id [$messageId] already existed: [$previous]"
 
@@ -135,7 +135,7 @@ class MessagesTableImpl implements MessagesTable
             for ( Map messagePersistencyData in data[ 'messages' ] )
             {
                 long      messageId   = messagePersistencyData[ 'id' ] as long
-                messages[ messageId ] = new Message( messagePersistencyData, context, util )
+                messages[ messageId ] = new Message( messagePersistencyData, context, config, util )
             }
         }
     }

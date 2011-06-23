@@ -41,8 +41,7 @@ class MessagesDisplayExtension extends MessagesBaseExtension
 //    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        model << [ messageLengthLimit  : config.messageLengthLimit,
-                   ajaxRequestInterval : config.ajaxRequestInterval,
+        model << [ ajaxRequestInterval : config.ajaxRequestInterval,
                    action              : MessagesDisplayController.MAPPING ]
     }
 }

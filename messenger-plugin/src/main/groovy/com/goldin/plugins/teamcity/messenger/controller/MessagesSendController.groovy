@@ -11,6 +11,7 @@ import jetbrains.buildServer.web.openapi.WebControllerManager
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.web.servlet.ModelAndView
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 
 /**
  * Controller activated when message is sent
@@ -20,14 +21,15 @@ class MessagesSendController extends MessagesBaseController
     static final String MAPPING = 'messagesSend.html'
 
 
-    @Requires({ server && manager && messagesBean && context && util })
-    MessagesSendController ( SBuildServer         server,
-                             WebControllerManager manager,
-                             MessagesBean         messagesBean,
-                             MessagesContext      context,
-                             MessagesUtil         util )
+    @Requires({ server && manager && messagesBean && context && config && util })
+    MessagesSendController ( SBuildServer          server,
+                             WebControllerManager  manager,
+                             MessagesBean          messagesBean,
+                             MessagesContext       context,
+                             MessagesConfiguration config,
+                             MessagesUtil          util )
     {
-        super( server, messagesBean, context, util )
+        super( server, messagesBean, context, config, util )
         manager.registerController( "/$MAPPING", this )
     }
 

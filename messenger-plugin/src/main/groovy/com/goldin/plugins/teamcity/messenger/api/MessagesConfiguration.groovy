@@ -1,5 +1,6 @@
 package com.goldin.plugins.teamcity.messenger.api
 
+import java.text.DateFormat
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.jdom.Element
@@ -42,4 +43,12 @@ interface MessagesConfiguration
 
     @Ensures({ result })
     String getTimeFormatPattern()
+
+
+    @Ensures({ result })
+    DateFormat getDateFormatter()
+
+
+    @Ensures({ result })
+    DateFormat getTimeFormatter()
 }

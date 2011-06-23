@@ -48,9 +48,7 @@
                                                               'text-align' : 'left' });
             }
 
-            j( '#messages-display-dialog-text' ).text( options.text.length > md.messageLengthLimit ?
-                                                       options.text.substring( 0, md.messageLengthLimit ) + ' ..' :
-                                                       options.text );
+            j( '#messages-display-dialog-text' ).text( options.text );
 
             j( '#messages-display-dialog' ).dialog({ height   : 115,
                                                      width    : 490,
