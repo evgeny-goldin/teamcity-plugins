@@ -12,9 +12,10 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link MessagesPersistency} implementation
  */
-@Invariant({ this.context && this.jsonFile })
+@Invariant({ this.dataDirectory && this.dataDirectory.directory && this.context && this.jsonFile })
 class MessagesPersistencyImpl implements MessagesPersistency
 {
+    private final File            dataDirectory
     private final MessagesContext context
     private final File            jsonFile
 
@@ -22,8 +23,9 @@ class MessagesPersistencyImpl implements MessagesPersistency
     @Requires({ context && paths })
     MessagesPersistencyImpl ( MessagesContext context, ServerPaths paths )
     {
-        this.context  = context
-        this.jsonFile = new File( paths.pluginDataDirectory, "${ context.pluginName }/messages.json" )
+        this.dataDirectory = new File( paths.pluginDataDirectory, context.pluginName )
+        this.context       = context
+        this.jsonFile      = new File( dataDirectory, 'messages.json' )
     }
 
 
@@ -50,7 +52,10 @@ class MessagesPersistencyImpl implements MessagesPersistency
         }
         catch ( e )
         {
-            context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath]: $e", e )
+            def copyFile = new File( dataDirectory, "messages-failed-to-load-${ System.currentTimeMillis() }.json" )
+            assert jsonFile.renameTo( copyFile )
+
+            context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath], copied to [$copyFile.canonicalPath]: $e", e )
             return [:]
         }
     }
