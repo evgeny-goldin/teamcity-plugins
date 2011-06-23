@@ -11,12 +11,16 @@ import org.jdom.Element
 /**
  * {@link MessagesConfiguration} implementation
  */
-@Invariant({ ( this.context && this.defaults ) &&
-             ( this.ajaxRequestInterval  > 0 ) &&
-             ( this.persistencyInterval  > 0 ) &&
-             ( this.messagesLimitPerUser > 0 ) &&
-             ( this.messageLengthLimit   > 0 ) &&
-             ( this.dateFormatPattern && this.timeFormatPattern ) })
+@Invariant({
+    ( this.context && this.defaults ) &&
+    ( this.ajaxRequestInterval  > 0 ) &&
+    ( this.persistencyInterval  > 0 ) &&
+    ( this.messagesLimitPerUser > 0 ) &&
+    ( this.messageLengthLimit   > 0 ) &&
+    ( this.logCategory       )        &&
+    ( this.dateFormatPattern )        &&
+    ( this.timeFormatPattern )
+})
 class MessagesConfigurationImpl implements MessagesConfiguration
 {
     private final MessagesContext     context
@@ -27,6 +31,7 @@ class MessagesConfigurationImpl implements MessagesConfiguration
     int     persistencyInterval
     int     messagesLimitPerUser
     int     messageLengthLimit
+    String  logCategory
     String  dateFormatPattern
     String  timeFormatPattern
 
@@ -47,11 +52,12 @@ class MessagesConfigurationImpl implements MessagesConfiguration
         this.persistencyInterval  = param( 'persistencyInterval',     config ) as int
         this.messagesLimitPerUser = param( 'messagesLimitPerUser',    config ) as int
         this.messageLengthLimit   = param( 'messageLengthLimit',      config ) as int
+        this.logCategory          = param( 'logCategory',             config )
         this.dateFormatPattern    = param( 'dateFormatPattern',       config )
         this.timeFormatPattern    = param( 'timeFormatPattern',       config )
     }
 
-    
+
     MessagesConfigurationImpl ( MessagesContext context )
     {
         this.context  = context

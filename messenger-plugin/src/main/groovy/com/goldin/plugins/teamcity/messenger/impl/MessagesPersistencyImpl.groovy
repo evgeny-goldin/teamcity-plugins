@@ -12,30 +12,46 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link MessagesPersistency} implementation
  */
-@Invariant({ this.dataFile != null })
+@Invariant({ this.context && this.jsonFile })
 class MessagesPersistencyImpl implements MessagesPersistency
 {
-
-    private final File dataFile
+    private final MessagesContext context
+    private final File            jsonFile
 
 
     @Requires({ context && paths })
-    MessagesPersistencyImpl ( ServerPaths paths, MessagesContext context )
+    MessagesPersistencyImpl ( MessagesContext context, ServerPaths paths )
     {
-        dataFile = new File( paths.pluginDataDirectory, "${ context.pluginName }/messages.json" )
+        this.context  = context
+        this.jsonFile = new File( paths.pluginDataDirectory, "${ context.pluginName }/messages.json" )
     }
 
 
     @Override
     void persist ( Map data )
     {
-        dataFile.write( new JsonBuilder( data ).toString())
+        try
+        {
+            jsonFile.write( new JsonBuilder( data ).toString())
+        }
+        catch ( e )
+        {
+            context.log.error( "Failed to persist [$data] to [$jsonFile.canonicalPath]: $e", e )
+        }
     }
 
 
     @Override
     Map restore ()
     {
-        ( dataFile.isFile() ? ( Map ) new JsonSlurper().parseText( dataFile.text ) : [:] )
+        try
+        {
+            return ( jsonFile.isFile() ? ( Map ) new JsonSlurper().parseText( jsonFile.text ) : [:] )
+        }
+        catch ( e )
+        {
+            context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath]: $e", e )
+            return [:]
+        }
     }
 }

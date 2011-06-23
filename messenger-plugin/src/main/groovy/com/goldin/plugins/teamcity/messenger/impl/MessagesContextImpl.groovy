@@ -6,25 +6,25 @@ import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.users.SUser
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import org.gcontracts.annotations.Ensures
+import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.context.ApplicationContext
-import org.gcontracts.annotations.Invariant
-
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 
 /**
  * {@link MessagesContext} implementation
  */
-@Invariant({ this.server && this.descriptor && this.pluginName && this.springContext })
+@Invariant({ this.server && this.descriptor && this.springContext && this.pluginName })
 class MessagesContextImpl implements InitializingBean, MessagesContext
 {
-    private static final String PLUGINS_CATEGORY = 'com.goldin.plugins'
-    private static final Logger LOG              = Logger.getInstance( PLUGINS_CATEGORY )
 
-    private final SBuildServer       server
-    private final PluginDescriptor   descriptor
-            final String             pluginName
-    private final ApplicationContext springContext
+    private final SBuildServer          server
+    private final PluginDescriptor      descriptor
+    private final ApplicationContext    springContext
+            final String                pluginName
+    private       MessagesConfiguration config
+                  Logger                log
 
 
     @Requires({ server && descriptor && springContext })
@@ -32,15 +32,28 @@ class MessagesContextImpl implements InitializingBean, MessagesContext
     {
         this.server        = server
         this.descriptor    = descriptor
-        this.pluginName    = descriptor.pluginName
         this.springContext = springContext
+        this.pluginName    = descriptor.pluginName
+
+        /**
+         * {@link MessagesConfiguration} bean depends on {@link MessagesContext} so we can't inject it in constructor.
+         * Instead, it is pulled from the context after all properties are set.
+         * @see #afterPropertiesSet
+         */
+        this.config = null
+        this.log    = null
     }
 
 
+    @Requires({ ( this.config == null ) && ( this.log == null ) })
+    @Ensures({ this.config && this.log })
     @Override
     void afterPropertiesSet ()
     {
-        if ( LOG.isDebugEnabled())
+        this.config = ( MessagesConfiguration ) springContext.getBean( 'messagesConfiguration', MessagesConfiguration )
+        this.log    = Logger.getInstance( config.logCategory )
+
+        if ( log.isDebugEnabled())
         {
             List<String> beanNames  = [ springContext, springContext.parent ]*.beanDefinitionNames.toList().flatten()
             int          beansCount = beanNames.size()
@@ -60,7 +73,7 @@ class MessagesContextImpl implements InitializingBean, MessagesContext
                 b
             }
 
-            LOG.debug( """
+            log.debug( """
  Plugin loaded:
  Name      = [${ descriptor.pluginName }]
  Version   = [${ descriptor.pluginVersion }]

@@ -6,21 +6,21 @@
                              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <!-- Utility beans -->
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
+    <bean name="messagesContext"           class="com.goldin.plugins.teamcity.messenger.impl.MessagesContextImpl"/>
+    <bean name="messagesConfiguration"     class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
+    <bean name="messagesUtil"              class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
+    <bean name="messagesTable"             class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
+    <bean name="usersTable"                class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+    <bean name="messagesPersistency"       class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
+    <bean name="messagesBean"              class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
 
     <!-- UI Controllers -->
-    <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.controller.MessagesSendController"/>
+    <bean name="messagesDisplayController" class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
+    <bean name="messagesSendController"    class="com.goldin.plugins.teamcity.messenger.controller.MessagesSendController"/>
 
     <!-- UI Extensions -->
-    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessagesDisplayExtension"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.extension.MessagesSendExtension"/>
+    <bean name="messagesDisplayExtension"  class="com.goldin.plugins.teamcity.messenger.extension.MessagesDisplayExtension"/>
+    <bean name="messagesSendExtension"     class="com.goldin.plugins.teamcity.messenger.extension.MessagesSendExtension"/>
 </beans>

@@ -13,6 +13,10 @@ interface MessagesConfiguration
     void readFrom ( Element root )
 
 
+    @Ensures({ result })
+    String getLogCategory()
+
+
     boolean isMinify ()
 
 
