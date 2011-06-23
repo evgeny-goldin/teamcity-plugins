@@ -1,6 +1,7 @@
 package com.goldin.plugins.teamcity.messenger.controller
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
+import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesUtil
 import javax.servlet.http.HttpServletRequest
@@ -12,14 +13,12 @@ import jetbrains.buildServer.web.util.SessionUser
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.springframework.web.servlet.ModelAndView
-import com.goldin.plugins.teamcity.messenger.api.MessagesConfiguration
-import org.gcontracts.annotations.Invariant
 
 
 /**
  * Base class for all controllers
  */
-@Invariant({ this.messagesBean && this.context && this.config && this.util })
+//@Invariant({ this.messagesBean && this.context && this.config && this.util })
 abstract class MessagesBaseController extends BaseController
 {
     protected final MessagesBean          messagesBean
