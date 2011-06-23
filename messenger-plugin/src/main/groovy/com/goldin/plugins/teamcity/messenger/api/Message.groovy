@@ -18,7 +18,7 @@ import groovy.transform.ToString
     ( this.sendToUsers  != null ) &&
     ( this.usersDeleted != null )
 })
-@ToString
+@ToString( includeNames = true )
 final class Message
 {
    /**
