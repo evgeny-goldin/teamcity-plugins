@@ -13,7 +13,7 @@ import org.gcontracts.annotations.Invariant
  */
 @Invariant({ this.context && this.config && this.util &&
              ( this.messages != null ) && ( this.messageIdGenerator != null )})
-class MessagesTableImpl  extends TimerTask implements MessagesTable
+class MessagesTableImpl implements MessagesTable
 {
     private final MessagesContext       context
     private final MessagesConfiguration config
@@ -30,35 +30,6 @@ class MessagesTableImpl  extends TimerTask implements MessagesTable
         this.util               = util
         this.messages           = new ConcurrentHashMap( 128, 0.75f, 10 )
         this.messageIdGenerator = new AtomicLong( 1000 )
-    }
-
-
-    /**
-     * Longevity cleanup timer task
-     */
-    @Override
-    void run ()
-    {
-        def now     = System.currentTimeMillis()
-        def deleted = []
-
-        for ( long messageId in messages.keySet())
-        {
-            Message message = messages[ messageId ]
-            assert  message.id        == messageId
-            assert  message.timestamp <= now
-
-            def messageAge  = (( now - message.timestamp ) / 3600000 ) // Message age in hours
-
-            if ( messageAge > message.longevity )
-            {
-                deleted << deleteMessage( messageId ).id
-            }
-        }
-
-        context.log.info(
-            "Longevity cleanup: [${ deleted.size() }] message${( deleted.size() == 1 ) ? '' : 's' } deleted" +
-            "${( deleted.size() > 0 ) ? ': ' + deleted  : '' }." )
     }
 
 

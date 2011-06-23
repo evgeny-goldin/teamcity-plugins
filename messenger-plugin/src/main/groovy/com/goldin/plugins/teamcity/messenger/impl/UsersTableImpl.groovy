@@ -9,27 +9,27 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link UsersTable} implementation
  */
-@Invariant({ this.configuration && this.context && this.util &&
+@Invariant({ this.context && this.config && this.util &&
              ( this.all != null ) && ( this.groups != null ) && ( this.users != null ) })
 class UsersTableImpl implements UsersTable
 {
-    private final MessagesConfiguration      configuration
     private final MessagesContext            context
+    private final MessagesConfiguration      config
     private final MessagesUtil               util
     private final List<Message>              all
     private final Map<String, List<Message>> groups
     private final Map<String, List<Message>> users
 
 
-    @Requires({ configuration && context && util })
-    UsersTableImpl ( MessagesConfiguration configuration, MessagesContext context, MessagesUtil util )
+    @Requires({ context && config && util })
+    UsersTableImpl ( MessagesContext context, MessagesConfiguration config, MessagesUtil util )
     {
-        this.configuration = configuration
-        this.context       = context
-        this.util          = util
-        this.all           = new ArrayList<Message>( 16 )
-        this.groups        = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
-        this.users         = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
+        this.context = context
+        this.config  = config
+        this.util    = util
+        this.all     = new ArrayList<Message>( 16 )
+        this.groups  = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
+        this.users   = new ConcurrentHashMap( 128, 0.75f, 10 ).withDefault { [] }
     }
 
 

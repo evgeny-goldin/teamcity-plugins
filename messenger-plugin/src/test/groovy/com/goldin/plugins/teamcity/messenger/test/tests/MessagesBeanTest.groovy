@@ -19,7 +19,7 @@ class MessagesBeanTest extends BaseSpecification
     @Autowired
     final MessagesBean messagesBean
 
-    
+
     @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
     def setup() { messagesTable.deleteAllMessages() }
 
@@ -93,7 +93,7 @@ class MessagesBeanTest extends BaseSpecification
         def messageId = messagesBean.sendMessage( m1 )
         def messages1 = messagesBean.getMessagesForUser( 'someUser' )
 
-        messagesBean.deleteMessage( messageId )
+        messagesBean.deleteMessage( messageId, true )
         def messages2 = messagesBean.getMessagesForUser( 'someUser' )
 
         then:
@@ -110,7 +110,7 @@ class MessagesBeanTest extends BaseSpecification
         expect:
         messagesBean.sendMessage( messageNoId( Urgency.INFO, false, [], [ 'someUser' ] ))
         messagesBean.sendMessage( messageNoId( Urgency.INFO, false, [], [ 'someUser' ] ))
-        messagesBean.deleteMessage( messageId )
+        messagesBean.deleteMessage( messageId, true )
 
         where:
         messageId | dummy

@@ -2,10 +2,9 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
-import org.gcontracts.annotations.Invariant
-
 
 /**
  * {@link MessagesBean} implementation
@@ -19,6 +18,7 @@ class MessagesBeanImpl implements MessagesBean
     private final MessagesContext     context
     private final MessagesUtil        util
     private final ExecutorService     executor
+
 
 
     @Requires({ messagesTable && usersTable && persistency && context && util })
@@ -40,12 +40,25 @@ class MessagesBeanImpl implements MessagesBean
     }
 
 
+    @Override
+    List<Message> getAllMessages () { messagesTable.allMessages }
+
+
     /**
      * Persists messages table in the background thread
      */
-    private void persistMessages ()
+    void persistMessages ()
     {
-        executor.submit({ persistency.save( messagesTable.persistencyData )} as Runnable )
+        executor.submit({
+
+            long t = System.currentTimeMillis()
+            persistency.save( messagesTable.persistencyData )
+
+            if ( context.log.isDebugEnabled())
+            {
+                context.log.debug( "Data persisted in [${ System.currentTimeMillis() - t }] ms" )
+            }
+        } as Runnable )
     }
 
 
@@ -77,11 +90,10 @@ class MessagesBeanImpl implements MessagesBean
 
 
     @Override
-    Message deleteMessage ( long messageId )
+    Message deleteMessage ( long messageId, boolean persist )
     {
         def message = messagesTable.deleteMessage( messageId )
-
-        persistMessages()
+        if ( persist ) { persistMessages() }
         message
     }
 

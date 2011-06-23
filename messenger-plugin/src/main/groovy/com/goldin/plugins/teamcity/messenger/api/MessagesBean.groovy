@@ -20,6 +20,15 @@ interface MessagesBean
 
 
     /**
+     * Retrieves all messages sent.
+     *
+     * @return all messages sent
+     */
+    @Ensures({ result != null })
+    List<Message> getAllMessages()
+
+
+    /**
      * Retrieves messages addressed to user specified.
      * @param username recipient username
      * @return messages addressed to user specified
@@ -36,7 +45,7 @@ interface MessagesBean
      */
     @Requires({ messageId > 0 })
     @Ensures({ result && ( result.id == messageId ) })
-    Message deleteMessage( long messageId )
+    Message deleteMessage( long messageId, boolean persistMessages )
 
 
     /**
@@ -48,4 +57,10 @@ interface MessagesBean
     @Requires({ ( messageId > 0 ) && username })
     @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessageByUser( long messageId, String username )
+
+
+    /**
+     * Triggers messages persistence
+     */
+    void persistMessages()
 }
