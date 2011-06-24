@@ -213,16 +213,25 @@ subprojects {
             assert destinationZip.isFile()
             assert teamCityDir.isDirectory()
 
-            def teamCityZip = new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/${project.name}.zip" )
-            delete( teamCityZip,
-                    new File( teamCityDir, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}" ),
-                    new File( teamCityDir, "work/Catalina/localhost/_/TC_${project.name}" ))
-
-            [ "webapps/ROOT/plugins/${project.name}", "logs" ].each {
-                new File( teamCityDir, it ).eachFile{ File f -> project.delete( f ) }
+            def zipPath = "webapps/ROOT/WEB-INF/plugins/${project.name}.zip"
+            def tDelete = {
+                boolean deleteDir, Object[] args ->
+                args.each {
+                    def dir = new File( teamCityDir, it )
+                    // Delete whole directory
+                    if ( deleteDir ){ project.delete( dir ) }
+                    // Delete directory files only but keep directory intact
+                    // (helpful when user edits or views some of the files, which locks the directory)
+                    else            { dir.eachFile { File f -> project.delete( f ) }}
+                }
             }
 
-            ant.copy( file: destinationZip, tofile: teamCityZip )
+            tDelete( true, zipPath, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}",
+                                    "work/Catalina/localhost/_/TC_${project.name}" )
+
+            tDelete( false, "webapps/ROOT/plugins/${project.name}", "logs" )
+
+            ant.copy( file: destinationZip, tofile: new File( teamCityDir, zipPath ))
         }
     }
 
