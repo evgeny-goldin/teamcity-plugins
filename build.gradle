@@ -69,9 +69,10 @@ allprojects {
 
 subprojects {
 
-    File        teamCityDir    = new File( 'T:/' )
-    File        destinationZip = new File( project.buildDir, "${project.name}.zip" )
-    Set<String> apiPatterns    = [ '**/api/**' ]
+    File        teamCityDir     = System.getProperty( 'teamCityDir'     ) ?: new File( 'T:/' )
+    String      teamCityAppName = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
+    File        destinationZip  = new File( project.buildDir, "${project.name}.zip" )
+    Set<String> apiPatterns     = [ '**/api/**' ]
 
     configurations {
         codenarc
@@ -210,10 +211,9 @@ subprojects {
         description = 'Deploys plugin Zip to TeamCity instance.'
 
         doFirst {
-            assert destinationZip.isFile()
-            assert teamCityDir.isDirectory()
+            assert destinationZip.isFile() && teamCityDir.isDirectory()
 
-            def zipPath = "webapps/ROOT/WEB-INF/plugins/${project.name}.zip"
+            def zipPath = "webapps/$teamCityAppName/WEB-INF/plugins/${project.name}.zip"
             def tDelete = {
                 boolean deleteDir, Object[] args ->
                 args.each {
@@ -226,10 +226,10 @@ subprojects {
                 }
             }
 
-            tDelete( true, zipPath, "webapps/ROOT/WEB-INF/plugins/.unpacked/${project.name}",
+            tDelete( true, zipPath, "webapps/$teamCityAppName/WEB-INF/plugins/.unpacked/${project.name}",
                                     "work/Catalina/localhost/_/TC_${project.name}" )
 
-            tDelete( false, "webapps/ROOT/plugins/${project.name}", "logs" )
+            tDelete( false, "webapps/$teamCityAppName/plugins/${project.name}", "logs" )
 
             ant.copy( file: destinationZip, tofile: new File( teamCityDir, zipPath ))
         }
@@ -240,10 +240,12 @@ subprojects {
      */
     task copy () {
         description        = 'Copies static resources to TeamCity instance.'
-        def destinationDir = "${teamCityDir}/webapps/ROOT/plugins/${project.name}"
+        def destinationDir = "${teamCityDir}/webapps/$teamCityAppName/plugins/${project.name}"
         def sourceDir      = "${project.projectDir}/src/main/resources/buildServerResources"
 
         doFirst {
+            assert sourceDir.isDirectory() && destinationDir.isDirectory()
+
             ant {
                 copy ( todir  : destinationDir ) { fileset( dir : sourceDir      ) }
                 touch()                          { fileset( dir : destinationDir ) }
