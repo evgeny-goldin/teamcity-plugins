@@ -213,8 +213,8 @@ subprojects {
         doFirst {
             assert destinationZip.isFile() && teamCityDir.isDirectory()
 
-            def zipPath = "webapps/$teamCityAppName/WEB-INF/plugins/${project.name}.zip"
-            def tDelete = {
+            def zipPath  = "webapps/$teamCityAppName/WEB-INF/plugins/${project.name}.zip"
+            def tcDelete = {
                 boolean deleteDir, Object[] args ->
                 args.each {
                     def dir = new File( teamCityDir, it )
@@ -226,10 +226,10 @@ subprojects {
                 }
             }
 
-            tDelete( true, zipPath, "webapps/$teamCityAppName/WEB-INF/plugins/.unpacked/${project.name}",
-                                    "work/Catalina/localhost/_/TC_${project.name}" )
+            tcDelete( true, zipPath, "webapps/$teamCityAppName/WEB-INF/plugins/.unpacked/${project.name}",
+                                     "work/Catalina/localhost/_/TC_${project.name}" )
 
-            tDelete( false, "webapps/$teamCityAppName/plugins/${project.name}", "logs" )
+            tcDelete( false, "webapps/$teamCityAppName/plugins/${project.name}", "logs" )
 
             ant.copy( file: destinationZip, tofile: new File( teamCityDir, zipPath ))
         }
