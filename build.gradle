@@ -217,7 +217,7 @@ subprojects {
             def tcDelete = {
                 boolean deleteDir, Object[] args ->
                 args.each {
-                    def dir = new File( teamCityDir, it )
+                    def dir = new File( teamCityDir, ( String ) it )
                     // Delete whole directory
                     if ( deleteDir ){ project.delete( dir ) }
                     // Delete directory files only but keep directory intact
