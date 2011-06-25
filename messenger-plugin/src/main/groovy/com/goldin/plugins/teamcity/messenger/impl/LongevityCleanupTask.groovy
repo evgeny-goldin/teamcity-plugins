@@ -32,22 +32,25 @@ class LongevityCleanupTask extends TimerTask
         def deleted = []
 
         for ( Message message in messagesBean.allMessages )
-        {
-            assert message.timestamp <= now
-
-            // Message age in hours
-            def messageAge = (( now - message.timestamp ) / 3600000 )
-
+        {   /**
+             * Message age in hours. If due to clock changes message
+             * comes "from the future" (message.timestamp > now),
+             * then its age would be negative.
+             */
+            def  messageAge = (( now - message.timestamp ) / 3600000 )
             if ( messageAge > message.longevity )
             {
                 deleted << messagesBean.deleteMessage( message.id, false ).id
             }
         }
 
-        if ( deleted ) { messagesBean.persistMessages() }
+        if ( deleted )
+        {
+            context.log.info(
+                "Longevity cleanup: [${ deleted.size() }] message${( deleted.size() == 1 ) ? '' : 's' } deleted" +
+                "${( deleted.size() > 0 ) ? ': ' + deleted  : '' }." )
 
-        context.log.info(
-            "Longevity cleanup: [${ deleted.size() }] message${( deleted.size() == 1 ) ? '' : 's' } deleted" +
-            "${( deleted.size() > 0 ) ? ': ' + deleted  : '' }." )
+            messagesBean.persistMessages()
+        }
     }
 }
