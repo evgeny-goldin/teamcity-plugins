@@ -240,8 +240,8 @@ subprojects {
      */
     task copy () {
         description        = 'Copies static resources to TeamCity instance.'
-        def destinationDir = "${teamCityDir}/webapps/$teamCityAppName/plugins/${project.name}"
-        def sourceDir      = "${project.projectDir}/src/main/resources/buildServerResources"
+        def destinationDir = new File( teamCityDir,        "webapps/$teamCityAppName/plugins/${project.name}" )
+        def sourceDir      = new File( project.projectDir, 'src/main/resources/buildServerResources' )
 
         doFirst {
             assert sourceDir.isDirectory() && destinationDir.isDirectory()
