@@ -12,7 +12,12 @@ import org.gcontracts.annotations.Invariant
 /**
  * {@link MessagesPersistency} implementation
  */
-@Invariant({ this.dataDirectory && this.dataDirectory.directory && this.context && this.jsonFile })
+@Invariant({
+    this.dataDirectory.directory &&
+    this.context                 &&
+    this.jsonFile.file           &&
+    this.jsonFile.canWrite()
+})
 class MessagesPersistencyImpl implements MessagesPersistency
 {
     private final File            dataDirectory
@@ -26,6 +31,9 @@ class MessagesPersistencyImpl implements MessagesPersistency
         this.dataDirectory = new File( paths.pluginDataDirectory, context.pluginName )
         this.context       = context
         this.jsonFile      = new File( dataDirectory, 'messages.json' )
+
+        if ( ! dataDirectory.isDirectory()) { assert dataDirectory.mkdirs()  }
+        if ( ! jsonFile.isFile())           { assert jsonFile.createNewFile()}
     }
 
 
@@ -46,9 +54,11 @@ class MessagesPersistencyImpl implements MessagesPersistency
     @Override
     Map restore ()
     {
+        def jsonData = jsonFile.text
+
         try
         {
-            return ( jsonFile.isFile() ? ( Map ) new JsonSlurper().parseText( jsonFile.text ) : [:] )
+            return ( jsonData ? ( Map ) new JsonSlurper().parseText( jsonData ) : [:] )
         }
         catch ( e )
         {

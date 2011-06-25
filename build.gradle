@@ -69,7 +69,7 @@ allprojects {
 
 subprojects {
 
-    File        teamCityDir     = System.getProperty( 'teamCityDir'     ) ?: new File( 'T:/' )
+    File        teamCityDir     = new File( System.getProperty( 'teamCityDir' ) ?: 'T:/' )
     String      teamCityAppName = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
     File        destinationZip  = new File( project.buildDir, "${project.name}.zip" )
     Set<String> apiPatterns     = [ '**/api/**' ]
