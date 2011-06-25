@@ -218,7 +218,7 @@ subprojects {
                 boolean deleteDir, Object[] args ->
                 args.each {
                     def file = new File( teamCityDir, ( String ) it )
-                    // Delete whole directory
+                    // Delete file or whole directory
                     if ( deleteDir ){
                         project.delete( file )
                     }
