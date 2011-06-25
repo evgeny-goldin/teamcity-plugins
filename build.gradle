@@ -217,12 +217,17 @@ subprojects {
             def tcDelete = {
                 boolean deleteDir, Object[] args ->
                 args.each {
-                    def dir = new File( teamCityDir, ( String ) it )
+                    def file = new File( teamCityDir, ( String ) it )
                     // Delete whole directory
-                    if ( deleteDir ){ project.delete( dir ) }
-                    // Delete directory files only but keep directory intact
+                    if ( deleteDir ){
+                        project.delete( file )
+                    }
+                    // Delete directory files only but keep the directory intact
                     // (helpful when user edits or views some of the files, which locks the directory)
-                    else            { dir.eachFile { File f -> project.delete( f ) }}
+                    else {
+                        assert file.isDirectory()
+                        file.eachFile { File f -> project.delete( f ) }
+                    }
                 }
             }
 
