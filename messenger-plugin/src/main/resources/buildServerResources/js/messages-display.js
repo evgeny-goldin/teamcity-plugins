@@ -128,21 +128,26 @@
                    { t: j.now() },
                    function ( newMessages ) /* JSON array of messages, as sent by MessagesDisplayController.handleRequest() */
                    {
-                       if ( ! ( newMessages && newMessages.length )) { return }
-
-                       var isUpdate =
-                           (( md.nMessages() < 1 )                   || // No existing message yet
-                            ( md.nMessages() != newMessages.length ) || // Number of messages on the server has changed
-                            ( newMessages.any( md.unknownMessage )));   // Some of new messages are new
-
-                       if ( isUpdate )
+                       if ( newMessages && newMessages.length )
                        {
-                           md.messageDisplayed = 0;
-                           md.messages         = newMessages.slice( 0 ); // Shallow copy of the messages array
+                           var isUpdate =
+                               (( md.nMessages() < 1 )                   || // No existing message yet
+                                ( md.nMessages() != newMessages.length ) || // Number of messages on the server has changed
+                                ( newMessages.any( md.unknownMessage )));   // Some of new messages are new
 
-                           j.assert( md.nMessages(), 'getMessages(): [' + md.nMessages() + '] (md.nMessages())' );
+                           if ( isUpdate )
+                           {
+                               md.messageDisplayed = 0;
+                               md.messages         = newMessages.slice( 0 ); // Shallow copy of the messages array
 
-                           md.dialogMessage();
+                               j.assert( md.nMessages(), 'getMessages(): [' + md.nMessages() + '] (md.nMessages())' );
+
+                               md.dialogMessage();
+                           }
+                       }
+                       else
+                       {
+                           md.dialogClose();
                        }
                    },
                    'json'
