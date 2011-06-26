@@ -81,10 +81,16 @@ class MessagesBeanImpl implements MessagesBean
     {
         List<Message> messages = []
 
+        /**
+         * Find messages for user, all his groups and "all" users
+         */
         messages.addAll( usersTable.getMessagesForUser( username ))
         context.getUserGroups( username ).each { messages.addAll( usersTable.getMessagesForGroup( it )) }
         messages.addAll( usersTable.messagesForAll )
 
+        /**
+         * Filter out duplicates, deleted messages and sort by importance for this user
+         */
         util.sortForUser( messages.unique  { Message m1, Message m2 -> m1.id <=> m2.id }.
                                    findAll { Message m -> ! m.usersDeleted.contains( username )}.
                                    findAll { Message m -> messagesTable.containsMessage( m.id )},
