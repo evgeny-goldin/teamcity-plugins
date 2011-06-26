@@ -96,8 +96,8 @@ class MessagesBeanImpl implements MessagesBean
     Message deleteMessage ( long messageId, boolean persist )
     {
         def message = messagesTable.deleteMessage( messageId )
-        if ( persist ) { persistMessages() }
-        message
+        if ( persist && message ) { persistMessages() }
+        message // May return null
     }
 
 

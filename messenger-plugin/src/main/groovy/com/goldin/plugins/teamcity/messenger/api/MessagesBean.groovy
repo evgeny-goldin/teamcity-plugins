@@ -44,7 +44,7 @@ interface MessagesBean
      * @return message deleted
      */
     @Requires({ messageId > 0 })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Ensures({ ( result == null ) || ( result.id == messageId ) })
     Message deleteMessage( long messageId, boolean persistMessages )
 
 

@@ -63,10 +63,11 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({  messages.containsKey( messageId ) })
+    @Requires({ messageId > 0 })
     @Ensures({ ! messages.containsKey( messageId ) })
     Message deleteMessage ( long messageId )
     {
+        // May return null if message was already deleted
         messages.remove( messageId )
     }
 

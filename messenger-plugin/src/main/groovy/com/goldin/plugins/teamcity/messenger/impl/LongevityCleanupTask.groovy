@@ -40,7 +40,8 @@ class LongevityCleanupTask extends TimerTask
             def  messageAge = (( now - message.timestamp ) / 3600000 )
             if ( messageAge > message.longevity )
             {
-                deleted << messagesBean.deleteMessage( message.id, false ).id
+                def  messageDeleted = messagesBean.deleteMessage( message.id, false )
+                if ( messageDeleted ) { deleted << messageDeleted.id }
             }
         }
 
