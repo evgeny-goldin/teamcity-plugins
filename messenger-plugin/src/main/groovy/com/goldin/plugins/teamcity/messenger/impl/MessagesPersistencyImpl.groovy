@@ -63,7 +63,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         catch ( Throwable t )
         {
             def copyFile = new File( dataDirectory, "messages-failed-to-load-${ System.currentTimeMillis() }.json" )
-            assert jsonFile.renameTo( copyFile )
+            assert jsonFile.with{ renameTo( copyFile ) && createNewFile() }
 
             context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath], copied to [$copyFile.canonicalPath]: $t", t )
             return [:]
