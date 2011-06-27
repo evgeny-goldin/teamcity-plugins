@@ -14,11 +14,13 @@ buildscript  {
     spockVersion         = '0.6-groovy-1.8-SNAPSHOT'
     codenarcVersion      = '0.14'
     junitVersion         = '4.8.2'
-    gradlePluginsVersion = '0.1-RC'
+    gradlePluginsVersion = '0.1-RC2'
     coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
     repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
 
     repositories {
+
+//        mavenRepo urls: uri ( "${ System.getProperty( 'user.home' )}/.m2/repository" )
         mavenRepo urls: repoUrl
         add( new org.apache.ivy.plugins.resolver.URLResolver()) {
             name = 'cobertura'
@@ -40,6 +42,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'groovy'
     apply plugin: 'about'
+    apply plugin: 'duplicates'
     apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
 
     defaultTasks 'clean', 'build'
@@ -52,6 +55,8 @@ allprojects {
 
     repositories { mavenRepo urls: repoUrl }
     about        { dumpDependencies = true }
+    duplicates   { configurations   = [ 'runtime' ]
+                   verbose          = true }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
 
     ideaProject {
@@ -199,8 +204,8 @@ subprojects {
         }
     }
 
-    task compileGroovy ( overwrite: true, dependsOn: [ compileGroovyApi, compileGroovyImpl ] )
-    task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
+    task compileGroovy ( overwrite: true, dependsOn: [ duplicates, compileGroovyApi, compileGroovyImpl ] )
+    task assemble      ( overwrite: true, dependsOn: [ assembleApi, assembleImpl ] )
     build.dependsOn( assemblePlugin )
 
 
