@@ -54,19 +54,22 @@ class MessagesPersistencyImpl implements MessagesPersistency
     @Override
     Map restore ()
     {
-        def jsonData = jsonFile.text
+        String    jsonData = jsonFile.text
+        Throwable error    = null
 
         try
         {
             return ( jsonData ? ( Map ) new JsonSlurper().parseText( jsonData ) : [:] )
         }
-        catch ( Throwable t )
-        {
-            def copyFile = new File( dataDirectory, "messages-failed-to-load-${ System.currentTimeMillis() }.json" )
-            assert jsonFile.with{ renameTo( copyFile ) && createNewFile() }
+        catch ( StackOverflowError e ) { error = e } // http://jira.codehaus.org/browse/GROOVY-4903
+        catch ( e )                    { error = e }
 
-            context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath], copied to [$copyFile.canonicalPath]: $t", t )
-            return [:]
-        }
+        def copyFile = new File( dataDirectory, "messages-failed-to-load-${ System.currentTimeMillis() }.json" )
+        assert jsonFile.with{ renameTo( copyFile ) && createNewFile() }
+
+        context.log.error( "Failed to restore JSON data from [$jsonFile.canonicalPath], " +
+                           "copied to [$copyFile.canonicalPath]: $error",
+                           error )
+        [:]
     }
 }
