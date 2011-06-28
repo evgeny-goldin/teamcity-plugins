@@ -13,7 +13,7 @@ buildscript  {
     gcontractsVersion    = '1.2.4'
     spockVersion         = '0.6-groovy-1.8-SNAPSHOT'
     junitVersion         = '4.8.2'
-    gradlePluginsVersion = '0.1-RC2'
+    gradlePluginsVersion = '0.1-RC3'
     codenarcConfig       = 'codenarc/codenarc.txt'
     coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
     repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
