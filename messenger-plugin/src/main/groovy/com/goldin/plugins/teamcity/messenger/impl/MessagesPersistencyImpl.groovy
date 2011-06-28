@@ -2,12 +2,10 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesPersistency
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
 import jetbrains.buildServer.serverSide.ServerPaths
-import org.gcontracts.annotations.Requires
+import net.sf.json.JSONObject
 import org.gcontracts.annotations.Invariant
-
+import org.gcontracts.annotations.Requires
 
 /**
  * {@link MessagesPersistency} implementation
@@ -42,7 +40,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
     {
         try
         {
-            jsonFile.write( new JsonBuilder( data ).toString())
+            jsonFile.write( JSONObject.fromObject( data ).toString())
         }
         catch ( e )
         {
@@ -59,10 +57,11 @@ class MessagesPersistencyImpl implements MessagesPersistency
 
         try
         {
-            return ( jsonData ? ( Map ) new JsonSlurper().parseText( jsonData ) : [:] )
+            // http://jira.codehaus.org/browse/GROOVY-4903 - can't use JsonSlurper :(
+            return ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
         }
-        catch ( StackOverflowError e ) { error = e } // http://jira.codehaus.org/browse/GROOVY-4903
-        catch ( e )                    { error = e }
+        catch ( Error     e ) { error = e } // Catching Throwable triggers CodeNarc alarm
+        catch ( Exception e ) { error = e }
 
         def copyFile = new File( dataDirectory, "messages-failed-to-load-${ System.currentTimeMillis() }.json" )
         assert jsonFile.with{ renameTo( copyFile ) && createNewFile() }

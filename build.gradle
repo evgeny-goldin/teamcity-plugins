@@ -77,7 +77,7 @@ subprojects {
 
     File        teamCityDir     = new File( System.getProperty( 'teamCityDir' ) ?: 'T:/' )
     String      teamCityAppName = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
-    File        destinationZip  = new File( project.buildDir, "${project.name}.zip" )
+    File        destinationZip  = new File(( File ) project.buildDir, "${project.name}.zip" )
     Set<String> apiPatterns     = [ '**/api/**' ]
 
     configurations {
@@ -90,10 +90,10 @@ subprojects {
         provided    "jetbrains:teamcity-openapi:$teamCityVersion",
                     "jetbrains:teamcity-openapi.util:$teamCityVersion",
                     "org.springframework:spring-webmvc:$springVersion",
-                    'org.jdom:jdom:1.1', // For reading configuration
+                    'org.jdom:jdom:1.1', // Configuration reading
                     'javax.servlet:servlet-api:2.5'
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
-        testRuntime "org.apache.ant:ant:$antVersion"
+        compile     ( 'net.sf.json-lib:json-lib:2.4:jdk15' ) { exclude group: 'commons-collections'  }
         testCompile "org.spockframework:spock-core:$spockVersion",
                     "org.spockframework:spock-spring:$spockVersion",
                     "org.springframework:spring-test:$springVersion",
@@ -103,7 +103,7 @@ subprojects {
 
     cobertura {
         coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
-        coverageReportDir = new File( toolReportsDir, 'cobertura' )
+        coverageReportDir = new File(( File ) toolReportsDir, 'cobertura' )
     }
 
 
@@ -118,7 +118,7 @@ subprojects {
     /**
      * Compiles API sources
      */
-    task compileGroovyApi ( type: GroovyCompile ) {
+    task compileGroovyApi ( type: GroovyCompile, dependsOn: duplicates ) {
         description    = 'Compiles API sources.'
         classpath      = compileGroovy.classpath
         source         = compileGroovy.source
@@ -176,7 +176,7 @@ subprojects {
              * Copying all required libraries except provided ones by TeamCity server
              * Groovy jar is not copied if -PnoGroovy is specified
              */
-            File compileLibs = new File( project.buildDir, 'compile-libs' )
+            File compileLibs = new File(( File ) project.buildDir, 'compile-libs' )
 
             ( configurations.compile.files - configurations.provided.files ).each {
                 File file ->
@@ -201,9 +201,9 @@ subprojects {
         }
     }
 
-    task compileGroovy ( overwrite: true, dependsOn: [ duplicates, compileGroovyApi, compileGroovyImpl ] )
-    task assemble      ( overwrite: true, dependsOn: [ assembleApi, assembleImpl ] )
-    build.dependsOn( assemblePlugin )
+    task compileGroovy ( overwrite: true, dependsOn: [ compileGroovyApi, compileGroovyImpl ] )
+    task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
+    build.dependsOn( duplicates, assemblePlugin )
 
 
     /**
@@ -248,7 +248,7 @@ subprojects {
     task copy () {
         description        = 'Copies static resources to TeamCity instance.'
         def destinationDir = new File( teamCityDir,        "webapps/$teamCityAppName/plugins/${project.name}" )
-        def sourceDir      = new File( project.projectDir, 'src/main/resources/buildServerResources' )
+        def sourceDir      = new File(( File ) project.projectDir, 'src/main/resources/buildServerResources' )
 
         doFirst {
             assert sourceDir.isDirectory() && destinationDir.isDirectory()
