@@ -12,9 +12,9 @@ buildscript  {
     antVersion           = '1.8.2'
     gcontractsVersion    = '1.2.4'
     spockVersion         = '0.6-groovy-1.8-SNAPSHOT'
-    codenarcVersion      = '0.14'
     junitVersion         = '4.8.2'
     gradlePluginsVersion = '0.1-RC2'
+    codenarcConfig       = 'codenarc/codenarc.txt'
     coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
     repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
 
@@ -44,6 +44,7 @@ allprojects {
     apply plugin: 'about'
     apply plugin: 'duplicates'
     apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
+    apply from:   'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
     defaultTasks 'clean', 'build'
 
@@ -80,16 +81,12 @@ subprojects {
     Set<String> apiPatterns     = [ '**/api/**' ]
 
     configurations {
-        codenarc
         provided
         compile { extendsFrom provided }
     }
 
     dependencies   {
         groovy      "org.codehaus.groovy:groovy-all:$groovyVersion"
-        codenarc    ( "org.codenarc:CodeNarc:$codenarcVersion" ){ exclude group: 'ant' }
-        codenarc    "org.apache.ant:ant:$antVersion",
-                    files( rootProject.file( 'codenarc' )) // For "log4j.xml"
         provided    "jetbrains:teamcity-openapi:$teamCityVersion",
                     "jetbrains:teamcity-openapi.util:$teamCityVersion",
                     "org.springframework:spring-webmvc:$springVersion",
@@ -259,34 +256,6 @@ subprojects {
             ant {
                 copy ( todir  : destinationDir ) { fileset( dir : sourceDir      ) }
                 touch()                          { fileset( dir : destinationDir ) }
-            }
-        }
-    }
-
-    /**
-     * Runs CodeNarc inspections on Groovy sources
-     * http://codenarc.sourceforge.net/codenarc-ant-task.html
-     */
-    task codenarc() {
-
-        description = 'Runs CodeNarc inspections on Groovy sources.'
-
-        doFirst {
-            File   codenarcConfigFile = rootProject.file( 'codenarc/codenarc.txt'  )
-            assert codenarcConfigFile.isFile()
-            assert toolReportsDir.isDirectory() || toolReportsDir.mkdirs()
-
-            ant.taskdef( name     : 'codenarc',
-                         classname: 'org.codenarc.ant.CodeNarcTask',
-                         classpath: configurations.codenarc.asPath )
-
-            ant.codenarc ( ruleSetFiles          : "file:$codenarcConfigFile",
-                           maxPriority1Violations: 0,
-                           maxPriority2Violations: 0,
-                           maxPriority3Violations: 0 ) {
-                 report  ( type : 'html' ) { option name: 'outputFile', value: new File(( File ) toolReportsDir, 'codenarc.html' ) }
-                 fileset ( dir  : 'src/main/groovy' )
-                 fileset ( dir  : 'src/test/groovy' )
             }
         }
     }
