@@ -120,6 +120,7 @@
                         urgency : message.urgency });
         },
 
+
         /**
          * Makes an Ajax request, retrieves messages for the current user and shows the first one in a dialog
          */
@@ -156,21 +157,9 @@
 
 
         /**
-         * Closes the dialog
+         * Message "Prev" link handler
          */
-        dialogClose : function()
-        {
-            j( '#messages-display-dialog' ).dialog( 'destroy' );
-        }
-    };
-
-
-    j( function() {
-
-        /**
-         * "Prev" button listener
-         */
-        j( '#messages-display-dialog-prev' ).click( function(){
+        prevMessage : function() {
 
             j.assert( md.messageDisplayed > 0,
                       '"Prev" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
@@ -183,13 +172,13 @@
 
             md.messageDisplayed = prevMessage;
             md.dialogMessage();
-        });
+        },
 
 
         /**
-         * "Next" button listener
+         * Message "Next" link handler
          */
-        j( '#messages-display-dialog-next' ).click( function(){
+        nextMessage : function() {
 
             j.assert( md.messageDisplayed < ( md.nMessages() - 1 ),
                       '"Next" click: [' + md.messageDisplayed + '][' + md.nMessages() + '] (md.messageDisplayed, md.nMessages())' );
@@ -202,22 +191,22 @@
 
             md.messageDisplayed = nextMessage;
             md.dialogMessage();
-        });
+        },
 
-
-       /**
-        * "Close" button listener
-        */
-        j( '#messages-display-dialog-close' ).click( function(){
-            md.dialogClose();
+        /**
+         * Dialog "Close" link handler
+         */
+        dialogClose : function()
+        {
+            j( '#messages-display-dialog' ).dialog( 'destroy' );
             return false;
-        });
+        },
 
 
-       /**
-        * "Delete" button listener
-        */
-        j( '#messages-display-dialog-delete' ).click( function(){
+        /**
+         * Message "Delete" link handler
+         */
+        deleteMessage : function() {
 
             j( '#messages-display-progress' ).show();
 
@@ -277,5 +266,13 @@
                    });
 
             return false;
-        });
+        }
+    };
+
+
+    j( function() {
+        j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
+        j( '#messages-display-dialog-next'   ).click( md.nextMessage   );
+        j( '#messages-display-dialog-close'  ).click( md.dialogClose   );
+        j( '#messages-display-dialog-delete' ).click( md.deleteMessage );
     });
