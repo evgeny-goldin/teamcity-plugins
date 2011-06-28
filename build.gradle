@@ -56,7 +56,7 @@ allprojects {
 
     repositories { mavenRepo urls: repoUrl }
     about        { dumpDependencies = true }
-    duplicates   { configurations   = [ 'runtime' ]
+    duplicates   { configurations   = ( System.getProperty( 'duplicates' ) ?: 'runtime' ).split()
                    verbose          = true }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
 
