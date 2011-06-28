@@ -172,6 +172,8 @@
 
             md.messageDisplayed = prevMessage;
             md.dialogMessage();
+
+            return false;
         },
 
 
@@ -191,6 +193,8 @@
 
             md.messageDisplayed = nextMessage;
             md.dialogMessage();
+
+            return false;
         },
 
         /**
@@ -199,6 +203,7 @@
         dialogClose : function()
         {
             j( '#messages-display-dialog' ).dialog( 'destroy' );
+
             return false;
         },
 
