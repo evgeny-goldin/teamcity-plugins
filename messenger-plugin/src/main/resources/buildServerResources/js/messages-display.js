@@ -276,7 +276,7 @@
 
         j( '#messages-display-dialog' ).dialog({ autoOpen : false,
                                                  height   : 115,
-                                                 width    : 490,
+                                                 width    : 550,
                                                  position : 'top' })
         j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
         j( '#messages-display-dialog-next'   ).click( md.nextMessage   );
