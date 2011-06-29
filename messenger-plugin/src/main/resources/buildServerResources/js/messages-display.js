@@ -28,7 +28,7 @@
         /**
          * Displays dialog widget according to options specified
          */
-        dialog : function( options ) {
+        dialogOpen : function( options ) {
 
             options = j.extend({ statusMessage : false, urgency : '' }, options );
 
@@ -50,11 +50,8 @@
 
             j( '#messages-display-dialog-text' ).text( options.text );
 
-            j( '#messages-display-dialog' ).dialog({ height   : 115,
-                                                     width    : 490,
-                                                     position : 'top',
-                                                     title    : options.title,
-                                                     close    : md.dialogClose });
+            j( '#messages-display-dialog' ).dialog({ title : options.title }).
+                                            dialog( 'open' );
             if ( options.urgency )
             {
                 j( 'div.ui-widget-header' ).addClass( 'dialog-' + options.urgency );
@@ -65,6 +62,16 @@
                                             removeClass( 'dialog-warning' ).
                                             removeClass( 'dialog-critical' );
             }
+        },
+
+
+        /**
+         * Dialog "Close" link handler
+         */
+        dialogClose : function()
+        {
+            j( '#messages-display-dialog' ).dialog( 'close' );
+            return false;
         },
 
 
@@ -83,15 +90,15 @@
         /**
          * Opens a dialog with details of the message specified by "md.messageDisplayed"
          */
-        dialogMessage : function() {
+        dialogOpenMessage : function() {
 
             j.assert(( md.messageDisplayed > -1 ) && ( md.messageDisplayed < md.nMessages()),
-                     'dialogMessage(): [' + md.messageDisplayed + '][' + md.nMessages() + '] (md.messageDisplayed, md.nMessages())' );
+                     'dialogOpenMessage(): [' + md.messageDisplayed + '][' + md.nMessages() + '] (md.messageDisplayed, md.nMessages())' );
 
             var message = md.messages[ md.messageDisplayed ];
 
             j.assert( ! message.deleted,
-                     'dialogMessage(): [' + md.messageDisplayed + '][' + message.id + '] (md.messageDisplayed, message.id - deleted)' );
+                     'dialogOpenMessage(): [' + md.messageDisplayed + '][' + message.id + '] (md.messageDisplayed, message.id - deleted)' );
 
            /**
             * "Message <counter> of <total>" dialog status
@@ -101,10 +108,10 @@
             var counter               = md.messageDisplayed + 1 - messagesDeletedBefore;
             var total                 = md.nMessages() - messagesDeletedBefore - messagesDeletedAfter;
 
-            j.assert( counter > 0,               'dialogMessage(): [' + counter + '] (counter)' );
-            j.assert( total   > 0,               'dialogMessage(): [' + total   + '] (total)' );
-            j.assert( counter <= total,          'dialogMessage(): [' + counter + '][' + total + '] (counter, total)' );
-            j.assert( total   <= md.nMessages(), 'dialogMessage(): [' + total   + '][' + md.nMessages() + '] (total, md.nMessages())' );
+            j.assert( counter > 0,               'dialogOpenMessage(): [' + counter + '] (counter)' );
+            j.assert( total   > 0,               'dialogOpenMessage(): [' + total   + '] (total)' );
+            j.assert( counter <= total,          'dialogOpenMessage(): [' + counter + '][' + total + '] (counter, total)' );
+            j.assert( total   <= md.nMessages(), 'dialogOpenMessage(): [' + total   + '][' + md.nMessages() + '] (total, md.nMessages())' );
 
             j( '#messages-display-counter'       ).text( counter );
             j( '#messages-display-counter-total' ).text( total   );
@@ -115,9 +122,9 @@
             // "Next" button
             j( '#messages-display-dialog-next' ).enable( counter < total );
 
-            md.dialog({ title   : md.titleTemplate.evaluate( message ),
-                        text    : message.text,
-                        urgency : message.urgency });
+            md.dialogOpen({ title   : md.titleTemplate.evaluate( message ),
+                            text    : message.text,
+                            urgency : message.urgency });
         },
 
 
@@ -143,7 +150,7 @@
 
                                j.assert( md.nMessages(), 'getMessages(): [' + md.nMessages() + '] (md.nMessages())' );
 
-                               md.dialogMessage();
+                               md.dialogOpenMessage();
                            }
                        }
                        else
@@ -161,17 +168,17 @@
          */
         prevMessage : function() {
 
-            j.assert( md.messageDisplayed > 0,
-                      '"Prev" click: [' + md.messageDisplayed + '] (md.messageDisplayed)' );
+            if ( md.messageDisplayed > 0 )
+            {
+                var  prevMessage;
+                for( prevMessage = md.messageDisplayed - 1; md.messages[ prevMessage ].deleted; prevMessage-- ){}
 
-            var  prevMessage;
-            for( prevMessage = md.messageDisplayed - 1; md.messages[ prevMessage ].deleted; prevMessage-- ){}
+                j.assert(( prevMessage > -1 ) && ( prevMessage < md.messageDisplayed ),
+                         '"Prev" click: [' + prevMessage + '][' + md.messageDisplayed + '] (prevMessage, md.messageDisplayed)' );
 
-            j.assert(( prevMessage > -1 ) && ( prevMessage < md.messageDisplayed ),
-                     '"Prev" click: [' + prevMessage + '][' + md.messageDisplayed + '] (prevMessage, md.messageDisplayed)' );
-
-            md.messageDisplayed = prevMessage;
-            md.dialogMessage();
+                md.messageDisplayed = prevMessage;
+                md.dialogOpenMessage();
+            }
 
             return false;
         },
@@ -182,27 +189,17 @@
          */
         nextMessage : function() {
 
-            j.assert( md.messageDisplayed < ( md.nMessages() - 1 ),
-                      '"Next" click: [' + md.messageDisplayed + '][' + md.nMessages() + '] (md.messageDisplayed, md.nMessages())' );
+            if ( md.messageDisplayed < ( md.nMessages() - 1 ))
+            {
+                var   nextMessage;
+                for ( nextMessage = md.messageDisplayed + 1; md.messages[ nextMessage ].deleted; nextMessage++ ){}
 
-            var   nextMessage;
-            for ( nextMessage = md.messageDisplayed + 1; md.messages[ nextMessage ].deleted; nextMessage++ ){}
+                j.assert(( nextMessage < md.nMessages()) && ( nextMessage > md.messageDisplayed ),
+                         '"Next" click: [' + nextMessage + '][' + md.messageDisplayed + '] (nextMessage, md.messageDisplayed)' );
 
-            j.assert(( nextMessage < md.nMessages()) && ( nextMessage > md.messageDisplayed ),
-                     '"Next" click: [' + nextMessage + '][' + md.messageDisplayed + '] (nextMessage, md.messageDisplayed)' );
-
-            md.messageDisplayed = nextMessage;
-            md.dialogMessage();
-
-            return false;
-        },
-
-        /**
-         * Dialog "Close" link handler
-         */
-        dialogClose : function()
-        {
-            j( '#messages-display-dialog' ).dialog( 'destroy' );
+                md.messageDisplayed = nextMessage;
+                md.dialogOpenMessage();
+            }
 
             return false;
         },
@@ -231,9 +228,9 @@
 
                          message.deleted = true;
 
-                         md.dialog({ title         : 'Message Deleted',
-                                     text          : 'Message "' + response + '" deleted',
-                                     statusMessage : true });
+                         md.dialogOpen({ title         : 'Message Deleted',
+                                         text          : 'Message "' + response + '" deleted',
+                                         statusMessage : true });
                         /**
                          * Invoked in one second, displays next message after the current one is deleted
                          * or closes the dialog if all messages are deleted
@@ -254,16 +251,16 @@
                              }
                              else {
                                  md.messageDisplayed = nextMessage;
-                                 md.dialogMessage();
+                                 md.dialogOpenMessage();
                              }
 
                          }).delay( 1 );
                      },
                      error    : function() {
-                         md.dialog({ title         : 'Message not Deleted',
-                                     text          : 'Failed to delete message "' + messageId + '"',
-                                     statusMessage : true,
-                                     urgency       : 'critical' });
+                         md.dialogOpen({ title         : 'Message not Deleted',
+                                         text          : 'Failed to delete message "' + messageId + '"',
+                                         statusMessage : true,
+                                         urgency       : 'critical' });
                      },
                      complete : function() {
                          j( '#messages-display-progress' ).hide();
@@ -276,8 +273,23 @@
 
 
     j( function() {
+
+        j( '#messages-display-dialog' ).dialog({ autoOpen : false,
+                                                 height   : 115,
+                                                 width    : 490,
+                                                 position : 'top' })
         j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
         j( '#messages-display-dialog-next'   ).click( md.nextMessage   );
         j( '#messages-display-dialog-close'  ).click( md.dialogClose   );
         j( '#messages-display-dialog-delete' ).click( md.deleteMessage );
+
+        j( 'body' ).keydown( function( e )
+        {
+            if ( j( '#messages-display-dialog' ).dialog( 'isOpen' ))
+            {
+                /* Prev   */ if ( e.which == 37 ) { j( '#messages-display-dialog-prev'   ).click() }
+                /* Next   */ if ( e.which == 39 ) { j( '#messages-display-dialog-next'   ).click() }
+                /* Delete */ if ( e.which == 46 ) { j( '#messages-display-dialog-delete' ).click() }
+            }
+        });
     });
