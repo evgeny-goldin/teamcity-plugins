@@ -52,15 +52,13 @@
 
             j( '#messages-display-dialog' ).dialog({ title : options.title }).
                                             dialog( 'open' );
+
+            j( 'div.ui-widget-header' ).removeClass( 'dialog-info' ).
+                                        removeClass( 'dialog-warning' ).
+                                        removeClass( 'dialog-critical' );
             if ( options.urgency )
             {
                 j( 'div.ui-widget-header' ).addClass( 'dialog-' + options.urgency );
-            }
-            else
-            {
-                j( 'div.ui-widget-header' ).removeClass( 'dialog-info' ).
-                                            removeClass( 'dialog-warning' ).
-                                            removeClass( 'dialog-critical' );
             }
         },
 
