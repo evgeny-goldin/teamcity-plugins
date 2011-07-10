@@ -75,7 +75,7 @@ allprojects {
 
 subprojects {
 
-    File        teamCityDir     = new File( System.getProperty( 'teamCityDir' ) ?: 'T:/' )
+    File        teamCityDir     = new File( System.getProperty( 'teamCityDir' ) ?: '/Users/evgenyg/app/java/teamcity' )
     String      teamCityAppName = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
     File        destinationZip  = new File(( File ) project.buildDir, "${project.name}.zip" )
     Set<String> apiPatterns     = [ '**/api/**' ]
@@ -226,8 +226,7 @@ subprojects {
                     }
                     // Delete directory files only but keep the directory intact
                     // (helpful when user edits or views some of the files, which locks the directory)
-                    else {
-                        assert file.isDirectory()
+                    else if ( file.isDirectory()) {
                         file.eachFile { File f -> project.delete( f ) }
                     }
                 }
