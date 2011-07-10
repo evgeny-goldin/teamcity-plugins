@@ -28,7 +28,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/jars/oro-2.0.8.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/javadocs/oro-2.0.8-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/sources/oro-2.0.8-sources.jar!/" />
         </SOURCES>
@@ -57,7 +59,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/jars/log4j-1.2.9.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/javadocs/log4j-1.2.9-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/sources/log4j-1.2.9-sources.jar!/" />
         </SOURCES>
@@ -68,7 +72,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/jars/ant-1.7.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/javadocs/ant-1.7.0-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/sources/ant-1.7.0-sources.jar!/" />
         </SOURCES>
@@ -79,10 +85,16 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.7.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant-launcher/javadocs/ant-launcher-1.7.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant-launcher/sources/ant-launcher-1.7.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="groovy-1.8.0" level="application" />
+    <orderEntry type="library" name="groovy-1.8.0 (2)" level="application" />
   </component>
 </module>
 

@@ -192,7 +192,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/aopalliance/aopalliance/jars/aopalliance-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/aopalliance/aopalliance/javadocs/aopalliance-1.0-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/aopalliance/aopalliance/sources/aopalliance-1.0-sources.jar!/" />
         </SOURCES>
@@ -263,7 +265,9 @@
           <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/jars/ant-1.8.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/org.apache.ant/ant/sources/ant-1.8.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
@@ -280,7 +284,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/jars/oro-2.0.8.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/javadocs/oro-2.0.8-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/oro/oro/sources/oro-2.0.8-sources.jar!/" />
         </SOURCES>
@@ -300,7 +306,9 @@
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/jars/log4j-1.2.9.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/javadocs/log4j-1.2.9-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/cache/log4j/log4j/sources/log4j-1.2.9-sources.jar!/" />
         </SOURCES>
