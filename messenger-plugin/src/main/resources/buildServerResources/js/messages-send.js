@@ -46,12 +46,25 @@
        /**
         * Listener submitting a request when form is submitted
         */
-        j( '#messages-send-form' ).submit( function() {
+        j( '#messages-send-form' ).submit( function()
+        {
+            var longevity = parseInt( j.trim( j( '#messages-send-longevity-number' ).val()));
+            if ( isNaN( longevity ) || ( longevity < 1 ))
+            {
+                j( '#messages-send-longevity-number' ).addClass( 'errorField' );
+                j( '#messages-send-error-longevity'  ).text( '\'Valid For\' should be a positive number' );
+                return false;
+            }
+            else
+            {
+                j( '#messages-send-longevity-number' ).removeClass( 'errorField' );
+                j( '#messages-send-error-longevity'  ).text( '' );
+            }
 
             if ( ! j.trim( j( '#messages-send-message' ).val()))
             {
-                j( '#messages-send-message'       ).addClass( 'errorField'   );
-                j( '#messages-send-error-message' ).text( 'Message is empty' );
+                j( '#messages-send-message'       ).addClass( 'errorField' );
+                j( '#messages-send-error-message' ).text( 'Message can\'t be empty' );
                 return false;
             }
             else
@@ -65,7 +78,7 @@
                                           j( '#messages-send-users'  ).val());
             if ( ! recipientsSelected )
             {
-                j( '#messages-send-error-selection' ).text( 'No recipients selected' );
+                j( '#messages-send-error-selection' ).text( 'Recipients should be selected' );
                 return false;
             }
             else

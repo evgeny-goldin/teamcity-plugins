@@ -8,7 +8,7 @@
 
 
 <style type="text/css">
-    .ui-dialog-titlebar{ display: none } /* Hiding dialog title */
+    .ui-dialog-titlebar { display: none } /* Hiding dialog title */
 </style>
 
 <div id="messages-send-dialog" style="display:none; overflow:hidden;">
@@ -31,7 +31,7 @@
 
             <p>
                 <label for="messages-send-longevity-number">Valid For: </label>
-                <input class="textfield1" id="messages-send-longevity-number" name="longevity-number" type="text" size="3"
+                <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" size="3"
                        maxlength="3" value="7">
                 <select id="messages-send-longevity-unit" name="longevity-unit">
                     <option>hours</option>
@@ -39,6 +39,7 @@
                     <option>weeks</option>
                     <option>months</option>
                 </select>
+                <span class="error" id="messages-send-error-longevity" style="margin-left: 10.5em;"></span>
             </p>
 
             <p><label for="messages-send-message">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
