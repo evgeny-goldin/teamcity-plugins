@@ -20,9 +20,8 @@
          */
         dialogClose : function()
         {
-            j( '#messages-send-dialog'  ).dialog( 'destroy' );
-            j( '#messages-send-message' ).val( '' ).focus();
-            j( '#messages-send-button'  ).enable();
+            j( '#messages-send-dialog' ).dialog( 'destroy' );
+            j( '#messages-send-button' ).enable();
         }
     };
 
@@ -48,12 +47,14 @@
         */
         j( '#messages-send-form' ).submit( function()
         {
+            var error     = false;
             var longevity = parseInt( j.trim( j( '#messages-send-longevity-number' ).val()));
+
             if ( isNaN( longevity ) || ( longevity < 1 ))
             {
                 j( '#messages-send-longevity-number' ).addClass( 'errorField' );
                 j( '#messages-send-error-longevity'  ).text( '\'Valid For\' should be a positive number' );
-                return false;
+                error = true;
             }
             else
             {
@@ -64,8 +65,8 @@
             if ( ! j.trim( j( '#messages-send-message' ).val()))
             {
                 j( '#messages-send-message'       ).addClass( 'errorField' );
-                j( '#messages-send-error-message' ).text( 'Message can\'t be empty' );
-                return false;
+                j( '#messages-send-error-message' ).text( 'Message should be specified' );
+                error = true;
             }
             else
             {
@@ -79,12 +80,14 @@
             if ( ! recipientsSelected )
             {
                 j( '#messages-send-error-selection' ).text( 'Recipients should be selected' );
-                return false;
+                error = true;
             }
             else
             {
                 j( '#messages-send-error-selection' ).text( '' );
             }
+
+            if ( error ) { return false }
 
             j( '#messages-send-button'   ).disable();
             j( '#messages-send-progress' ).show();
@@ -93,7 +96,8 @@
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',
-                     success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 )},
+                     success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 );
+                                                       j( '#messages-send-message' ).val( '' ).focus(); },
                      error    : function()           { ms.dialog( 'Failed to send message',         -1 )},
                      complete : function()           { j( '#messages-send-progress' ).hide()}
                     });
