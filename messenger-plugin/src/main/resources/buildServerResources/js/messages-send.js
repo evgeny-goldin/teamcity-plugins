@@ -48,9 +48,9 @@
         j( '#messages-send-form' ).submit( function()
         {
             var error     = false;
-            var longevity = parseInt( j.trim( j( '#messages-send-longevity-number' ).val()));
+            var longevity = parseFloat( j.trim( j( '#messages-send-longevity-number' ).val()));
 
-            if ( isNaN( longevity ) || ( longevity < 1 ))
+            if ( isNaN( longevity ) || ( ! ( longevity > 0.0 )))
             {
                 j( '#messages-send-longevity-number' ).addClass( 'errorField' );
                 j( '#messages-send-error-longevity'  ).text( '\'Valid For\' should be a positive number' );

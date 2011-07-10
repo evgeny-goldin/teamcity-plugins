@@ -61,10 +61,10 @@ class MessagesSendController extends MessagesBaseController
     @Ensures({ result > 0 })
     private long longevity ( Map<String, ?> requestParams)
     {
-        long   number = param( requestParams, 'longevity-number' ) as long
+        float  number = param( requestParams, 'longevity-number' ) as float
         String unit   = param( requestParams, 'longevity-unit'   )
 
-        assert number > 0
+        assert number > 0.0
 
         number * (( 'hours'  == unit ) ? 1       :
                   ( 'days'   == unit ) ? 24      :
