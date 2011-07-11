@@ -42,7 +42,7 @@ final class Message
     final Set<String>     usersDeleted  // Users who deleted this message, usernames
 
 
-    @Requires({ sender && urgency && text && ( sendToGroups != null ) && ( sendToUsers != null )})
+    @Requires({ sender && urgency && text && ( longevity != 0 ) && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ this.id == -1 })
     Message ( String       sender,
               Urgency      urgency,

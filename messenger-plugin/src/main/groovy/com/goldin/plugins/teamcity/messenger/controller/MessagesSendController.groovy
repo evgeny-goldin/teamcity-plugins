@@ -40,7 +40,7 @@ class MessagesSendController extends MessagesBaseController
     {
         Urgency      urgency       = param( requestParams, 'urgency' ).toUpperCase() as Urgency
         String       messageText   = param( requestParams, 'message' )
-        long         longevity     = longevity( requestParams )
+        long         longevity     = longevity( requestParams ) ?: 1
         boolean      sendToAll     = param( requestParams,  'all',    false ) as boolean
         List<String> sendToGroups  = params( requestParams, 'groups', false ) // Values are not sent
         List<String> sendToUsers   = params( requestParams, 'users',  false ) // when groups/users are disabled
@@ -59,7 +59,7 @@ class MessagesSendController extends MessagesBaseController
      */
     @Requires({ requestParams })
     @Ensures({ result > 0 })
-    private long longevity ( Map<String, ?> requestParams)
+    private long longevity ( Map<String, ?> requestParams )
     {
         float  number = param( requestParams, 'longevity-number' ) as float
         String unit   = param( requestParams, 'longevity-unit'   )
@@ -70,6 +70,6 @@ class MessagesSendController extends MessagesBaseController
                   ( 'days'   == unit ) ? 24      :
                   ( 'weeks'  == unit ) ? 24 * 7  :
                   ( 'months' == unit ) ? 24 * 30 :
-                                         24 * 365 ) // One year if not specified
+                                         24 * 365 )
     }
 }

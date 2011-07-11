@@ -96,10 +96,9 @@
                      type     : 'POST',
                      data     : j( this ).serialize(),
                      dataType : 'text',
-                     success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 );
-                                                       j( '#messages-send-message' ).val( '' ).focus(); },
-                     error    : function()           { ms.dialog( 'Failed to send message',         -1 )},
-                     complete : function()           { j( '#messages-send-progress' ).hide()}
+                     success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 ); j( '#messages-send-message' ).val( '' ).focus(); },
+                     error    : function()           { ms.dialog( 'Failed to send message',         -1 ); j( '#messages-send-message' ).focus(); },
+                     complete : function()           { j( '#messages-send-progress' ).hide() }
                     });
 
             return false;
