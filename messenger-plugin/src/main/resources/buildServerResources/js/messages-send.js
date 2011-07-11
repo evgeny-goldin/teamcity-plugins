@@ -20,8 +20,9 @@
          */
         dialogClose : function()
         {
-            j( '#messages-send-dialog' ).dialog( 'destroy' );
-            j( '#messages-send-button' ).enable();
+            j( '#messages-send-dialog'  ).dialog( 'destroy' );
+            j( '#messages-send-button'  ).enable();
+            j( '#messages-send-message' ).focus();
         }
     };
 
@@ -102,9 +103,8 @@
                          data     : j( this ).serialize(),
                          dataType : 'text',
                          success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 );
-                                                           j( '#messages-send-message' ).val( '' ).focus(); },
-                         error    : function() { ms.dialog( 'Failed to send message', -1 );
-                                                 j( '#messages-send-message' ).focus(); },
+                                                           j( '#messages-send-message' ).val( '' ) },
+                         error    : function() { ms.dialog( 'Failed to send message', -1 ) },
                          complete : function() { j( '#messages-send-progress' ).hide() }
                        });
             }
