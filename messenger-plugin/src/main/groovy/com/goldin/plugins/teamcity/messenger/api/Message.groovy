@@ -35,7 +35,9 @@ final class Message
     final String          sender        // Message sender, a username
     final Urgency         urgency       // Message urgency
     final String          text          // Message text
-    final long            longevity     // Message "longevity" in hours - for how long should it be kept
+    final long            longevity     // Message "longevity" in hours - for how long should it be kept in the system.
+                                        // If negative value - message is kept forever
+                                        // Zero value is forbidden and verified by the corresponding constructor
     final boolean         sendToAll     // Whether message should be sent to all users
     final Set<String>     sendToGroups  // Groups message should be sent to
     final Set<String>     sendToUsers   // Users message should be sent to
@@ -43,7 +45,7 @@ final class Message
 
 
     @Requires({ sender && urgency && text && ( longevity != 0 ) && ( sendToGroups != null ) && ( sendToUsers != null ) })
-    @Ensures({ this.id == -1 })
+    @Ensures({ ( this.id == -1 ) && ( this.longevity != 0 ) })
     Message ( String       sender,
               Urgency      urgency,
               String       text,

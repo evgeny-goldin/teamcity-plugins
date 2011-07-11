@@ -31,7 +31,7 @@ class LongevityCleanupTask extends TimerTask
         def now     = System.currentTimeMillis()
         def deleted = []
 
-        for ( Message message in messagesBean.allMessages )
+        for ( Message message in messagesBean.allMessages.findAll { it.longevity > 0 } )
         {   /**
              * Message age in hours. If due to clock changes message
              * comes "from the future" (message.timestamp > now),
