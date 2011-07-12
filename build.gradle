@@ -174,17 +174,11 @@ subprojects {
 
             /**
              * Copying all required libraries except provided ones by TeamCity server
-             * Groovy jar is not copied if -PnoGroovy is specified
              */
             File compileLibs = new File(( File ) project.buildDir, 'compile-libs' )
 
             ( configurations.compile.files - configurations.provided.files ).each {
-                File file ->
-                if (( file.name != "groovy-all-${groovyVersion}.jar" ) ||
-                    ( ! project.properties.containsKey( 'noGroovy' )))
-                {
-                    ant.copy( file: file, todir: compileLibs )
-                }
+                File file -> ant.copy( file: file, todir: compileLibs )
             }
 
             /**

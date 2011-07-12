@@ -93,7 +93,7 @@ class MessagesBeanTest extends BaseSpecification
         def messageId = messagesBean.sendMessage( m1 )
         def messages1 = messagesBean.getMessagesForUser( 'someUser' )
 
-        messagesBean.deleteMessage( messageId, true )
+        messagesBean.deleteMessage( messageId )
         def messages2 = messagesBean.getMessagesForUser( 'someUser' )
 
         then:
@@ -110,7 +110,7 @@ class MessagesBeanTest extends BaseSpecification
         expect:
         messagesBean.sendMessage( messageNoId( Urgency.INFO, false, [], [ 'someUser' ] ))
         messagesBean.sendMessage( messageNoId( Urgency.INFO, false, [], [ 'someUser' ] ))
-        messagesBean.deleteMessage( messageId, true )
+        messagesBean.deleteMessage( messageId )
 
         where:
         messageId | dummy

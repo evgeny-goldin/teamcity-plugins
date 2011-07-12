@@ -1,11 +1,9 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
-import org.gcontracts.annotations.Requires
 import org.gcontracts.annotations.Invariant
-
+import org.gcontracts.annotations.Requires
 
 /**
  * Longevity cleanup timer task
@@ -28,30 +26,21 @@ class LongevityCleanupTask extends TimerTask
     @Override
     void run ()
     {
-        def now     = System.currentTimeMillis()
-        def deleted = []
-
-        for ( Message message in messagesBean.allMessages.findAll { it.longevity > 0 } )
-        {   /**
-             * Message age in hours. If due to clock changes message
-             * comes "from the future" (message.timestamp > now),
-             * then its age would be negative.
-             */
-            def  messageAge = (( now - message.timestamp ) / 3600000 )
-            if ( messageAge > message.longevity )
-            {
-                def  messageDeleted = messagesBean.deleteMessage( message.id, false )
-                if ( messageDeleted ) { deleted << messageDeleted.id }
-            }
-        }
-
-        if ( deleted )
+        def now           = System.currentTimeMillis()
+        long[] messageIds = messagesBean.allMessages.findAll { it.longevity > 0 }.
+                                                     /**
+                                                      * Message age in hours. If message comes "from the future" due to clock changes
+                                                      * ( it.timestamp > now ), its age would be negative.
+                                                      */
+                                                     findAll { (( now - it.timestamp ) / 3600000 ) > it.longevity }.
+                                                     collect { it.id }
+        if ( messageIds )
         {
-            context.log.info(
-                "Longevity cleanup: [${ deleted.size() }] message${( deleted.size() == 1 ) ? '' : 's' } deleted" +
-                "${( deleted.size() > 0 ) ? ': ' + deleted  : '' }." )
+            messagesBean.deleteMessage( messageIds )
 
-            messagesBean.persistMessages()
+            context.log.info(
+                "Longevity cleanup: [${ messageIds.size() }] message${( messageIds.size() == 1 ) ? '' : 's' } deleted" +
+                "${ messageIds ? ': ' + messageIds : '' }." )
         }
     }
 }

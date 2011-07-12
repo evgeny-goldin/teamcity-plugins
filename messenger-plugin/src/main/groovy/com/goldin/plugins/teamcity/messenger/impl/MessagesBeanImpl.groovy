@@ -99,11 +99,11 @@ class MessagesBeanImpl implements MessagesBean
 
 
     @Override
-    Message deleteMessage ( long messageId, boolean persist )
+    List<Message> deleteMessage ( long ... messageIds )
     {
-        def message = messagesTable.deleteMessage( messageId )
-        if ( persist && message ) { persistMessages() }
-        message // May return null
+        def messages = messagesTable.deleteMessage( messageIds )
+        if ( messages ) { persistMessages() }
+        messages
     }
 
 

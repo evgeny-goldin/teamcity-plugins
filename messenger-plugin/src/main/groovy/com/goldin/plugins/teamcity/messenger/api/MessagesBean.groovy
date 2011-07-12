@@ -40,12 +40,12 @@ interface MessagesBean
 
     /**
      * Deletes message specified.
-     * @param messageId message id to delete
+     * @param messageIds message id to delete
      * @return message deleted
      */
-    @Requires({ messageId > 0 })
-    @Ensures({ ( result == null ) || ( result.id == messageId ) })
-    Message deleteMessage( long messageId, boolean persistMessages )
+    @Requires({ ( messageIds != null ) && ( messageIds.every { it > 0 } ) })
+    @Ensures({ ( result != null ) && ( result.size() <= messageIds.size()) })
+    List<Message> deleteMessage( long ... messageIds )
 
 
     /**

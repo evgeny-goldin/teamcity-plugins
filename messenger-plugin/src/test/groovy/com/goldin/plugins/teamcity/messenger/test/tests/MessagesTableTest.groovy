@@ -26,7 +26,7 @@ class MessagesTableTest extends BaseSpecification
     @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
     def setup() { table.deleteAllMessages() }
 
-    
+
     def "test adding new message"() {
 
         when:
@@ -66,7 +66,7 @@ class MessagesTableTest extends BaseSpecification
         Message m1 = messageNoId( Urgency.INFO, true, [], [] )
         Message m2 = table.addMessage( m1 )
         Message m3 = table.allMessages.first()
-        Message m4 = table.deleteMessage( m2.id )
+        Message m4 = table.deleteMessage( m2.id ).first()
 
         then:
         m1.id < 0
@@ -83,7 +83,7 @@ class MessagesTableTest extends BaseSpecification
         List<Message> messagesNew     = newMessages()
         List<Message> messagesSent    = messagesNew.collect  { table.addMessage( it )}
         List<Message> messagesAll     = table.allMessages
-        List<Message> messagesRemoved = messagesSent.collect { table.deleteMessage( it.id )}
+        List<Message> messagesRemoved = table.deleteMessage( messagesSent.collect { it.id } as long[] )
 
         then:
         messagesNew.every     { it.id < 0 }

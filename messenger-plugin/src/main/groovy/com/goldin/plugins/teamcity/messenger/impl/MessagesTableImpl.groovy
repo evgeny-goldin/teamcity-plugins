@@ -63,12 +63,9 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ messageId > 0 })
-    @Ensures({ ! messages.containsKey( messageId ) })
-    Message deleteMessage ( long messageId )
+    List<Message> deleteMessage ( long ... messageIds )
     {
-        // May return null if message was already deleted
-        messages.remove( messageId )
+        messageIds.collect { messages.remove( it ) }.findAll { it }
     }
 
 
@@ -127,12 +124,12 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ data.isEmpty() || ( data[ 'messageId' ] && ( data[ 'messages' ] != null )) })
+    @Requires({ data.isEmpty() || ( data[ 'messageIds' ] && ( data[ 'messages' ] != null )) })
     void setPersistencyData ( Map data )
     {
         if ( data )
         {
-            messageIdGenerator.set( data[ 'messageId' ] as long )
+            messageIdGenerator.set( data[ 'messageIds' ] as long )
 
             for ( Map messagePersistencyData in data[ 'messages' ] )
             {
