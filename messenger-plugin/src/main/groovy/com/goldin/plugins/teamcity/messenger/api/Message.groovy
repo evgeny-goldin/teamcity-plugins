@@ -86,7 +86,7 @@ final class Message
 
         this.timestamp    = message.timestamp
         this.sender       = message.sender
-        this.senderName   = context.getUser( message.sender ).descriptiveName
+        this.senderName   = context.getUser( message.sender )?.descriptiveName ?: 'Test User'
         this.urgency      = message.urgency
         this.text         = message.text
         this.longevity    = message.longevity
