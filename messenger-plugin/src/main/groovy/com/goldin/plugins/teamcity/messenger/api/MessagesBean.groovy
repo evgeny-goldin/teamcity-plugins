@@ -60,7 +60,7 @@ interface MessagesBean
 
 
     /**
-     * Triggers messages persistence
+     * Persists all current messages on the disk
      */
     void persistMessages()
 }

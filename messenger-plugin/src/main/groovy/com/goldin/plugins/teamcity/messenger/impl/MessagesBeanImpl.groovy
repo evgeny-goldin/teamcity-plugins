@@ -2,6 +2,9 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import jetbrains.buildServer.serverSide.BuildServerAdapter
+import jetbrains.buildServer.serverSide.BuildServerListener
+import jetbrains.buildServer.util.EventDispatcher
 import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import com.goldin.plugins.teamcity.messenger.api.*
@@ -20,10 +23,13 @@ class MessagesBeanImpl implements MessagesBean
     private final ExecutorService     executor
 
 
+    @Delegate( interfaces = true )
+    private final BuildServerListener listener = new BuildServerAdapter()
 
-    @Requires({ messagesTable && usersTable && persistency && context && util })
+
+    @Requires({ messagesTable && usersTable && persistency && context && util && dispatcher })
     MessagesBeanImpl ( MessagesTable messagesTable, UsersTable usersTable, MessagesPersistency persistency,
-                       MessagesContext context, MessagesUtil util )
+                       MessagesContext context, MessagesUtil util, EventDispatcher<BuildServerListener> dispatcher )
     {
         this.messagesTable = messagesTable
         this.usersTable    = usersTable
@@ -32,11 +38,23 @@ class MessagesBeanImpl implements MessagesBean
         this.util          = util
         this.executor      = Executors.newFixedThreadPool( 1 )
 
+        dispatcher.addListener( this )
+
         /**
          * Restoring data from persistent storage
          */
         messagesTable.persistencyData = persistency.restore()
         usersTable.init( messagesTable.allMessages )
+    }
+
+
+    @Override
+    void serverShutdown ()
+    {
+        context.log.info( 'Server shutdown - persisting messages' )
+        persistMessages()
+        executor.shutdown()
+        context.log.info( 'Server shutdown - messages persisted' )
     }
 
 

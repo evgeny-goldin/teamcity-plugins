@@ -15,7 +15,6 @@
     <bean id="usersTable"                class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
     <bean id="messagesPersistency"       class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
     <bean id="messagesBean"              class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
-    <bean id="messagesServerListener"    class="com.goldin.plugins.teamcity.messenger.impl.MessagesServerListener"/>
 
     <!-- UI Controllers -->
     <bean id="messagesDisplayController" class="com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController"/>
@@ -38,6 +37,7 @@
                 </bean>
             </list>
         </property>
+        <property name="daemon" value="true"/>
     </bean>
 
 </beans>

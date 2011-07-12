@@ -32,7 +32,8 @@ final class Message
 
     final long            id            // Message id, assigned when added to messages table: MessagesTable.addMessage()
     final long            timestamp     // Message creation timestamp
-    final String          sender        // Message sender, a username
+    final String          sender        // Message sender, username
+    final String          senderName    // Message sender, descriptive name
     final Urgency         urgency       // Message urgency
     final String          text          // Message text
     final long            longevity     // Message "longevity" in hours - for how long should it be kept in the system.
@@ -61,6 +62,7 @@ final class Message
 
         this.timestamp    = System.currentTimeMillis()
         this.sender       = sender
+        this.senderName   = null
         this.urgency      = urgency
         this.text         = text
         this.longevity    = longevity
@@ -74,7 +76,7 @@ final class Message
 
 
     @Requires({( id > 0 ) && context && config && util && message })
-    @Ensures({ this.id == id })
+    @Ensures({ ( this.id == id ) && ( this.senderName ) })
     Message ( long id, MessagesContext context, MessagesConfiguration config, MessagesUtil util, Message message )
     {
         this.id           = id
@@ -84,6 +86,7 @@ final class Message
 
         this.timestamp    = message.timestamp
         this.sender       = message.sender
+        this.senderName   = context.getUser( message.sender ).descriptiveName
         this.urgency      = message.urgency
         this.text         = message.text
         this.longevity    = message.longevity
@@ -135,7 +138,7 @@ final class Message
 
         [ id         : id as String,
           urgency    : urgency.toString().toLowerCase( context.locale ),
-          senderName : context.getUser( sender )?.descriptiveName ?: 'Test Sender',
+          senderName : senderName,
           date       : config.dateFormatter.format( date ),
           time       : config.timeFormatter.format( date ),
           text       : ( truncateText && text.size() > config.messageLengthLimit ) ?
