@@ -124,12 +124,12 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    @Requires({ data.isEmpty() || ( data[ 'messageIds' ] && ( data[ 'messages' ] != null )) })
+    @Requires({ data.isEmpty() || ( data[ 'messageId' ] && ( data[ 'messages' ] != null )) })
     void setPersistencyData ( Map data )
     {
         if ( data )
         {
-            messageIdGenerator.set( data[ 'messageIds' ] as long )
+            messageIdGenerator.set( data[ 'messageId' ] as long )
 
             for ( Map messagePersistencyData in data[ 'messages' ] )
             {
