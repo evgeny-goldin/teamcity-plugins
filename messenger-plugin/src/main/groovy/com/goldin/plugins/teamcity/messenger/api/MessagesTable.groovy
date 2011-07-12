@@ -19,7 +19,7 @@ interface MessagesTable
     Message getMessage( long messageId )
 
 
-    @Requires({ ( messageIds != null ) && ( messageIds.every { it > 0 } ) })
+    @Requires({ ( messageIds != null ) && messageIds.every { it > 0 } })
     @Ensures({ messageIds.every { ! containsMessage( it ) } && result.every { ! containsMessage( it.id ) } })
     List<Message> deleteMessage( long ... messageIds )
 

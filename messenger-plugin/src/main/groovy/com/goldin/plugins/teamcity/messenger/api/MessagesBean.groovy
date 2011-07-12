@@ -43,7 +43,7 @@ interface MessagesBean
      * @param messageIds message id to delete
      * @return message deleted
      */
-    @Requires({ ( messageIds != null ) && ( messageIds.every { it > 0 } ) })
+    @Requires({ ( messageIds != null ) && messageIds.every { it > 0 } })
     @Ensures({ ( result != null ) && ( result.size() <= messageIds.size()) })
     List<Message> deleteMessage( long ... messageIds )
 

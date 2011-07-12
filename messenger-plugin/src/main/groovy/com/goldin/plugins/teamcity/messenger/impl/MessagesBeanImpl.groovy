@@ -25,7 +25,7 @@ class MessagesBeanImpl implements MessagesBean
 
 
     @Delegate( interfaces = true )
-    private final BuildServerListener listener = new BuildServerAdapter()
+    final BuildServerListener listener = new BuildServerAdapter()
 
 
     @Requires({ messagesTable && usersTable && persistency && context && util && springContext })

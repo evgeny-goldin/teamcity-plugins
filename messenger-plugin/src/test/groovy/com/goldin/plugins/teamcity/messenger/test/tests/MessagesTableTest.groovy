@@ -83,7 +83,7 @@ class MessagesTableTest extends BaseSpecification
         List<Message> messagesNew     = newMessages()
         List<Message> messagesSent    = messagesNew.collect  { table.addMessage( it )}
         List<Message> messagesAll     = table.allMessages
-        List<Message> messagesRemoved = table.deleteMessage( messagesSent.collect { it.id } as long[] )
+        List<Message> messagesRemoved = table.deleteMessage( messagesSent*.id as long[] )
 
         then:
         messagesNew.every     { it.id < 0 }
