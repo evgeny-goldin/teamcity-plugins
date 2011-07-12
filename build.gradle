@@ -20,7 +20,6 @@ buildscript  {
 
     repositories {
 
-//        mavenRepo urls: uri ( "${ System.getProperty( 'user.home' )}/.m2/repository" )
         mavenRepo urls: repoUrl
         add( new org.apache.ivy.plugins.resolver.URLResolver()) {
             name = 'cobertura'
@@ -28,6 +27,7 @@ buildscript  {
             addIvyPattern      "$coberturaPluginUrl/[organization]/[module]/[revision]/ivy.xml"
         }
     }
+
     dependencies {
         classpath "com.goldin.plugins:gradle:$gradlePluginsVersion",
                   "org.codehaus.groovy:groovy-all:$groovyVersion",
