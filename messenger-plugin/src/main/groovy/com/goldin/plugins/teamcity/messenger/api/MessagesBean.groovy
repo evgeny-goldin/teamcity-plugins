@@ -57,10 +57,4 @@ interface MessagesBean
     @Requires({ ( messageId > 0 ) && username })
     @Ensures({ result && ( result.id == messageId ) })
     Message deleteMessageByUser( long messageId, String username )
-
-
-    /**
-     * Persists all current messages on the disk
-     */
-    void persistMessages()
 }

@@ -2,6 +2,7 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import jetbrains.buildServer.serverSide.BuildServerAdapter
 import jetbrains.buildServer.serverSide.BuildServerListener
 import jetbrains.buildServer.util.EventDispatcher
@@ -9,6 +10,7 @@ import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import org.springframework.context.ApplicationContext
 import com.goldin.plugins.teamcity.messenger.api.*
+import java.util.concurrent.Callable
 
 /**
  * {@link MessagesBean} implementation
@@ -21,6 +23,7 @@ class MessagesBeanImpl implements MessagesBean
     private final MessagesPersistency persistency
     private final MessagesContext     context
     private final MessagesUtil        util
+    private final Callable<Void>      executorTask
     private final ExecutorService     executor
 
 
@@ -37,7 +40,8 @@ class MessagesBeanImpl implements MessagesBean
         this.persistency   = persistency
         this.context       = context
         this.util          = util
-        this.executor      = Executors.newFixedThreadPool( 1 )
+        this.executorTask  = { persistency.save( messagesTable.persistencyData ) } as Callable
+        this.executor      = Executors.newSingleThreadExecutor()
 
         /**
          * Adding this bean as server life cycle listener when not in test environment.
@@ -60,10 +64,9 @@ class MessagesBeanImpl implements MessagesBean
     @Override
     void serverShutdown ()
     {
-        context.log.info( 'Server shutdown - persisting messages' )
-        persistMessages()
+        persistMessages().get()
         executor.shutdown()
-        context.log.info( 'Server shutdown - messages persisted' )
+        assert executor.isShutdown() && executor.isTerminated()
     }
 
 
@@ -74,19 +77,8 @@ class MessagesBeanImpl implements MessagesBean
     /**
      * Persists messages table in the background thread
      */
-    void persistMessages ()
-    {
-        executor.submit({
-
-            long t = System.currentTimeMillis()
-            persistency.save( messagesTable.persistencyData )
-
-            if ( context.log.isDebugEnabled())
-            {
-                context.log.debug( "Data persisted in [${ System.currentTimeMillis() - t }] ms" )
-            }
-        } as Runnable )
-    }
+    @Requires({ executor && executorTask })
+    Future<Void> persistMessages () { executor.submit( executorTask ) }
 
 
     @Override
