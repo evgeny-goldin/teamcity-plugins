@@ -7,6 +7,7 @@ import jetbrains.buildServer.serverSide.BuildServerListener
 import jetbrains.buildServer.util.EventDispatcher
 import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
+import org.springframework.context.ApplicationContext
 import com.goldin.plugins.teamcity.messenger.api.*
 
 /**
@@ -27,9 +28,9 @@ class MessagesBeanImpl implements MessagesBean
     private final BuildServerListener listener = new BuildServerAdapter()
 
 
-    @Requires({ messagesTable && usersTable && persistency && context && util && dispatcher })
+    @Requires({ messagesTable && usersTable && persistency && context && util && springContext })
     MessagesBeanImpl ( MessagesTable messagesTable, UsersTable usersTable, MessagesPersistency persistency,
-                       MessagesContext context, MessagesUtil util, EventDispatcher<BuildServerListener> dispatcher )
+                       MessagesContext context, MessagesUtil util, ApplicationContext springContext )
     {
         this.messagesTable = messagesTable
         this.usersTable    = usersTable
@@ -38,7 +39,15 @@ class MessagesBeanImpl implements MessagesBean
         this.util          = util
         this.executor      = Executors.newFixedThreadPool( 1 )
 
-        dispatcher.addListener( this )
+        /**
+         * Adding this bean as server life cycle listener when not in test environment.
+         */
+        if ( ! context.isTest())
+        {
+            EventDispatcher<BuildServerListener> dispatcher = ( EventDispatcher ) springContext.getBean( 'serverDispatcher', EventDispatcher )
+            assert dispatcher, "Failed to locate [${ EventDispatcher.class.name }] bean in Spring context"
+            dispatcher.addListener( this )
+        }
 
         /**
          * Restoring data from persistent storage
