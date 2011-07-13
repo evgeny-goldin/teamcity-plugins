@@ -39,7 +39,7 @@
         * "All" checkbox listener, enables and disables groups/users according to checkbox value
         */
         j( '#messages-send-all' ).change( function() {
-            j( '#messages-send-groups, #messages-send-users' ).disable( this.value == 'on' );
+            j( '#messages-send-groups, #messages-send-users' ).disable( j( this ).is( ':checked' ));
         });
         j( '#messages-send-all' ).click().change();
 
