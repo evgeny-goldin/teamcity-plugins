@@ -27,7 +27,7 @@
         <hr style="border: 0.1em ridge; margin-bottom: 1px"/>
         <a id="messages-display-dialog-prev"  href="#" class="text-link" style="">[Prev]</a>
         <a id="messages-display-dialog-next"  href="#" class="text-link" style="">[Next]</a>
-        <span style="margin-left: 20%">
+        <span style="margin-left: 30%">
             Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>
         </span>
         <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
