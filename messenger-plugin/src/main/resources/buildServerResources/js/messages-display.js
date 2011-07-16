@@ -13,7 +13,7 @@ var md;
          * Template to be used for message dialog title
          * http://api.prototypejs.org/language/Template/
          */
-        titleTemplate    : new Template( 'Message "#{id}", sent by #{senderName} on #{date} at #{time}' ),
+        titleTemplate    : new Template( messages_const.title_template ),
 
        /**
         * User messages retrieved and index of the message being displayed currently
@@ -75,6 +75,10 @@ var md;
          */
         isDeleted : function( message ) { return j.choose( message.deleted, false )},
 
+        /**
+         * Truncates texts that are too long
+         */
+        cut       : function( text, length ) { return (( text.length > length ) ? ( text.substring( 0, length ) + ' ..' ) : text ) },
 
         /**
          * Determines if message specified is unknown, i.e., it doesn't exist in md.messages
@@ -96,7 +100,7 @@ var md;
                      'dialogOpenMessage(): [' + md.messageDisplayed + '][' + message.id + '] (md.messageDisplayed, message.id - deleted)' );
 
            /**
-            * "Message <counter> of <total>" dialog status
+            * Calculating "Message X (counter) of Y (total)" dialog status
             */
             var messagesDeletedBefore = md.messages.count( md.isDeleted, 0, md.messageDisplayed  );
             var messagesDeletedAfter  = md.messages.count( md.isDeleted, md.messageDisplayed + 1 );
@@ -116,6 +120,9 @@ var md;
 
             // "Next" button
             j( '#messages-display-dialog-next' ).enable( counter < total );
+
+            message.senderName = md.cut( message.senderName, messages_const.sender_max_length );
+            message.text       = md.cut( message.text,       messages_const.text_max_length   );
 
             md.dialogOpen({ title   : md.titleTemplate.evaluate( message ),
                             text    : message.text,

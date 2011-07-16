@@ -35,7 +35,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Date format pattern used when message is displayed -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <dateFormatPattern>EEEEEEE, MMMMMM dd, yyyy</dateFormatPattern>
+    <dateFormatPattern>MMMMMM dd, yyyy</dateFormatPattern>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Time format pattern used when message is displayed -->
