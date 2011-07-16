@@ -128,20 +128,26 @@ final class Message
     @Requires({ persistencyData && context && config && util && persistencyData[ 'id' ] && persistencyData[ 'timestamp' ] })
     Message ( Map persistencyData, MessagesContext context, MessagesConfiguration config, MessagesUtil util )
     {
-        this.id           = persistencyData[ 'id' ] as long
+        def data          = new HashMap( persistencyData )
+        def read          = { String key -> data.remove( key ) }
+
+        this.id           = read( 'id' ) as long
         this.context      = context
         this.config       = config
         this.util         = util
 
-        this.timestamp    = persistencyData[ 'timestamp' ] as long
-        this.sender       = persistencyData[ 'sender'    ]
-        this.urgency      = (( String ) persistencyData[ 'urgency' ] ).toUpperCase() as Urgency
-        this.text         = persistencyData[ 'text'      ]
-        this.longevity    = persistencyData[ 'longevity' ] as long
-        this.sendToAll    = Boolean.valueOf(( String  ) persistencyData[ 'sendToAll'    ])
-        this.sendToGroups = new HashSet<String>(( Set ) persistencyData[ 'sendToGroups' ]).asImmutable()
-        this.sendToUsers  = new HashSet<String>(( Set ) persistencyData[ 'sendToUsers'  ]).asImmutable()
-        this.usersDeleted = new HashSet<String>(( Set ) persistencyData[ 'usersDeleted' ])
+        this.timestamp    = read( 'timestamp'  ) as long
+        this.sender       = read( 'sender'     )
+        this.senderName   = read( 'senderName' )
+        this.urgency      = (( String ) read( 'urgency' )).toUpperCase() as Urgency
+        this.text         = read( 'text'      )
+        this.longevity    = read( 'longevity' ) as long
+        this.sendToAll    = Boolean.valueOf(( String  ) read( 'sendToAll'    ))
+        this.sendToGroups = new HashSet<String>(( Set ) read( 'sendToGroups' )).asImmutable()
+        this.sendToUsers  = new HashSet<String>(( Set ) read( 'sendToUsers'  )).asImmutable()
+        this.usersDeleted = new HashSet<String>(( Set ) read( 'usersDeleted' ))
+
+        assert data.isEmpty(), "Persistency data keys left unread: ${data.keySet()}"
     }
 
 
@@ -158,8 +164,8 @@ final class Message
      * @return {@link Message} data to be sent over network to display it to user
      * @see com.goldin.plugins.teamcity.messenger.controller.MessagesDisplayController#handleRequest
      */
-    @Requires({ ( this.id > 0 ) && this.context })
-    @Ensures({ result && result[ 'id' ] && result[ 'text' ] })
+    @Requires({ ( this.id > 0 ) && this.config && this.text && this.senderName })
+    @Ensures({ result && result.id && result.text && result.senderName })
     Map<String, Object> getDisplayData ()
     {
         def date = new Date( timestamp )
@@ -183,8 +189,8 @@ final class Message
     @Ensures({ result && result.id && result.text && result.sender })
     Map<String, Object> getMessagePersistencyData ()
     {
-        getDisplayData() << [ sender       : sender,
-                              timestamp    : timestamp,
+        getDisplayData() << [ timestamp    : timestamp,
+                              sender       : sender,
                               longevity    : longevity,
                               sendToAll    : sendToAll,
                               sendToGroups : sendToGroups,
