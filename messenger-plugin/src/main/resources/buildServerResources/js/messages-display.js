@@ -216,13 +216,21 @@
                      dataType : 'text',
                      success  : function( response ) {
 
-                         j.assert( message.id == response,
-                                   '"Delete" click: [' + message.id + '] != [' + response + ']' );
+                         /**
+                          * If response is not empty - it is an 'id' of deleted message
+                          * If response is empty - message was already deleted
+                          */
+
+                         if ( response )
+                         {
+                             j.assert( message.id == response,
+                                       '"Delete" click: [' + message.id + '] != [' + response + ']' );
+                         }
 
                          message.deleted = true;
 
                          md.dialogOpen({ title         : 'Message Deleted',
-                                         text          : 'Message "' + response + '" deleted',
+                                         text          : 'Message "' + message.id + '" ' + ( response ? 'deleted' : 'was already deleted' ),
                                          statusMessage : true });
                         /**
                          * Invoked in one second, displays next message after the current one is deleted
@@ -270,7 +278,8 @@
         j( '#messages-display-dialog' ).dialog({ autoOpen : false,
                                                  height   : 115,
                                                  width    : 550,
-                                                 position : 'top' })
+                                                 position : 'top' });
+
         j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
         j( '#messages-display-dialog-next'   ).click( md.nextMessage   );
         j( '#messages-display-dialog-close'  ).click( md.dialogClose   );

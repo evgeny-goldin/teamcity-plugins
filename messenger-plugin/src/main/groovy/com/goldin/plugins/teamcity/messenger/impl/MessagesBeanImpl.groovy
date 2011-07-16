@@ -129,8 +129,8 @@ class MessagesBeanImpl implements MessagesBean
     @Override
     Message deleteMessageByUser ( long messageId, String username )
     {
-        def message = messagesTable.deleteMessageByUser( messageId, username )
-        persistMessages()
+        def  message = messagesTable.deleteMessageByUser( messageId, username )
+        if ( message ){ persistMessages() }
         message
     }
 }

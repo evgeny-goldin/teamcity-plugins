@@ -102,8 +102,13 @@
                          type     : 'POST',
                          data     : j( this ).serialize(),
                          dataType : 'text',
-                         success  : function( response ) { ms.dialog( 'Message "' + response + '" sent', 1 );
-                                                           j( '#messages-send-message' ).val( '' ) },
+                         success  : function( response ) {
+                             /**
+                              * Response is 'id' of the new message sent
+                              */
+                             ms.dialog( 'Message "' + response + '" sent', 1 );
+                             j( '#messages-send-message' ).val( '' )
+                         },
                          error    : function() { ms.dialog( 'Failed to send message', -1 ) },
                          complete : function() { j( '#messages-send-progress' ).hide() }
                        });

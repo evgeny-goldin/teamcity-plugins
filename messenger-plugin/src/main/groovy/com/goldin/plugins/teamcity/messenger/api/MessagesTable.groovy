@@ -24,8 +24,8 @@ interface MessagesTable
     List<Message> deleteMessage( long ... messageIds )
 
 
-    @Requires({ messageId > 0 })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Requires({ ( messageId > 0 ) && username })
+    @Ensures({ ( result == null ) || ( result.id == messageId ) })
     Message deleteMessageByUser ( long messageId, String username )
 
 

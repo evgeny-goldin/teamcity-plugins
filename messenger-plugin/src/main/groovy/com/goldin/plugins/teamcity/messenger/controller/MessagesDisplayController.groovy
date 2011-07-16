@@ -43,8 +43,8 @@ class MessagesDisplayController extends MessagesBaseController
         {   /**
              * User deletes message displayed
              */
-            messagesBean.deleteMessageByUser( messageId as long, username )
-            new TextModelAndView( messageId, context.locale )
+            def message = messagesBean.deleteMessageByUser( messageId as long, username )
+            new TextModelAndView( message ? String.valueOf( message.id ) : '', context.locale )
         }
         else
         {

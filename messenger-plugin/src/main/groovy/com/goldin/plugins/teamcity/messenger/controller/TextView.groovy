@@ -18,7 +18,7 @@ class TextView implements View
     private final Locale locale
 
 
-    @Requires({ text && mimeType && charset && locale })
+    @Requires({ ( text != null ) && mimeType && charset && locale })
     TextView ( String text, String mimeType, String charset, Locale locale )
     {
         this.text     = text

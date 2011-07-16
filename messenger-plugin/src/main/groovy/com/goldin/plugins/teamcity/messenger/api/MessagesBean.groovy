@@ -52,9 +52,10 @@ interface MessagesBean
      * Deletes message specified for specific user.
      * @param messageId message id to delete
      * @param username username of the person who deleted his message
-     * @return message deleted
+     * @return message deleted if message was deleted,
+     *         null if message was already deleted in the past
      */
     @Requires({ ( messageId > 0 ) && username })
-    @Ensures({ result && ( result.id == messageId ) })
+    @Ensures({ ( result == null ) || ( result.id == messageId ) })
     Message deleteMessageByUser( long messageId, String username )
 }
