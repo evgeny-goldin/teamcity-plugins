@@ -147,6 +147,8 @@ final class Message
         this.sendToUsers  = new HashSet<String>(( Set ) read( 'sendToUsers'  )).asImmutable()
         this.usersDeleted = new HashSet<String>(( Set ) read( 'usersDeleted' ))
 
+        data.remove( 'date' )
+        data.remove( 'time' )
         assert data.isEmpty(), "Persistency data keys left unread: ${data.keySet()}"
     }
 
