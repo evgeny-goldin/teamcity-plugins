@@ -10,10 +10,12 @@
 </style>
 
 <script type="text/javascript">
-    jQuery.assert( '${action}', 'action is [${action}]' );
+    var j = jQuery.noConflict();
+
+    j.assert( '${action}', 'action is [${action}]' );
     md.action = '${action}';
 
-    jQuery.assert(( ${ajaxRequestInterval} > 0 ), 'ajaxRequestInterval is [${ajaxRequestInterval}]' );
+    j.assert(( ${ajaxRequestInterval} > 0 ), 'ajaxRequestInterval is [${ajaxRequestInterval}]' );
     new PeriodicalExecuter( md.getMessages, ${ajaxRequestInterval} );
     md.getMessages();
 </script>

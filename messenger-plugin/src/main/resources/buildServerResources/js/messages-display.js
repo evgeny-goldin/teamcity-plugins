@@ -1,6 +1,8 @@
+var md;
 
-    var j  = jQuery;
-    var md = { /* Shortcut for "messagesDisplay" */
+( function( j ) {
+
+    md = { /* Shortcut for "messagesDisplay" */
 
        /**
         * Action URL, set by hosting page
@@ -45,7 +47,7 @@
 
             j( '#messages-display-dialog-text' ).text( options.text );
 
-            j( '#messages-display-dialog' ).dialog({ title : options.title }).
+            j( '#messages-display-dialog' ).dialog({ title : options.title.escapeHTML() }).
                                             dialog( 'open' );
 
             j( 'div.ui-widget-header' ).removeClass( 'dialog-info' ).
@@ -276,8 +278,8 @@
     j( function() {
 
         j( '#messages-display-dialog' ).dialog({ autoOpen : false,
-                                                 height   : 115,
-                                                 width    : 550,
+                                                 height   : messages_const.dialog_height,
+                                                 width    : messages_const.dialog_width,
                                                  position : 'top' });
 
         j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
@@ -295,3 +297,6 @@
             }
         });
     });
+
+})( jQuery.noConflict());
+

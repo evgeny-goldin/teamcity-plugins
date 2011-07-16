@@ -45,7 +45,8 @@ abstract class MessagesBaseExtension extends SimplePageExtension implements Main
         jsPaths.clear()
         cssPaths.clear()
 
-        for ( String fileName in ( [ 'jquery-ui-1.8.13.js', 'jquery-plugins.js', 'jquery-ui-1.8.13.css', 'messenger-plugin.css' ] +
+        for ( String fileName in ( [ 'jquery-ui-1.8.13.js', 'jquery-plugins.js', 'messages-constants.js',
+                                     'jquery-ui-1.8.13.css', 'messenger-plugin.css' ] +
                                    filesToAdd ))
         {
             if ( fileName.endsWith( '.js' ))

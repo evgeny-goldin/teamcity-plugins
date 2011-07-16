@@ -1,7 +1,8 @@
+var ms;
 
-( function( j ){
+( function( j ) {
 
-    var ms = { /* Shortcut for "messagesSend" */
+    ms = { /* Shortcut for "messagesSend" */
 
        /**
         * Opens the dialog with message specified
@@ -117,4 +118,5 @@
             return false;
         })
     })
-})( jQuery );
+
+})( jQuery.noConflict());
