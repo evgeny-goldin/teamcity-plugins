@@ -8,11 +8,6 @@
         action : null,
 
         /**
-         * Limit of message text length, set by hosting page
-         */
-        messageLengthLimit : null,
-
-        /**
          * Template to be used for message dialog title
          * http://api.prototypejs.org/language/Template/
          */

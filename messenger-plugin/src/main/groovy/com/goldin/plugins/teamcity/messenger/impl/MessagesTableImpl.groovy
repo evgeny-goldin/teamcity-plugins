@@ -87,39 +87,23 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    void deleteAllMessages ()
-    {
-        messages.clear()
-    }
+    void deleteAllMessages () { messages.clear() }
+
+    @Override
+    List<Message> getAllMessages () { new ArrayList<Message>( messages.values()) }
+
+    @Override
+    boolean containsMessage ( long messageId ) { messages.containsKey( messageId ) }
+
+    @Override
+    int getNumberOfMessages () { messages.size() }
 
 
     @Override
-    List<Message> getAllMessages ()
-    {
-        new ArrayList<Message>( messages.values())
-    }
-
-
-    @Override
-    boolean containsMessage ( long messageId )
-    {
-        messages.containsKey( messageId )
-    }
-
-
-    @Override
-    int getNumberOfMessages ()
-    {
-        messages.size()
-    }
-
-
     Map getPersistencyData()
     {
-        [ messageId : messageIdGenerator.get(),
-          // 'messages' is List of Maps (one Map per Message), sorted chronologically
-          messages  : allMessages.sort{ Message m1, Message m2 -> m1.timestamp <=> m2.timestamp }*.
-                                  messagePersistencyData ]
+        [ messages  : ( List<Map> ) allMessages*.messagePersistencyData,
+          messageId : messageIdGenerator.get() ]
     }
 
 
@@ -129,7 +113,9 @@ class MessagesTableImpl implements MessagesTable
     {
         if ( data )
         {
-            messageIdGenerator.set( data[ 'messageId' ] as long )
+            // Picking maximal value between last known id and messages ids, in case messages were added after last known id was taken
+            def messageIdSet = (( List<String> )[ data[ 'messageId' ], *( data[ 'messages' ]*.id ) ] )*.toLong().max()
+            messageIdGenerator.set( messageIdSet )
 
             for ( Map messagePersistencyData in data[ 'messages' ] )
             {

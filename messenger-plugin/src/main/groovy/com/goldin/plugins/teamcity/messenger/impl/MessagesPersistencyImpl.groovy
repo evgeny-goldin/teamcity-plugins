@@ -55,8 +55,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         String jsonData = jsonFile.text
 
         try
-        {
-            // http://jira.codehaus.org/browse/GROOVY-4903 - can't use JsonSlurper :(
+        {   // http://jira.codehaus.org/browse/GROOVY-4903 - can't use JsonSlurper :(
             return ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
         }
         catch ( e )

@@ -51,7 +51,7 @@ class MessagesDisplayController extends MessagesBaseController
             /**
              * User retrieves all his messages: List<Message> => List<Map> => JSON
              */
-            def messages = messagesBean.getMessagesForUser( username )*.getDisplayData( true )
+            def messages = messagesBean.getMessagesForUser( username )*.displayData
             new TextModelAndView( new JsonBuilder( messages ).toString(), 'application/json', context.locale )
         }
     }

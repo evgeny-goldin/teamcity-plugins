@@ -45,6 +45,17 @@ final class Message
     final Set<String>     usersDeleted  // Users who deleted this message, usernames
 
 
+    /**
+     * Creates a new message, invoked by client code.
+     *
+     * @param sender       message sender user id
+     * @param urgency      message urgency
+     * @param text         message text
+     * @param longevity    message longevity
+     * @param sendToAll    whether message should be sent to all users
+     * @param sendToGroups groups message should be sent to
+     * @param sendToUsers  users message should be sent to
+     */
     @Requires({ sender && urgency && text && ( longevity != 0 ) && ( sendToGroups != null ) && ( sendToUsers != null ) })
     @Ensures({ ( this.id == -1 ) && ( this.longevity != 0 ) })
     Message ( String       sender,
@@ -75,6 +86,15 @@ final class Message
     }
 
 
+    /**
+     * Creates a new Message, invoked by the plugin code when message is added to the database.
+     *
+     * @param id      generated message id
+     * @param context plugin context
+     * @param config  plugin configuration
+     * @param util    plugin utils
+     * @param message data message to copy all information from
+     */
     @Requires({( id > 0 ) && context && config && util && message })
     @Ensures({ ( this.id == id ) && ( this.senderName ) })
     Message ( long id, MessagesContext context, MessagesConfiguration config, MessagesUtil util, Message message )
@@ -97,6 +117,14 @@ final class Message
     }
 
 
+    /**
+     * Creates a new Message, invoked by the plugin code when message is restored from persistency storage.
+     *
+     * @param persistencyData persistency storage, as returned by {@link #getMessagePersistencyData}
+     * @param context         plugin context
+     * @param config          plugin configuration
+     * @param util            plugin utils
+     */
     @Requires({ persistencyData && context && config && util && persistencyData[ 'id' ] && persistencyData[ 'timestamp' ] })
     Message ( Map persistencyData, MessagesContext context, MessagesConfiguration config, MessagesUtil util )
     {
@@ -132,18 +160,16 @@ final class Message
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result[ 'id' ] && result[ 'text' ] })
-    Map<String, String> getDisplayData ( boolean truncateText )
+    Map<String, Object> getDisplayData ()
     {
         def date = new Date( timestamp )
 
-        [ id         : id as String,
+        [ id         : id,
           urgency    : urgency.toString().toLowerCase( context.locale ),
           senderName : senderName,
           date       : config.dateFormatter.format( date ),
           time       : config.timeFormatter.format( date ),
-          text       : ( truncateText && text.size() > config.messageLengthLimit ) ?
-                           text.substring( 0, config.messageLengthLimit ) + ' ..' :
-                           text
+          text       : text
         ]
     }
 
@@ -155,15 +181,15 @@ final class Message
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result.id && result.text && result.sender })
-    Map<String, String> getMessagePersistencyData ()
+    Map<String, Object> getMessagePersistencyData ()
     {
-        getDisplayData( false ) << [ sender       : sender,
-                                     timestamp    : timestamp as String,
-                                     longevity    : longevity,
-                                     sendToAll    : sendToAll,
-                                     sendToGroups : sendToGroups,
-                                     sendToUsers  : sendToUsers,
-                                     usersDeleted : usersDeleted ]
+        getDisplayData() << [ sender       : sender,
+                              timestamp    : timestamp,
+                              longevity    : longevity,
+                              sendToAll    : sendToAll,
+                              sendToGroups : sendToGroups,
+                              sendToUsers  : sendToUsers,
+                              usersDeleted : usersDeleted ]
     }
 
 

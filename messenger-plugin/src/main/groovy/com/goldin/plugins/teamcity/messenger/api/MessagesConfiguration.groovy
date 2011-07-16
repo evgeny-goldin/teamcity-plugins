@@ -33,10 +33,6 @@ interface MessagesConfiguration
     int    getMessagesLimitPerUser()
 
 
-    @Ensures({ result > 0 })
-    int    getMessageLengthLimit()
-
-
     @Ensures({ result })
     String getDateFormatPattern()
 

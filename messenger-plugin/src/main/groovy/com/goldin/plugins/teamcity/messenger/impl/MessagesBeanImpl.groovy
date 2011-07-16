@@ -130,7 +130,6 @@ class MessagesBeanImpl implements MessagesBean
     Message deleteMessageByUser ( long messageId, String username )
     {
         def message = messagesTable.deleteMessageByUser( messageId, username )
-
         persistMessages()
         message
     }
