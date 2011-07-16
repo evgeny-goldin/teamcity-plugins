@@ -247,8 +247,8 @@ subprojects {
             assert sourceDir.isDirectory() && destinationDir.isDirectory()
 
             ant {
-                copy ( todir  : destinationDir ) { fileset( dir : sourceDir      ) }
-                touch()                          { fileset( dir : destinationDir ) }
+                copy ( todir : destinationDir, overwrite : true ) { fileset( dir : sourceDir      ) }
+                touch()                                           { fileset( dir : destinationDir ) }
             }
         }
     }

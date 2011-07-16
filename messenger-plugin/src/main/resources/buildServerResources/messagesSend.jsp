@@ -42,8 +42,10 @@
                 <span class="error" id="messages-send-error-longevity" style="margin-left: 10.5em;"></span>
             </p>
 
-            <p><label for="messages-send-message">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
-                <textarea class="textfield" id="messages-send-message" name="message" cols="30" rows="12"></textarea>
+            <p><label for="messages-send-text">Message: <span class="mandatoryAsterix" title="Mandatory field">*</span></label>
+                <textarea class="textfield" id="messages-send-text" name="message" cols="30" rows="12"></textarea>
+                <br/>
+                <span id="messages-send-counter" style="margin-left: 315px"></span>
                 <span class="error" id="messages-send-error-message" style="margin-left: 10.5em;"></span>
             </p>
 

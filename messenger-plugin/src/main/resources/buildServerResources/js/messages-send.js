@@ -21,15 +21,24 @@ var ms;
          */
         dialogClose : function()
         {
-            j( '#messages-send-dialog'  ).dialog( 'destroy' );
-            j( '#messages-send-button'  ).enable();
-            j( '#messages-send-message' ).focus();
+            j( '#messages-send-dialog' ).dialog( 'destroy' );
+            j( '#messages-send-button' ).enable();
+            j( '#messages-send-text'   ).focus();
         }
     };
 
     j( function() {
 
-        j( '#messages-send-message' ).focus();
+        /**
+         * Twitter-like message length counter
+         */
+        j( '#messages-send-counter' ).text( messages_const.text_max_length );
+        j( '#messages-send-text'    ).focus().keyup( function(){
+            var text      = j( this ).val();
+            var charsLeft = messages_const.text_max_length - text.length;
+            j( '#messages-send-counter' ).text( charsLeft ).
+                                          css({ color : ( charsLeft < 1 ? 'red' : '#151515' ) })
+        });
 
        /**
         * "Ok" button listener
@@ -69,14 +78,24 @@ var ms;
                 j( '#messages-send-error-longevity' ).text( '' );
             }
 
-            if ( j.trim( j( '#messages-send-message' ).val()))
+            var messageText = j( '#messages-send-text' ).val();
+            if ( j.trim( messageText ))
             {
-                j( '#messages-send-message' ).removeClass( 'errorField' );
-                j( '#messages-send-error-message' ).text( '' );
+                if ( messageText.length > messages_const.text_max_length )
+                {
+                    j( '#messages-send-text'          ).addClass( 'errorField' );
+                    j( '#messages-send-error-message' ).text( 'Message should be no longer than ' + messages_const.text_max_length + ' characters.' );
+                    error = true;
+                }
+                else
+                {
+                    j( '#messages-send-text'          ).removeClass( 'errorField' );
+                    j( '#messages-send-error-message' ).text( '' );
+                }
             }
             else
             {
-                j( '#messages-send-message'       ).addClass( 'errorField' );
+                j( '#messages-send-text'          ).addClass( 'errorField' );
                 j( '#messages-send-error-message' ).text( 'Message should be specified' );
                 error = true;
             }
@@ -108,7 +127,7 @@ var ms;
                               * Response is 'id' of the new message sent
                               */
                              ms.dialog( 'Message "' + response + '" sent', 1 );
-                             j( '#messages-send-message' ).val( '' )
+                             j( '#messages-send-text' ).val( '' )
                          },
                          error    : function() { ms.dialog( 'Failed to send message', -1 ) },
                          complete : function() { j( '#messages-send-progress' ).hide() }
