@@ -1,19 +1,13 @@
-var md;
+var md;  /* Shortcut for "messagesDisplay" */
 
 ( function( j ) {
 
-    md = { /* Shortcut for "messagesDisplay" */
+    md = {
 
        /**
         * Action URL, set by hosting page
         */
         action : null,
-
-        /**
-         * Template to be used for message dialog title
-         * http://api.prototypejs.org/language/Template/
-         */
-        titleTemplate    : new Template( messages_const.title_template ),
 
        /**
         * User messages retrieved and index of the message being displayed currently
@@ -121,10 +115,10 @@ var md;
             // "Next" button
             j( '#messages-display-dialog-next' ).enable( counter < total );
 
-            message.senderName = md.cut( message.senderName, messages_const.sender_max_length );
-            message.text       = md.cut( message.text,       messages_const.text_max_length   );
+            message.senderName = md.cut( message.senderName, dialog_const.sender_max_length );
+            message.text       = md.cut( message.text,       dialog_const.text_max_length   );
 
-            md.dialogOpen({ title   : md.titleTemplate.evaluate( message ),
+            md.dialogOpen({ title   : dialog_const.title_template.evaluate( message ),
                             text    : message.text,
                             urgency : message.urgency });
         },
@@ -284,23 +278,31 @@ var md;
 
     j( function() {
 
+        /**
+         * Dialog message
+         */
         j( '#messages-display-dialog' ).dialog({ autoOpen : false,
-                                                 height   : messages_const.dialog_height,
-                                                 width    : messages_const.dialog_width,
+                                                 height   : dialog_const.height,
+                                                 width    : dialog_const.width,
                                                  position : 'top' });
-
+        /**
+         * Setting dialog message link handlers: Prev, Next, Close, Delete
+         */
         j( '#messages-display-dialog-prev'   ).click( md.prevMessage   );
         j( '#messages-display-dialog-next'   ).click( md.nextMessage   );
         j( '#messages-display-dialog-close'  ).click( md.dialogClose   );
         j( '#messages-display-dialog-delete' ).click( md.deleteMessage );
 
+        /**
+         * Setting dialog message keyboard event handlers: Left (Prev), Right (Next), Delete (Delete)
+         */
         j( 'body' ).keydown( function( e )
         {
             if ( j( '#messages-display-dialog' ).dialog( 'isOpen' ))
             {
-                /* Prev   */ if ( e.which == 37 ) { j( '#messages-display-dialog-prev'   ).click() }
-                /* Next   */ if ( e.which == 39 ) { j( '#messages-display-dialog-next'   ).click() }
-                /* Delete */ if ( e.which == 46 ) { j( '#messages-display-dialog-delete' ).click() }
+                if ( e.which == 37 ) { j( '#messages-display-dialog-prev'   ).click() } // Left
+                if ( e.which == 39 ) { j( '#messages-display-dialog-next'   ).click() } // Right
+                if ( e.which == 46 ) { j( '#messages-display-dialog-delete' ).click() } // Delete
             }
         });
     });

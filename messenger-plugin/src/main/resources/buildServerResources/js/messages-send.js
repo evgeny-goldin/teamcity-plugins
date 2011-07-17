@@ -1,8 +1,8 @@
-var ms;
+var ms;  /* Shortcut for "messagesSend" */
 
 ( function( j ) {
 
-    ms = { /* Shortcut for "messagesSend" */
+    ms = {
 
        /**
         * Opens the dialog with message specified
@@ -66,14 +66,14 @@ var ms;
 
             var formSubmit  = ( ! event );
             var messageText = j.trim( j( this ).val());
-            var left        = messages_const.text_max_length - messageText.length;
+            var left        = dialog_const.text_max_length - messageText.length;
 
             j( '#messages-send-counter' ).text( left ).css({ color : (( left < 10 ) ? 'red' : '#151515' ) });
 
             if ( formSubmit && (( ! messageText ) || ( left < 0 )))
             {
                 j( this ).addClass( 'errorField' ).focus();
-                j( '#messages-send-error-message' ).text( messageText ? 'Message should be no longer than ' + messages_const.text_max_length + ' characters.' :
+                j( '#messages-send-error-message' ).text( messageText ? 'Message should be no longer than ' + dialog_const.text_max_length + ' characters.' :
                                                                         'Message should be specified' );
                 return false;
             }
@@ -140,7 +140,7 @@ var ms;
         /**
          * Setting change listeners
          */
-        j( '#messages-send-counter' ).text( messages_const.text_max_length );
+        j( '#messages-send-counter' ).text( dialog_const.text_max_length );
         j( '#messages-send-longevity-number' ).change( ms.longevityValidate );
         j( '#messages-send-text'             ).keyup ( ms.textValidate ).change( ms.textValidate ).focus();
         j( '#messages-send-all, #messages-send-groups, #messages-send-users' ).change( ms.recipientsValidate );

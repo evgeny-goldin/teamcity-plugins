@@ -14,7 +14,7 @@ or
 
 
 
-2) To deploy plugins:
+2) To deploy plugins to standalone TC installation:
 ---------------------------------------------------------
 
  Make sure TC server is not running
