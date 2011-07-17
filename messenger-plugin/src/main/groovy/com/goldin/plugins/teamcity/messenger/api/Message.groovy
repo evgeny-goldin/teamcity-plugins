@@ -191,13 +191,13 @@ final class Message
     @Ensures({ result && result.id && result.text && result.sender })
     Map<String, Object> getMessagePersistencyData ()
     {
-        getDisplayData() << [ timestamp    : timestamp,
-                              sender       : sender,
-                              longevity    : longevity,
-                              sendToAll    : sendToAll,
-                              sendToGroups : sendToGroups,
-                              sendToUsers  : sendToUsers,
-                              usersDeleted : usersDeleted ]
+        displayData << [ timestamp    : timestamp,
+                         sender       : sender,
+                         longevity    : longevity,
+                         sendToAll    : sendToAll,
+                         sendToGroups : sendToGroups,
+                         sendToUsers  : sendToUsers,
+                         usersDeleted : usersDeleted ]
     }
 
 
