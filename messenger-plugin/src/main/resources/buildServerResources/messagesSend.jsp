@@ -74,7 +74,7 @@
 
             <p>
                 <input type="submit" value="Send" id="messages-send-button">
-                <img id="messages-send-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="display: none"/>
+                <img id="messages-send-progress" src="<c:url value='${teamcityPluginResourcesPath}images/ajax-loader.gif'/>" style="display: none"/>
             </p>
         </form>
     </div>

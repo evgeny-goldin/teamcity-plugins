@@ -30,7 +30,7 @@
             Message <span id="messages-display-counter"></span> of <span id="messages-display-counter-total"></span>
             <a id="messages-display-dialog-close"  href="#" class="text-link" style="float: right; margin-right: 10px">[Close]</a>
             <a id="messages-display-dialog-delete" href="#" class="text-link" style="float: right; margin-right: 5px">[Delete]</a>
-            <img id="messages-display-progress" src="${teamcityPluginResourcesPath}images/ajax-loader.gif" style="float: right; margin-right: 5px; display: none"/>
+            <img id="messages-display-progress" src="<c:url value='${teamcityPluginResourcesPath}images/ajax-loader.gif'/>" style="float: right; margin-right: 5px; display: none"/>
         </div>
     </div>
 </div>
