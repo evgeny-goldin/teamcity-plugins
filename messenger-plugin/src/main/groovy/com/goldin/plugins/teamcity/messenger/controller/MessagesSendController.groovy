@@ -42,8 +42,8 @@ class MessagesSendController extends MessagesBaseController
         String       messageText   = param( requestParams, 'message' )
         long         longevity     = longevity( requestParams ) ?: 1
         boolean      sendToAll     = param( requestParams,  'all',    false ) as boolean
-        List<String> sendToGroups  = params( requestParams, 'groups', false ) // Values are not sent
-        List<String> sendToUsers   = params( requestParams, 'users',  false ) // when groups/users are disabled
+        List<String> sendToGroups  = params( requestParams, 'groups', false ).collect { util.htmlUnescape( it )} // Values are not sent
+        List<String> sendToUsers   = params( requestParams, 'users',  false ).collect { util.htmlUnescape( it )} // when groups/users are disabled
         Message      message       = new Message( username, urgency, messageText, longevity, sendToAll, sendToGroups, sendToUsers )
         long         messageId     = messagesBean.sendMessage( message )
 

@@ -16,7 +16,7 @@ class MessagesUtil
         this.context = context
     }
 
-    
+
    /**
     * Escapes all HTML tags in the String specified.
     *
@@ -31,6 +31,23 @@ class MessagesUtil
           replace( '"', '&quot;' ).
           replace( '<', '&lt;'   ).
           replace( '>', '&gt;'   )
+    }
+
+
+   /**
+    * Un-escapes all HTML tags in the String specified.
+    *
+    * @param s text to un-escape
+    * @return original text with all HTML tags un-escaped
+    */
+    @Requires({ s })
+    @Ensures({ ! result.with{ contains( '&lt;' ) || contains( '&gt;' ) }})
+    String htmlUnescape ( String s )
+    {
+        s.replace( '&quot;', '"' ).
+          replace( '&lt;',   '<' ).
+          replace( '&gt;',   '>' ).
+          replace( '&amp;',  '&' )
     }
 
 
@@ -124,7 +141,7 @@ class MessagesUtil
 
             int  urgencyCompare = ( m1.urgency <=> m2.urgency )
             if ( urgencyCompare != 0                    ){ return urgencyCompare }
-            
+
             if ( different( m1.sendToAll, m2.sendToAll )){ return ( m1.sendToAll ? 1 : -1 ) }
 
             boolean m1ForUser = m1.sendToUsers.contains( username )
