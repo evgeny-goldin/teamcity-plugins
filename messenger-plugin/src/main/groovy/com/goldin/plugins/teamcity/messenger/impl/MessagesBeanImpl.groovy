@@ -1,8 +1,5 @@
 package com.goldin.plugins.teamcity.messenger.impl
 
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import jetbrains.buildServer.serverSide.BuildServerAdapter
 import jetbrains.buildServer.serverSide.BuildServerListener
 import jetbrains.buildServer.util.EventDispatcher
@@ -10,21 +7,18 @@ import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
 import org.springframework.context.ApplicationContext
 import com.goldin.plugins.teamcity.messenger.api.*
-import java.util.concurrent.Callable
 
 /**
  * {@link MessagesBean} implementation
  */
-@Invariant({ this.messagesTable && this.usersTable && this.persistency && this.context && this.util && this.executor })
+@Invariant({ this.messagesTable && this.usersTable && this.context && this.util && this.persistencyExecutor })
 class MessagesBeanImpl implements MessagesBean
 {
     private final MessagesTable       messagesTable
     private final UsersTable          usersTable
-    private final MessagesPersistency persistency
     private final MessagesContext     context
     private final MessagesUtil        util
-    private final Callable<Void>      executorTask
-    private final ExecutorService     executor
+    private final SameTaskExecutor    persistencyExecutor
 
 
     @Delegate( interfaces = true )
@@ -35,13 +29,11 @@ class MessagesBeanImpl implements MessagesBean
     MessagesBeanImpl ( MessagesTable messagesTable, UsersTable usersTable, MessagesPersistency persistency,
                        MessagesContext context, MessagesUtil util, ApplicationContext springContext )
     {
-        this.messagesTable = messagesTable
-        this.usersTable    = usersTable
-        this.persistency   = persistency
-        this.context       = context
-        this.util          = util
-        this.executorTask  = { persistency.save( messagesTable.persistencyData ) } as Callable
-        this.executor      = Executors.newSingleThreadExecutor()
+        this.messagesTable       = messagesTable
+        this.usersTable          = usersTable
+        this.context             = context
+        this.util                = util
+        this.persistencyExecutor = new SameTaskExecutor({ persistency.save( messagesTable.persistencyData ) }, context )
 
         /**
          * Adding this bean as server life cycle listener when not in test environment.
@@ -61,24 +53,21 @@ class MessagesBeanImpl implements MessagesBean
     }
 
 
+    /**
+     * Persists messages table in this thread
+     */
     @Override
-    void serverShutdown ()
-    {
-        persistMessages().get()
-        executor.shutdown()
-        assert executor.isShutdown() && executor.isTerminated()
-    }
-
-
-    @Override
-    List<Message> getAllMessages () { messagesTable.allMessages }
+    void serverShutdown () { persistencyExecutor.execute( false ) }
 
 
     /**
      * Persists messages table in the background thread
      */
-    @Requires({ executor && executorTask })
-    Future<Void> persistMessages () { executor.submit( executorTask ) }
+    private void persistMessages () { persistencyExecutor.execute( true ) }
+
+
+    @Override
+    List<Message> getAllMessages () { messagesTable.allMessages }
 
 
     @Override

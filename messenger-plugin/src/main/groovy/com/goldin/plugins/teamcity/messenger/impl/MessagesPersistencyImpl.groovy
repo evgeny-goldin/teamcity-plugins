@@ -40,7 +40,14 @@ class MessagesPersistencyImpl implements MessagesPersistency
     {
         try
         {
+            long t         = System.currentTimeMillis()
+            int  nMessages = (( List<Map> ) data[ 'messages' ] ).size()
+
             jsonFile.write( JSONObject.fromObject( data ).toString())
+
+            context.log.with { debugEnabled && debug(
+                 "Data of [$nMessages] message${ nMessages == 1 ? '' : 's' } " +
+                 "persisted in [${ System.currentTimeMillis() - t }] ms" ) }
         }
         catch ( e )
         {
