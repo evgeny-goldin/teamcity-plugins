@@ -75,10 +75,10 @@ allprojects {
 
 subprojects {
 
-    File        teamCityDir     = new File( System.getProperty( 'teamCityDir' ) ?: System.getProperty( 'user.home' ) + '/app/java/teamcity' )
-    String      teamCityAppName = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
-    File        destinationZip  = new File(( File ) project.buildDir, "${project.name}.zip" )
-    Set<String> apiPatterns     = [ '**/api/**' ]
+    File        teamCityDir    = new File( System.getProperty( 'teamCityDir' ) ?: System.getProperty( 'user.home' ) + '/app/java/teamcity' )
+    String      appName        = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
+    File        destinationZip = new File(( File ) project.buildDir, "${project.name}.zip" )
+    Set<String> apiPatterns    = [ '**/api/**' ]
 
     configurations {
         provided
@@ -209,7 +209,7 @@ subprojects {
         doFirst {
             assert destinationZip.isFile() && teamCityDir.isDirectory()
 
-            def zipPath  = "webapps/$teamCityAppName/WEB-INF/plugins/${project.name}.zip"
+            def zipPath  = "webapps/$appName/WEB-INF/plugins/${project.name}.zip"
             def tcDelete = {
                 boolean deleteDir, Object[] args ->
                 args.each {
@@ -226,10 +226,10 @@ subprojects {
                 }
             }
 
-            tcDelete( true, zipPath, "webapps/$teamCityAppName/WEB-INF/plugins/.unpacked/${project.name}",
+            tcDelete( true, zipPath, "webapps/$appName/WEB-INF/plugins/.unpacked/${project.name}",
                                      "work/Catalina/localhost/_/TC_${project.name}" )
 
-            tcDelete( false, "webapps/$teamCityAppName/plugins/${project.name}", "logs" )
+            tcDelete( false, "webapps/$appName/plugins/${project.name}" )
 
             ant.copy( file: destinationZip, tofile: new File( teamCityDir, zipPath ))
         }
@@ -240,7 +240,7 @@ subprojects {
      */
     task copy () {
         description        = 'Copies static resources to TeamCity instance.'
-        def destinationDir = new File( teamCityDir,        "webapps/$teamCityAppName/plugins/${project.name}" )
+        def destinationDir = new File( teamCityDir,        "webapps/$appName/plugins/${project.name}" )
         def sourceDir      = new File(( File ) project.projectDir, 'src/main/resources/buildServerResources' )
 
         doFirst {
