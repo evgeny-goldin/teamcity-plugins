@@ -32,7 +32,7 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
         this.groupsManager = groupsManager
     }
 
-    
+
     @Override
 //    @Ensures({ result })
     List<String> getFilesToAdd () { [ 'messages-send.js' ] }
@@ -48,14 +48,15 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
 //    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        def groups = groupsManager.userGroups*.name.findAll{ it }
-        def users  = server.userModel.allUsers.users*.username.findAll{ it }
+        def groups = groupsManager.userGroups
+        def users  = server.userModel.allUsers.users
 
         assert groups, 'No groups found on the server'
         assert users,  'No users found on the server'
 
-        model << [ groups : groups,
-                   users  : users,
-                   action : MessagesSendController.MAPPING ]
+        model << [ groups    : groups*.name            as List,
+                   userNames : users*.username         as List,
+                   fullNames : users*.descriptiveName  as List,
+                   action    : MessagesSendController.MAPPING ]
     }
 }

@@ -2,9 +2,10 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesSendExtension.fillModel() --%>
-<jsp:useBean id="groups"  scope="request" type="java.util.Collection"/>
-<jsp:useBean id="users"   scope="request" type="java.util.Collection"/>
-<jsp:useBean id="action"  scope="request" type="java.lang.String"/>
+<jsp:useBean id="groups"    scope="request" type="java.util.List<java.lang.String>"/>
+<jsp:useBean id="userNames" scope="request" type="java.util.List<java.lang.String>"/>
+<jsp:useBean id="fullNames" scope="request" type="java.util.List<java.lang.String>"/>
+<jsp:useBean id="action"    scope="request" type="java.lang.String"/>
 
 
 <style type="text/css">
@@ -65,9 +66,16 @@
             <p>
                 <label for="messages-send-users">Send to Users:</label>
                 <select id="messages-send-users" name="users" multiple="multiple" size="2">
-                <c:forEach items="${users}" var="user">
-                    <option>${user}</option>
-                </c:forEach>
+                <%
+                    for ( int index = 0; index < userNames.size(); index++ )
+                    {
+                        String username = userNames.get( index );
+                        String fullName = fullNames.get( index );
+                %>
+                    <option value="<%= username %>"><%= fullName %></option>
+                <%
+                    }
+                %>
                 </select>
                 <span class="error" id="messages-send-error-selection" style="margin-left: 10.5em;"></span>
             </p>
