@@ -34,7 +34,7 @@ class UsersTableImpl implements UsersTable
 
 
     @Override
-    void init ( List<Message> messages )
+    void restore ( List<Message> messages )
     {
         if ( messages )
         {
@@ -72,7 +72,7 @@ class UsersTableImpl implements UsersTable
 
 
     @Override
-    long addMessage ( Message message)
+    long addMessage ( Message message )
     {
         if ( message.sendToAll )  { all          << message }
         message.sendToGroups.each { groups[ it ] << message }

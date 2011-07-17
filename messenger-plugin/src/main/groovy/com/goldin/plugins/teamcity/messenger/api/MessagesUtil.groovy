@@ -3,6 +3,7 @@ package com.goldin.plugins.teamcity.messenger.api
 import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 
+
 /**
  * Various messages utils.
  */

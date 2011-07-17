@@ -15,7 +15,6 @@ import org.jdom.Element
 @Invariant({
     ( this.context && this.defaults ) &&
     ( this.ajaxRequestInterval  > 0 ) &&
-    ( this.persistencyInterval  > 0 ) &&
     ( this.messagesLimitPerUser > 0 ) &&
     ( this.logCategory       )        &&
     ( this.dateFormatPattern )        &&
@@ -28,7 +27,6 @@ class MessagesConfigurationImpl implements MessagesConfiguration
 
     boolean    minify
     int        ajaxRequestInterval
-    int        persistencyInterval
     int        messagesLimitPerUser
     String     logCategory
     String     dateFormatPattern
@@ -59,7 +57,6 @@ class MessagesConfigurationImpl implements MessagesConfiguration
     {
         this.minify               = Boolean.valueOf( param( 'minify', config ))
         this.ajaxRequestInterval  = param( 'ajaxRequestInterval',     config ) as int
-        this.persistencyInterval  = param( 'persistencyInterval',     config ) as int
         this.messagesLimitPerUser = param( 'messagesLimitPerUser',    config ) as int
         this.logCategory          = param( 'logCategory',             config )
         this.dateFormatPattern    = param( 'dateFormatPattern',       config )

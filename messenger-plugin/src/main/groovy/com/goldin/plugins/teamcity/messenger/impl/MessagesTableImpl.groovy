@@ -113,7 +113,7 @@ class MessagesTableImpl implements MessagesTable
 
     @Override
     @Requires({ data.isEmpty() || ( data[ 'messageId' ] && ( data[ 'messages' ] != null )) })
-    void setPersistencyData ( Map data )
+    void restoreFromPersistencyData ( Map data )
     {
         if ( data )
         {

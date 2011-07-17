@@ -48,8 +48,8 @@ class MessagesBeanImpl implements MessagesBean
         /**
          * Restoring data from persistent storage
          */
-        messagesTable.persistencyData = persistency.restore()
-        usersTable.init( messagesTable.allMessages )
+        messagesTable.restoreFromPersistencyData( persistency.restore())
+        usersTable.restore( messagesTable.allMessages )
     }
 
 
