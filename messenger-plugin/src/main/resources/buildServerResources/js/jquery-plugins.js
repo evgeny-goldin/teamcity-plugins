@@ -11,8 +11,8 @@
     /**
      * Alerts, logs and throws execution fatal error
      */
-    j.error = function( message ) {
-        var errorMessage = 'Assertion Failure!\n[' + message + ']';
+    j.fatalError = function( message ) {
+        var errorMessage = 'Fatal Error!\n[' + message + ']';
         alert         ( errorMessage );
         console.error ( errorMessage );
         throw         ( errorMessage );
@@ -29,9 +29,9 @@
      * Verifies that condition specified is true and displays an alert() if it's not
      */
     j.assert = function( condition, message ) {
-        if ( ! j.defined( condition )) { j.error( 'alert(): condition is not specified'   )}
-        if ( ! j.defined( message   )) { j.error( 'alert(): message is not specified'     )}
-        if ( ! condition )             { j.error( message )}
+        if ( ! j.defined( condition )) { j.fatalError( 'alert(): condition is not specified'   )}
+        if ( ! j.defined( message   )) { j.fatalError( 'alert(): message is not specified'     )}
+        if ( ! condition )             { j.fatalError( 'Assertion Failure: ' + message )}
     };
 
 
@@ -58,7 +58,7 @@
      */
     j.nativeDisable = $w( 'button command fieldset input keygen optgroup option select textarea' ),
 
-            
+
     /**
      * Disables jQuery object, taking optional boolean argument into consideration as well.
      */
@@ -71,10 +71,10 @@
 		{
 			return this.attr({ disabled: disabled })
 		}
-        else if ( tagName == 'a' ) 
+        else if ( tagName == 'a' )
 		{
             // http://css-tricks.com/6379-pointer-events-current-nav/
-			return this.css({ 'pointer-events' : disabled ? 'none'    : 'auto', 
+			return this.css({ 'pointer-events' : disabled ? 'none'    : 'auto',
 			                  'cursor'         : disabled ? 'default' : 'pointer',
                               'color'          : disabled ? '#151515' : '#1564c2' })
 		}
@@ -156,5 +156,5 @@ Object.extend( Array.prototype, ( function( j ) {
         newIndexOf : newIndexOf,
         contains   : contains
     };
-    
+
 })( jQuery ));
