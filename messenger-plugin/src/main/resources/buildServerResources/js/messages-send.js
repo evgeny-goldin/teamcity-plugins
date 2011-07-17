@@ -16,6 +16,8 @@ var ms;
 
             if ( closeAfter > 0 ) { ms.dialogClose.delay( closeAfter ) }
         },
+
+
         /**
          * Closes the dialog and enables "Send" button
          */
@@ -24,110 +26,105 @@ var ms;
             j( '#messages-send-dialog' ).dialog( 'destroy' );
             j( '#messages-send-button' ).enable();
             j( '#messages-send-text'   ).focus();
-        }
-    };
+        },
 
-    j( function() {
 
         /**
-         * Twitter-like message length counter
+         * Validates longevity values and returns true if value is legal.
+         * Returns false otherwise.
+         * When invoked explicitly upon form submit - event parameter is undefined.
          */
-        j( '#messages-send-counter' ).text( messages_const.text_max_length );
-        j( '#messages-send-text'    ).focus().keyup( function(){
-            var text      = j( this ).val();
-            var charsLeft = messages_const.text_max_length - text.length;
-            j( '#messages-send-counter' ).text( charsLeft ).
-                                          css({ color : ( charsLeft < 1 ? 'red' : '#151515' ) })
-        });
+        longevityValidate : function( event ) {
 
-       /**
-        * "Ok" button listener
-        */
-        j( '#messages-send-dialog-ok' ).click( function(){ ms.dialogClose(); return false; });
+            var formSubmit = ( ! event );
+            var longevity  = j.trim( j( this ).val());
 
-       /**
-        * "All" checkbox listener, enables and disables groups/users according to checkbox value
-        */
-        j( '#messages-send-all' ).change( function() {
-            j( '#messages-send-groups, #messages-send-users' ).disable( j( this ).is( ':checked' ));
-        });
-        j( '#messages-send-all' ).click().change();
-
-       /**
-        * Listener submitting a request when form is submitted
-        */
-        j( '#messages-send-form' ).submit( function()
-        {
-            var error     = false;
-            var longevity = j.trim( j( '#messages-send-longevity-number' ).val());
-
-            if ( longevity.length )
+            if ( longevity )
             {
                 longevity = parseFloat( longevity );
                 if ( isNaN( longevity ) || ( longevity <= 0.0 ))
                 {
-                    j( '#messages-send-longevity-number' ).addClass( 'errorField' );
-                    j( '#messages-send-error-longevity'  ).text( 'Message longevity should be a positive number' );
-                    error = true;
+                    j( this ).addClass( 'errorField' );
+                    j( '#messages-send-error-longevity' ).text( 'If specified message longevity should be a positive number' );
+                    if ( formSubmit ) { j( this ).focus() }
+                    return false;
                 }
             }
 
-            if ( ! error )
+            j( this ).removeClass( 'errorField' );
+            j( '#messages-send-error-longevity' ).text( '' );
+            return true;
+        },
+
+
+        /**
+         * Validates text message and returns true if value is legal.
+         * Returns false otherwise.
+         * When invoked explicitly upon form submit - event parameter is undefined.
+         */
+        textValidate : function( event ) {
+
+            var formSubmit  = ( ! event );
+            var messageText = j.trim( j( this ).val());
+            var left        = messages_const.text_max_length - messageText.length;
+
+            j( '#messages-send-counter' ).text( left ).css({ color : (( left < 10 ) ? 'red' : '#151515' ) });
+
+            if ( formSubmit && (( ! messageText ) || ( left < 0 )))
             {
-                j( '#messages-send-longevity-number' ).removeClass( 'errorField' );
-                j( '#messages-send-error-longevity' ).text( '' );
+                j( this ).addClass( 'errorField' ).focus();
+                j( '#messages-send-error-message' ).text( messageText ? 'Message should be no longer than ' + messages_const.text_max_length + ' characters.' :
+                                                                        'Message should be specified' );
+                return false;
             }
 
-            var messageText = j( '#messages-send-text' ).val();
-            if ( j.trim( messageText ))
-            {
-                if ( messageText.length > messages_const.text_max_length )
-                {
-                    j( '#messages-send-text'          ).addClass( 'errorField' );
-                    j( '#messages-send-error-message' ).text( 'Message should be no longer than ' + messages_const.text_max_length + ' characters.' );
-                    error = true;
-                }
-                else
-                {
-                    j( '#messages-send-text'          ).removeClass( 'errorField' );
-                    j( '#messages-send-error-message' ).text( '' );
-                }
-            }
-            else
-            {
-                j( '#messages-send-text'          ).addClass( 'errorField' );
-                j( '#messages-send-error-message' ).text( 'Message should be specified' );
-                error = true;
-            }
+            j( this ).removeClass( 'errorField' );
+            j( '#messages-send-error-message' ).text( '' );
+            return true;
+        },
 
-            var    recipientsSelected = ( j( '#messages-send-all'    ).attr( 'checked' ) ||
-                                          j( '#messages-send-groups' ).val()             ||
-                                          j( '#messages-send-users'  ).val());
-            if ( recipientsSelected )
-            {
-                j( '#messages-send-error-selection' ).text( '' );
-            }
-            else
-            {
-                j( '#messages-send-error-selection' ).text( 'Recipients should be selected' );
-                error = true;
-            }
 
-            if ( ! error )
+        /**
+         * Validates recipients selected and returns true if value is legal.
+         * Returns false otherwise.
+         * When invoked explicitly upon form submit - event parameter is undefined.
+         */
+        recipientsValidate : function( event ) {
+
+            var  formSubmit = ( ! event );
+            var  allChecked = j( '#messages-send-all' ).is( ':checked' );
+            var  selected   = ( allChecked || j( '#messages-send-groups' ).val() || j( '#messages-send-users'  ).val());
+
+            j( '#messages-send-error-selection' ).text( formSubmit && ( ! selected ) ? 'Recipients should be selected' : '' );
+            j( '#messages-send-groups, #messages-send-users' ).disable( allChecked );
+            return selected;
+        },
+
+
+        /**
+         * Form submit listener
+         */
+        formSubmit : function() {
+
+            var longevityError   = ( ! ms.longevityValidate.call( j( '#messages-send-longevity-number' ).get( 0 )));
+            var messageTextError = ( ! ms.textValidate.call( j( '#messages-send-text' ).get( 0 )));
+            var recipientsError  = ( ! ms.recipientsValidate());
+
+            if ( ! ( longevityError || messageTextError || recipientsError ))
             {
                 j( '#messages-send-button'   ).disable();
                 j( '#messages-send-progress' ).show();
 
-                j.ajax({ url      : this.action,
-                         type     : 'POST',
+                j.ajax({ url      : j( this ).attr( 'action' ),
                          data     : j( this ).serialize(),
+                         type     : 'POST',
                          dataType : 'text',
                          success  : function( response ) {
                              /**
                               * Response is 'id' of the new message sent
                               */
                              ms.dialog( 'Message "' + response + '" sent', 1 );
-                             j( '#messages-send-text' ).val( '' )
+                             j( '#messages-send-text' ).val( '' ).change();
                          },
                          error    : function() { ms.dialog( 'Failed to send message', -1 ) },
                          complete : function() { j( '#messages-send-progress' ).hide() }
@@ -135,7 +132,33 @@ var ms;
             }
 
             return false;
-        })
+        }
+    };
+
+    j( function() {
+
+        /**
+         * Setting change listeners
+         */
+        j( '#messages-send-counter' ).text( messages_const.text_max_length );
+        j( '#messages-send-longevity-number' ).change( ms.longevityValidate );
+        j( '#messages-send-text'             ).keyup ( ms.textValidate ).change( ms.textValidate ).focus();
+        j( '#messages-send-all, #messages-send-groups, #messages-send-users' ).change( ms.recipientsValidate );
+
+       /**
+        * Dialog message "Ok" button listener
+        */
+        j( '#messages-send-dialog-ok' ).click( function(){ ms.dialogClose(); return false; });
+
+       /**
+        * Checking "all" checkbox
+        */
+        j( '#messages-send-all' ).click().change();
+
+       /**
+        * Listener submitting a request when form is submitted
+        */
+        j( '#messages-send-form' ).submit( ms.formSubmit )
     })
 
 })( jQuery.noConflict());
