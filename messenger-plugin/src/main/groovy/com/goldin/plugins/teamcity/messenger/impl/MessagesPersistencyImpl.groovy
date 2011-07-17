@@ -62,8 +62,16 @@ class MessagesPersistencyImpl implements MessagesPersistency
         String jsonData = jsonFile.text
 
         try
-        {   // http://jira.codehaus.org/browse/GROOVY-4903 - can't use JsonSlurper :(
-            return ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
+        {
+            long t         = System.currentTimeMillis()
+            Map data       = ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
+            int  nMessages = (( List<Map> ) data[ 'messages' ] ).size()
+
+            context.log.with { debugEnabled && debug(
+                 "Data of [$nMessages] message${ nMessages == 1 ? '' : 's' } " +
+                 "restored in [${ System.currentTimeMillis() - t }] ms" ) }
+
+            data
         }
         catch ( e )
         {
