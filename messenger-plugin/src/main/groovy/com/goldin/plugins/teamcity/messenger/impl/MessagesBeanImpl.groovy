@@ -14,11 +14,11 @@ import com.goldin.plugins.teamcity.messenger.api.*
 @Invariant({ this.messagesTable && this.usersTable && this.context && this.util && this.persistencyExecutor })
 class MessagesBeanImpl implements MessagesBean
 {
-    private final MessagesTable       messagesTable
-    private final UsersTable          usersTable
-    private final MessagesContext     context
-    private final MessagesUtil        util
-    private final SameTaskExecutor    persistencyExecutor
+    private final MessagesTable   messagesTable
+    private final UsersTable      usersTable
+    private final MessagesContext context
+    private final MessagesUtil    util
+    private final TaskExecutor    persistencyExecutor
 
 
     @Delegate( interfaces = true )
@@ -33,7 +33,7 @@ class MessagesBeanImpl implements MessagesBean
         this.usersTable          = usersTable
         this.context             = context
         this.util                = util
-        this.persistencyExecutor = new SameTaskExecutor({ persistency.save( messagesTable.persistencyData ) }, context )
+        this.persistencyExecutor = new TaskExecutor({ persistency.save( messagesTable.persistencyData ) }, context )
 
         /**
          * Adding this bean as server life cycle listener when not in test environment.
