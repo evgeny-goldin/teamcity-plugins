@@ -12,7 +12,7 @@ import org.gcontracts.annotations.Requires
 @Invariant({ this.taskRunnable })
 class TaskExecutor
 {
-    private final TaskRunnable taskRunnable;
+    private final TaskRunnable taskRunnable
 
 
     /**
@@ -23,8 +23,8 @@ class TaskExecutor
     class TaskRunnable implements Runnable
     {
         private final Semaphore       semaphore = new Semaphore( 0 )
-        private final Closure         task;
-        private final MessagesContext context;
+        private final Closure         task
+        private final MessagesContext context
 
 
         @Requires({ task && context })
@@ -69,7 +69,7 @@ class TaskExecutor
         taskRunnable = new TaskRunnable( task, context )
         Thread t     = new Thread( taskRunnable )
         t.daemon     = true
-        t.name       = "Messenger Plugin persistency background thread"
+        t.name       = 'Messenger Plugin persistency background thread'
         t.start()
     }
 

@@ -71,7 +71,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
                  "Data of [$nMessages] message${ nMessages == 1 ? '' : 's' } " +
                  "restored in [${ System.currentTimeMillis() - t }] ms" ) }
 
-            data
+            return data
         }
         catch ( e )
         {
@@ -81,7 +81,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
             context.log.error( "Failed to read JSON data at [$jsonFile.canonicalPath], " +
                                "copied to [$copyFile.canonicalPath]: $e",
                                e )
-            [:]
+            return [:]
         }
     }
 }
