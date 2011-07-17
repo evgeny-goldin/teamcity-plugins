@@ -73,8 +73,9 @@ var ms;  /* Shortcut for "messagesSend" */
             if ( formSubmit && (( ! messageText ) || ( left < 0 )))
             {
                 j( this ).addClass( 'errorField' ).focus();
-                j( '#messages-send-error-message' ).text( messageText ? 'Message should be no longer than ' + dialog_const.text_max_length + ' characters.' :
-                                                                        'Message should be specified' );
+                j( '#messages-send-error-message' ).text(
+                    messageText ? 'Message should be no longer than ' + dialog_const.text_max_length + ' characters.' :
+                                  'Message should be specified' );
                 return false;
             }
 
@@ -106,11 +107,12 @@ var ms;  /* Shortcut for "messagesSend" */
          */
         formSubmit : function() {
 
-            var longevityError   = ( ! ms.longevityValidate.call( j( '#messages-send-longevity-number' ).get( 0 )));
-            var messageTextError = ( ! ms.textValidate.call( j( '#messages-send-text' ).get( 0 )));
-            var recipientsError  = ( ! ms.recipientsValidate());
+            // We always have to invoke all 3 validations to collect the errors, don't short-circuit them
+            var longevityValid   = ms.longevityValidate.call( j( '#messages-send-longevity-number' ).get( 0 ));
+            var messageTextValid = ms.textValidate.call( j( '#messages-send-text' ).get( 0 ));
+            var recipientsValid  = ms.recipientsValidate();
 
-            if ( ! ( longevityError || messageTextError || recipientsError ))
+            if ( longevityValid && messageTextValid && recipientsValid )
             {
                 j( '#messages-send-button'   ).disable();
                 j( '#messages-send-progress' ).show();
@@ -145,6 +147,11 @@ var ms;  /* Shortcut for "messagesSend" */
         j( '#messages-send-text'             ).keyup ( ms.textValidate ).change( ms.textValidate ).focus();
         j( '#messages-send-all, #messages-send-groups, #messages-send-users' ).change( ms.recipientsValidate );
 
+        /**
+         * Listener submitting a request when form is submitted
+         */
+         j( '#messages-send-form' ).submit( ms.formSubmit );
+
        /**
         * Dialog message "Ok" button listener
         */
@@ -154,11 +161,6 @@ var ms;  /* Shortcut for "messagesSend" */
         * Checking "all" checkbox
         */
         j( '#messages-send-all' ).click().change();
-
-       /**
-        * Listener submitting a request when form is submitted
-        */
-        j( '#messages-send-form' ).submit( ms.formSubmit )
     })
 
 })( jQuery.noConflict());
