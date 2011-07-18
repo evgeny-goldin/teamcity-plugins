@@ -45,7 +45,7 @@ var ms;  /* Shortcut for "messagesSend" */
                 if ( isNaN( longevity ) || ( longevity <= 0.0 ))
                 {
                     j( this ).addClass( 'errorField' );
-                    j( '#messages-send-error-longevity' ).text( 'If specified message longevity should be a positive number' );
+                    j( '#messages-send-error-longevity' ).text( 'Message longevity should be a positive number' );
                     if ( formSubmit ) { j( this ).focus() }
                     return false;
                 }
