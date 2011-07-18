@@ -65,7 +65,7 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
         /**
          * Map of users: username => descriptive name, sorted
          */
-        Map<String, String> usersMapSorted = usersMap.keySet().sort().inject( new LinkedHashMap())
+        Map<String, String> usersMapSorted = usersMap.keySet().sort().inject( [:] /* [:] is LinkedHashMap */ )
                                              { Map m, String descriptiveName ->
                                                def username = usersMap[ descriptiveName ]
                                                m[ util.htmlEscape( username ) ] = util.htmlEscape( descriptiveName )
