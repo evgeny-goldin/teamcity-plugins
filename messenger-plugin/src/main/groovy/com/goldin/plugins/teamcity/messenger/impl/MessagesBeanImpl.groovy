@@ -54,7 +54,7 @@ class MessagesBeanImpl implements MessagesBean
 
 
     /**
-     * Persists messages table in this thread
+     * Persists messages table in the current thread
      */
     @Override
     void serverShutdown () { persistencyExecutor.execute( false ) }

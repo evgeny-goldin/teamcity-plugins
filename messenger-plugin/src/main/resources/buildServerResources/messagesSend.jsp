@@ -2,9 +2,10 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesSendExtension.fillModel() --%>
-<jsp:useBean id="groups"  scope="request" type="java.util.List<java.lang.String>"/>
-<jsp:useBean id="users"   scope="request" type="java.util.Map<java.lang.String, java.lang.String>"/>
-<jsp:useBean id="action"  scope="request" type="java.lang.String"/>
+<jsp:useBean id="groups"                      scope="request" type="java.util.List<java.lang.String>"/>
+<jsp:useBean id="users"                       scope="request" type="java.util.Map<java.lang.String, java.lang.String>"/>
+<jsp:useBean id="action"                      scope="request" type="java.lang.String"/>
+<jsp:useBean id="teamcityPluginResourcesPath" scope="request" type="java.lang.String"/>
 
 <style type="text/css">
     .ui-dialog-titlebar { display: none } /* Hiding dialog title */

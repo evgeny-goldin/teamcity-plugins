@@ -2,8 +2,9 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesDisplayExtension.fillModel() --%>
-<jsp:useBean id="action"              scope="request" type="java.lang.String"/>
-<jsp:useBean id="ajaxRequestInterval" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="action"                      scope="request" type="java.lang.String"/>
+<jsp:useBean id="ajaxRequestInterval"         scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="teamcityPluginResourcesPath" scope="request" type="java.lang.String"/>
 
 <style type="text/css">
     .ui-dialog .ui-dialog-content { padding: 0 } /* Disabling widget-enforced text padding in dialog */
@@ -21,7 +22,7 @@
 </script>
 
 <div id="messages-display-dialog"  style="display:none; overflow:hidden;">
-    <div id="messages-display-dialog-text" style="margin:5px; margin-bottom: -5px"></div>
+    <div id="messages-display-dialog-text" style="margin: 5px; margin-bottom: -5px"></div>
     <div  id="messages-display-dialog-buttons" style="position: absolute; bottom: 0; width: 100%; margin-left: 5px; margin-top: 5px">
         <hr style="border: 0.1em ridge; margin-bottom: 1px"/>
         <div style="text-align: center;">

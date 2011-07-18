@@ -44,15 +44,13 @@ class MessagesDisplayController extends MessagesBaseController
              * User deletes message displayed
              */
             def message = messagesBean.deleteMessageByUser( messageId as long, username )
-            new TextModelAndView( message ? String.valueOf( message.id ) : '', context.locale )
+            return new TextModelAndView( message ? message.id as String : '', context.locale )
         }
-        else
-        {
-            /**
-             * User retrieves all his messages: List<Message> => List<Map> => JSON
-             */
-            def messages = messagesBean.getMessagesForUser( username )*.displayData
-            new TextModelAndView( new JsonBuilder( messages ).toString(), 'application/json', context.locale )
-        }
+
+        /**
+         * User retrieves all his messages: List<Message> => List<Map> => JSON
+         */
+        def messages = messagesBean.getMessagesForUser( username )*.displayData
+        new TextModelAndView( new JsonBuilder( messages ).toString(), 'application/json', context.locale )
     }
 }

@@ -84,13 +84,11 @@ abstract class MessagesBaseController extends BaseController
             assert ( list != null ), \
                    "Requests contains parameter [$name], but it's neither a String nor a List - [$o][${ o.class.name }]"
 
-            ( trim ? list*.trim() : list )
+            return ( trim ? list*.trim() : list )
         }
-        else
-        {
-            assert ( ! failIfMissing ), "Requests contains no parameter [$name]. It contains paramaters ${ requestParams.keySet() }"
-            []
-        }
+
+        assert ( ! failIfMissing ), "Requests contains no parameter [$name]. It contains paramaters ${ requestParams.keySet() }"
+        []
     }
 
 

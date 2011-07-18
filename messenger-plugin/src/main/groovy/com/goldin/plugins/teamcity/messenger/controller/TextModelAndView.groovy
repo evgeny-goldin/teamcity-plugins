@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView
  */
 class TextModelAndView extends ModelAndView
 {
-
     @Requires({ ( text != null ) && mimeType && charset && locale })
     TextModelAndView ( String text, String mimeType = 'text/plain', String charset = 'UTF-8', Locale locale )
     {

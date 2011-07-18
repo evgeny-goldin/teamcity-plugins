@@ -168,7 +168,7 @@ final class Message
      */
     @Requires({ ( this.id > 0 ) && this.config && this.text && this.senderName })
     @Ensures({ result && result.id && result.text && result.senderName })
-    Map<String, Object> getDisplayData ()
+    Map<String, ? extends Object> getDisplayData ()
     {
         def date = new Date( timestamp )
 
@@ -189,7 +189,7 @@ final class Message
      */
     @Requires({ ( this.id > 0 ) && this.context })
     @Ensures({ result && result.id && result.text && result.sender })
-    Map<String, Object> getMessagePersistencyData ()
+    Map<String, ? extends Object> getMessagePersistencyData ()
     {
         displayData << [ timestamp    : timestamp,
                          sender       : sender,
