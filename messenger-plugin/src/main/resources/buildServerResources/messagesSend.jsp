@@ -23,7 +23,7 @@
 
             <p>
                 <label for="messages-send-urgency">Urgency: </label>
-                <select name="urgency" id="messages-send-urgency">
+                <select name="urgency" id="messages-send-urgency" style="width: 210px">
                     <option selected="selected">Info</option>
                     <option>Warning</option>
                     <option>Critical</option>
@@ -32,9 +32,8 @@
 
             <p>
                 <label for="messages-send-longevity-number">Valid For: </label>
-                <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" size="3"
-                       maxlength="5" value="7">
-                <select id="messages-send-longevity-unit" name="longevity-unit">
+                <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" maxlength="5" value="7" style="width: 50px">
+                <select id="messages-send-longevity-unit" name="longevity-unit" style="width: 150px">
                     <option>hours</option>
                     <option selected="selected">days</option>
                     <option>weeks</option>
