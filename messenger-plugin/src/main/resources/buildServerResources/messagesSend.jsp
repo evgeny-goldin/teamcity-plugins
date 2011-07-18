@@ -56,7 +56,7 @@
 
             <p>
                 <label for="messages-send-groups">Send to Groups:</label>
-                <select id="messages-send-groups" name="groups" multiple="multiple" size="2" style="width: 210px">
+                <select id="messages-send-groups" name="groups" multiple="multiple" size="5" style="width: 210px; overflow: auto;">
                 <c:forEach items="${groups}" var="group">
                     <option>${group}</option>
                 </c:forEach>
@@ -65,7 +65,7 @@
 
             <p>
                 <label for="messages-send-users">Send to Users:</label>
-                <select id="messages-send-users" name="users" multiple="multiple" size="2" style="width: 210px">
+                <select id="messages-send-users" name="users" multiple="multiple" size="5" style="width: 210px; overflow: auto;">
                 <%
                     for ( int index = 0; index < userNames.size(); index++ )
                     {
