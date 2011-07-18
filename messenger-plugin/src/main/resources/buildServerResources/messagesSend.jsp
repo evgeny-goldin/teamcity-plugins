@@ -2,11 +2,9 @@
 <%@ include file="/include.jsp" %>
 
 <%-- MessagesSendExtension.fillModel() --%>
-<jsp:useBean id="groups"    scope="request" type="java.util.List<java.lang.String>"/>
-<jsp:useBean id="userNames" scope="request" type="java.util.List<java.lang.String>"/>
-<jsp:useBean id="fullNames" scope="request" type="java.util.List<java.lang.String>"/>
-<jsp:useBean id="action"    scope="request" type="java.lang.String"/>
-
+<jsp:useBean id="groups"  scope="request" type="java.util.List<java.lang.String>"/>
+<jsp:useBean id="users"   scope="request" type="java.util.Map<java.lang.String, java.lang.String>"/>
+<jsp:useBean id="action"  scope="request" type="java.lang.String"/>
 
 <style type="text/css">
     .ui-dialog-titlebar { display: none } /* Hiding dialog title */
@@ -32,12 +30,12 @@
 
             <p>
                 <label for="messages-send-longevity-number">Valid For: </label>
-                <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" maxlength="5" value="7" style="width: 50px">
+                <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" maxlength="5" style="width: 50px">
                 <select id="messages-send-longevity-unit" name="longevity-unit" style="width: 150px">
-                    <option>hours</option>
-                    <option selected="selected">days</option>
-                    <option>weeks</option>
-                    <option>months</option>
+                    <option>Hours</option>
+                    <option selected="selected">Days</option>
+                    <option>Weeks</option>
+                    <option>Months</option>
                 </select>
                 <span class="error" id="messages-send-error-longevity" style="margin-left: 10.5em;"></span>
             </p>
@@ -65,16 +63,9 @@
             <p>
                 <label for="messages-send-users">Send to Users:</label>
                 <select id="messages-send-users" name="users" multiple="multiple" size="5" style="width: 210px; overflow: auto;">
-                <%
-                    for ( int index = 0; index < userNames.size(); index++ )
-                    {
-                        String username = userNames.get( index );
-                        String fullName = fullNames.get( index );
-                %>
-                    <option value="<%= username %>"><%= fullName %></option>
-                <%
-                    }
-                %>
+                <c:forEach items="${users}" var="entry">
+                    <option value="${entry.key}">${entry.value}</option>
+                </c:forEach>
                 </select>
                 <span class="error" id="messages-send-error-selection" style="margin-left: 10.5em;"></span>
             </p>

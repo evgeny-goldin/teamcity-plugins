@@ -7,6 +7,7 @@ import com.goldin.plugins.teamcity.messenger.controller.MessagesSendController
 import javax.servlet.http.HttpServletRequest
 import jetbrains.buildServer.groups.UserGroupManager
 import jetbrains.buildServer.serverSide.SBuildServer
+import jetbrains.buildServer.users.User
 import jetbrains.buildServer.web.openapi.CustomTab
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
@@ -50,15 +51,31 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
 //    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
-        def groups = groupsManager.userGroups
-        def users  = server.userModel.allUsers.users
+        /**
+         * List of server groups, sorted
+         */
+        List<String> groupsSorted = groupsManager.userGroups*.name.collect{ util.htmlEscape( it )}.sort()
 
-        assert groups, 'No groups found on the server'
-        assert users,  'No users found on the server'
+        /**
+         * Map of users: descriptive name => username
+         */
+        Map<String, String> usersMap = server.userModel.allUsers.users.inject( [:] )
+                                       { Map m, User u -> m[ u.descriptiveName ] = u.username
+                                                          m }
+        /**
+         * Map of users: username => descriptive name, sorted
+         */
+        Map<String, String> usersMapSorted = usersMap.keySet().sort().inject( new LinkedHashMap())
+                                             { Map m, String descriptiveName ->
+                                               def username = usersMap[ descriptiveName ]
+                                               m[ util.htmlEscape( username ) ] = util.htmlEscape( descriptiveName )
+                                               m }
 
-        model << [ groups    : groups*.name.          collect { util.htmlEscape( it )},
-                   userNames : users*.username.       collect { util.htmlEscape( it )},
-                   fullNames : users*.descriptiveName.collect { util.htmlEscape( it )},
-                   action    : MessagesSendController.MAPPING ]
+        assert groupsSorted,   'No groups found on the server'
+        assert usersMapSorted, 'No users found on the server'
+
+        model << [ groups : groupsSorted,
+                   users  : usersMapSorted,
+                   action : MessagesSendController.MAPPING ]
     }
 }

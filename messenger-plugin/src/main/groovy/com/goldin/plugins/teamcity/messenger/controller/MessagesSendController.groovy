@@ -61,7 +61,7 @@ class MessagesSendController extends MessagesBaseController
     private long longevity ( Map<String, ?> requestParams )
     {
         float  number  = ( param( requestParams, 'longevity-number', false ) ?: -1 ) as float
-        String unit    = param( requestParams, 'longevity-unit' )
+        String unit    = param( requestParams, 'longevity-unit' ).toLowerCase()
 
         assert number != 0.0
 
