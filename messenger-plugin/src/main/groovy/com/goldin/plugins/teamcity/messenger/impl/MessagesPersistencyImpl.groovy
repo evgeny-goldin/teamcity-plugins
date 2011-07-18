@@ -41,7 +41,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         try
         {
             long t         = System.currentTimeMillis()
-            int  nMessages = (( List<Map> ) data[ 'messages' ] ).size()
+            int  nMessages = (( List<Map> ) data[ 'messages' ] ?: [] ).size()
 
             jsonFile.write( JSONObject.fromObject( data ).toString())
 
@@ -65,7 +65,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         {
             long t         = System.currentTimeMillis()
             Map data       = ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
-            int  nMessages = (( List<Map> ) data[ 'messages' ] ).size()
+            int  nMessages = (( List<Map> ) data[ 'messages' ] ?: [] ).size()
 
             context.log.with { debugEnabled && debug(
                  "Data of [$nMessages] message${ nMessages == 1 ? '' : 's' } " +
