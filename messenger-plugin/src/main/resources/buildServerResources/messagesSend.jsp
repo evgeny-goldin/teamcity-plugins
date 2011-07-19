@@ -32,7 +32,7 @@
             <p>
                 <label for="messages-send-longevity-number">Valid For: </label>
                 <input class="textfield" id="messages-send-longevity-number" name="longevity-number" type="text" maxlength="5" style="width: 50px">
-                <select id="messages-send-longevity-unit" name="longevity-unit" style="width: 150px">
+                <select id="messages-send-longevity-unit" name="longevity-unit" style="width: 151px">
                     <option>Hours</option>
                     <option selected="selected">Days</option>
                     <option>Weeks</option>
