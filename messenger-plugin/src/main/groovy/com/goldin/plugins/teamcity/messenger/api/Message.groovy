@@ -158,7 +158,10 @@ final class Message
 
 
     @Override
-    boolean equals ( Object object ) { ( object instanceof Message ) && (( Message ) object ).id == id }
+    boolean equals ( Object object ) { ( object instanceof Message )                   &&
+                                       ((( Message ) object ).id        == id )        &&
+                                       ((( Message ) object ).timestamp == timestamp ) &&
+                                       ((( Message ) object ).text      == text )}
 
 
     /**

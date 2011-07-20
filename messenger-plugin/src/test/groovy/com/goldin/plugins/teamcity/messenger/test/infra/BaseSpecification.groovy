@@ -4,9 +4,11 @@ import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import java.security.SecureRandom
 import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 import com.goldin.plugins.teamcity.messenger.api.*
+import org.junit.After
 
 /**
  * Super class for all tests
@@ -17,28 +19,16 @@ class BaseSpecification extends Specification
     final   Random random       = new SecureRandom()
     final   File   messagesFile = new File ( Constants.MESSAGES_DIR, "${ Constants.PLUGIN_NAME }/messages.json" )
 
-    @Autowired
-    final MessagesContext context
-
-    @Autowired
-    final MessagesConfiguration config
-
-    @Autowired
-    final MessagesUtil    util
-
-    @Autowired
-    final MessagesTable messagesTable
-
-    @Autowired
-    final MessagesBean messagesBean
+    @Autowired final MessagesContext       context
+    @Autowired final MessagesConfiguration config
+    @Autowired final MessagesUtil          util
+    @Autowired final MessagesTable         messagesTable
+    @Autowired final MessagesBean          messagesBean
+    @Autowired final ApplicationContext    springContext
 
 
-    @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
-    def setup()
-    {
-        messagesTable.deleteAllMessages()
-        messagesFile.write( '' )
-    }
+    @Before def setup  () { messagesFile.write( '' ) }
+    @After  def cleanup() { messagesFile.write( '' ) }
 
 
     /**

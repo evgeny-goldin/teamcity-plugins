@@ -11,9 +11,9 @@
     <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl" name="messages-bean" scope="prototype"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"             scope="prototype"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"               scope="prototype"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"                     scope="prototype"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"                        scope="prototype"/>
 </beans>

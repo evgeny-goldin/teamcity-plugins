@@ -1,21 +1,16 @@
 package com.goldin.plugins.teamcity.messenger.test.tests
 
 import com.goldin.plugins.teamcity.messenger.api.Message
+import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesTable
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
-import org.springframework.beans.factory.annotation.Autowired
-import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
-import org.junit.Before
+
 
 /**
  * {@link MessagesTable} test
  */
 class MessagesTableTest extends BaseSpecification
 {
-    @Autowired
-    final MessagesTable table
-
-
     private List<Message> newMessages() {
         List<Message> messages = []
         random.nextInt( 100 ).times { messages <<  messageNoId( Urgency.INFO, true, [], [] ) }
@@ -23,16 +18,12 @@ class MessagesTableTest extends BaseSpecification
     }
 
 
-    @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
-    def setup() { table.deleteAllMessages() }
-
-
     def "test adding new message"() {
 
         when:
         Message m1 = messageNoId()
-        Message m2 = table.addMessage( m1 )
-        Message m3 = table.allMessages.first()
+        Message m2 = messagesTable.addMessage( m1 )
+        Message m3 = messagesTable.allMessages.first()
 
         then:
         m1.id < 0
@@ -45,9 +36,9 @@ class MessagesTableTest extends BaseSpecification
 
         when:
         List<Message> messagesNew      = newMessages()
-        List<Message> messagesSent     = messagesNew.collect  { table.addMessage( it    )}
-        List<Message> messagesReceived = messagesSent.collect { table.getMessage( it.id )}
-        List<Message> messagesAll      = table.allMessages
+        List<Message> messagesSent     = messagesNew.collect  { messagesTable.addMessage( it    )}
+        List<Message> messagesReceived = messagesSent.collect { messagesTable.getMessage( it.id )}
+        List<Message> messagesAll      = messagesTable.allMessages
 
         then:
         messagesNew.every      { it.id < 0 }
@@ -64,16 +55,16 @@ class MessagesTableTest extends BaseSpecification
 
         when:
         Message m1 = messageNoId( Urgency.INFO, true, [], [] )
-        Message m2 = table.addMessage( m1 )
-        Message m3 = table.allMessages.first()
-        Message m4 = table.deleteMessage( m2.id ).first()
+        Message m2 = messagesTable.addMessage( m1 )
+        Message m3 = messagesTable.allMessages.first()
+        Message m4 = messagesTable.deleteMessage( m2.id ).first()
 
         then:
         m1.id < 0
         m2.id > 0
         m2.is( m3 )
         m3.is( m4 )
-        table.numberOfMessages == 0
+        messagesTable.numberOfMessages == 0
     }
 
 
@@ -81,9 +72,9 @@ class MessagesTableTest extends BaseSpecification
 
         when:
         List<Message> messagesNew     = newMessages()
-        List<Message> messagesSent    = messagesNew.collect  { table.addMessage( it )}
-        List<Message> messagesAll     = table.allMessages
-        List<Message> messagesRemoved = table.deleteMessage( messagesSent*.id as long[] )
+        List<Message> messagesSent    = messagesNew.collect  { messagesTable.addMessage( it )}
+        List<Message> messagesAll     = messagesTable.allMessages
+        List<Message> messagesRemoved = messagesTable.deleteMessage( messagesSent*.id as long[] )
 
         then:
         messagesNew.every     { it.id < 0 }
@@ -93,6 +84,6 @@ class MessagesTableTest extends BaseSpecification
         messagesSent.containsAll( messagesAll )
         messagesAll.containsAll( messagesSent )
         messagesSent           == messagesRemoved
-        table.numberOfMessages == 0
+        messagesTable.numberOfMessages == 0
     }
 }

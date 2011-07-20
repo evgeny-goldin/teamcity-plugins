@@ -78,12 +78,6 @@ interface MessagesTable
 
 
     /**
-     * Deletes all messages stored.
-     */
-    void deleteAllMessages()
-
-
-    /**
      * Retrieves messages persistency data.
      * @return messages persistency data
      */

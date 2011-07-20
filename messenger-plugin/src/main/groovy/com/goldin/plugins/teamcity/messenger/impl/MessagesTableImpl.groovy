@@ -91,9 +91,6 @@ class MessagesTableImpl implements MessagesTable
 
 
     @Override
-    void deleteAllMessages () { messages.clear() }
-
-    @Override
     List<Message> getAllMessages () { new ArrayList<Message>( messages.values()) }
 
     @Override

@@ -54,16 +54,17 @@ class MessagesBeanImpl implements MessagesBean
 
 
     /**
-     * Persists messages table in the current thread
+     * Persists messages table before server shuts down
      */
     @Override
-    void serverShutdown () { persistencyExecutor.execute( false ) }
+    void serverShutdown () { persistMessages( false ) }
 
 
     /**
-     * Persists messages table in the background thread
+     * Persists messages table.
+     * @param async whether operation should be performed asynchronously or synchronously
      */
-    private void persistMessages () { persistencyExecutor.execute( true ) }
+    private void persistMessages ( boolean async = true ) { persistencyExecutor.execute( async ) }
 
 
     @Override
