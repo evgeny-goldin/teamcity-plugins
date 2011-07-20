@@ -27,8 +27,12 @@ class BaseSpecification extends Specification
     @Autowired final ApplicationContext    springContext
 
 
-    @Before def setup  () { messagesFile.write( '' ) }
-    @After  def cleanup() { messagesFile.write( '' ) }
+    @Before def setup  () { cleanup() }
+    @After  def cleanup()
+    {
+        messagesFile.write( '' )
+        messagesBean.deleteMessage( messagesBean.allMessages*.id as long[] )
+    }
 
 
     /**
