@@ -2,10 +2,7 @@ package com.goldin.plugins.teamcity.messenger.test.tests
 
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
-import com.goldin.plugins.teamcity.messenger.api.MessagesTable
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
-import org.junit.Before
-import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.FailsWith
 
 /**
@@ -13,16 +10,6 @@ import spock.lang.FailsWith
  */
 class MessagesBeanTest extends BaseSpecification
 {
-    @Autowired
-    final MessagesTable messagesTable
-
-    @Autowired
-    final MessagesBean messagesBean
-
-
-    @Before // Not required for Spock but this silents "JUnitPublicNonTestMethod" CodeNarc rule
-    def setup() { messagesTable.deleteAllMessages() }
-
 
     def "testing sending message to user"() {
 

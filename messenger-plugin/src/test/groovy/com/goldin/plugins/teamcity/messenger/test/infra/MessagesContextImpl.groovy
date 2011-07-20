@@ -16,7 +16,7 @@ class MessagesContextImpl implements MessagesContext
     Logger getLog () { Logger.getInstance( 'com.goldin.plugins' ) }
 
     @Override
-    String getPluginName () { 'messenger-plugin' }
+    String getPluginName () { Constants.PLUGIN_NAME }
 
     @Override
     SUser getUser ( String username ) { null }

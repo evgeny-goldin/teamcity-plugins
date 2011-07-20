@@ -7,12 +7,13 @@
 
     <!-- Utility beans -->
     <bean class="com.goldin.plugins.teamcity.messenger.test.infra.MessagesContextImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.test.infra.TestServerPaths"/>
     <bean class="com.goldin.plugins.teamcity.messenger.api.MessagesUtil"/>
 
     <!-- Working beans -->
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesBeanImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesConfigurationImpl"/>
-    <bean class="com.goldin.plugins.teamcity.messenger.test.infra.MessagesPersistencyImpl"/>
+    <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesPersistencyImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.MessagesTableImpl"/>
     <bean class="com.goldin.plugins.teamcity.messenger.impl.UsersTableImpl"/>
 </beans>
