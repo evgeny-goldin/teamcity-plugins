@@ -2,13 +2,11 @@ package com.goldin.plugins.teamcity.messenger.test.infra
 
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import java.security.SecureRandom
-import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 import com.goldin.plugins.teamcity.messenger.api.*
-import org.junit.After
 
 /**
  * Super class for all tests
@@ -16,8 +14,9 @@ import org.junit.After
 @ContextConfiguration( locations = 'classpath:/build-server-plugin-messenger-test.xml' )
 class BaseSpecification extends Specification
 {
-    final   Random random       = new SecureRandom()
-    final   File   messagesFile = new File ( Constants.MESSAGES_DIR, "${ Constants.PLUGIN_NAME }/messages.json" )
+    final   Random random           = new SecureRandom()
+    final   File   messagesFile     = new File ( Constants.MESSAGES_DIR, "${ Constants.PLUGIN_NAME }/messages.json" )
+            int    messageIdCounter = 1000
 
     @Autowired final MessagesContext       context
     @Autowired final MessagesConfiguration config
@@ -27,11 +26,14 @@ class BaseSpecification extends Specification
     @Autowired final ApplicationContext    springContext
 
 
-    @Before def setup  () { cleanup() }
-    @After  def cleanup()
+    def setupSpec  () { cleanup() }
+    def cleanupSpec() { cleanup() }
+    def setup      () { cleanup() }
+    def cleanup()
     {
-        messagesFile.write( '' )
-        messagesBean.deleteMessage( messagesBean.allMessages*.id as long[] )
+        if ( messagesBean ) { messagesBean.messagesTable.messages.clear()
+                              messagesBean.messagesTable.messageIdGenerator.set( 1000 ) }
+        if ( messagesFile ) { messagesFile.write( '' ) }
     }
 
 
@@ -92,7 +94,6 @@ class BaseSpecification extends Specification
      */
 //    @Requires({ urgency && ( sendToGroups != null ) && ( sendToUsers != null ) })
 //    @Ensures({ result.id > 0 })
-    private messageIdCounter = 1000
     Message messageWithId ( Urgency urgency = Urgency.INFO, boolean sendToAll = true, List<String> sendToGroups = [], List<String> sendToUsers = [] )
     {
         new Message( messageIdCounter++, context, config, util, messageNoId( urgency, sendToAll, sendToGroups, sendToUsers ))

@@ -4,6 +4,10 @@ import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.api.MessagesBean
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * Messages persietncy machanism tests.
@@ -12,29 +16,29 @@ class MessagesPersistencyTest extends BaseSpecification
 {
 
     def "test sending single message"() {
-
-        given:
+        when:
         assert messagesFile.size()            == 0
         assert messagesTable.numberOfMessages == 0
 
-        when:
-        messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
+        def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
         sleep( 100 )
 
         then:
-        messagesBean.allMessages.size() == 1
+        messageId                                                    == 1001
+        messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == 1002
+        messagesBean.allMessages.size() == 2
         messagesFile.size()              > 200
     }
 
 
     def "test sending multiple messages"() {
 
-        given:
+        when:
         assert messagesFile.size()            == 0
         assert messagesTable.numberOfMessages == 0
+
         def n = 1000
 
-        when:
         n.times{ messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) }
         def sentMessages = messagesBean.allMessages
         sleep( 500 )
@@ -43,9 +47,60 @@ class MessagesPersistencyTest extends BaseSpecification
         def receivedMessages = restoredMessagesBean.allMessages
 
         then:
+        messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == n + 1001
+        messagesBean.allMessages.size()                              == n + 1
+
+        messagesFile.size()      > 0
         sentMessages.size()     == n
         receivedMessages.size() == n
-        messagesFile.size()      > 0
+
         sentMessages.every { Message m -> receivedMessages.contains( m ) }
+        receivedMessages.every { Message m -> sentMessages.contains( m ) }
+        receivedMessages == sentMessages
     }
+
+
+    def "test sending multiple messages concurrently"() {
+
+        assert messagesFile.size()            == 0
+        assert messagesTable.numberOfMessages == 0
+
+        ExecutorService pool = Executors.newFixedThreadPool( Runtime.runtime.availableProcessors() - 1 ?: 2 )
+        def messagesMap      = new ConcurrentHashMap( n )
+
+        n.times{ pool.submit({
+            def message              = messageNoId( Urgency.INFO, true )
+            def messageId            = messagesBean.sendMessage( message )
+            messagesMap[ messageId ] = message
+
+            if ( sleepTime ){ sleep( random.nextInt( sleepTime )) }
+        } as Runnable )}
+
+        pool.shutdown()
+        pool.awaitTermination( 1, TimeUnit.HOURS )
+
+        def sentMessages = messagesBean.allMessages
+        sleep( 500 )
+
+        MessagesBean restoredMessagesBean = ( MessagesBean ) springContext.getBean( 'messages-bean', MessagesBean )
+        def receivedMessages = restoredMessagesBean.allMessages
+
+        expect:
+        messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == n + 1001
+        messagesBean.allMessages.size()                              == n + 1
+
+        messagesFile.size()      > 0
+        sentMessages.size()     == n
+        receivedMessages.size() == n
+
+        sentMessages.every { Message m -> receivedMessages.contains( m ) }
+        receivedMessages.every { Message m -> sentMessages.contains( m ) }
+
+        where:
+        n    | sleepTime
+        100  | 0
+        500  | 50
+        1000 | 100
+    }
+
 }
