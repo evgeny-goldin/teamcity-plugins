@@ -22,7 +22,7 @@ class MessagesPersistencyTest extends BaseSpecification
     def "test sending single message"() {
         when:
         def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
-        sleep( 500 )
+        sleep( 1000 )
 
         then:
         messageId                                                    == 1001
@@ -39,7 +39,7 @@ class MessagesPersistencyTest extends BaseSpecification
 
         n.times{ messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) }
         def sentMessages = messagesBean.allMessages
-        sleep( 500 )
+        sleep( 1000 )
 
         messagesBean.restore()
         def receivedMessages = messagesBean.allMessages
@@ -75,7 +75,7 @@ class MessagesPersistencyTest extends BaseSpecification
         pool.awaitTermination( 1, TimeUnit.HOURS )
 
         def sentMessages = messagesBean.allMessages
-        sleep( 500 )
+        sleep( 1000 )
 
         messagesBean.restore()
         def receivedMessages = messagesBean.allMessages
