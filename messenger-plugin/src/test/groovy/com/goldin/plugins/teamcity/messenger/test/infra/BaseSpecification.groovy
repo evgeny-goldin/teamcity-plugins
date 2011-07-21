@@ -14,9 +14,8 @@ import com.goldin.plugins.teamcity.messenger.api.*
 @ContextConfiguration( locations = 'classpath:/build-server-plugin-messenger-test.xml' )
 class BaseSpecification extends Specification
 {
-    final   Random random           = new SecureRandom()
-    final   File   messagesFile     = new File ( Constants.MESSAGES_DIR, "${ Constants.PLUGIN_NAME }/messages.json" )
-            int    messageIdCounter = 1000
+    final   Random random       = new SecureRandom()
+    final   File   messagesFile = new File ( Constants.MESSAGES_DIR, "${ Constants.PLUGIN_NAME }/messages.json" )
 
     @Autowired final MessagesContext       context
     @Autowired final MessagesConfiguration config
@@ -88,6 +87,8 @@ class BaseSpecification extends Specification
         counter
     }
 
+
+    private int    messageIdCounter = 1000
 
     /**
      * Retrieves test message with 'id' assigned.
