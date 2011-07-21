@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import org.junit.After
 import org.junit.Before
 
 /**
@@ -14,9 +15,8 @@ import org.junit.Before
  */
 class MessagesPersistencyTest extends BaseSpecification
 {
-    @Before
-    void setup   () { assert  messagesFile.with { ( ! isFile()) || delete() }}
-    void cleanup () { assert  messagesFile.with { ( ! isFile()) || delete() }}
+    @Before void setup   () { messagesFile.write( '' ) }
+    @After  void cleanup () { messagesFile.write( '' ) }
 
 
     def "test sending single message"() {
