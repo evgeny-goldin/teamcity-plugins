@@ -390,6 +390,19 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/cache/commons-collections/commons-collections/jars/commons-collections-3.2.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/cache/commons-collections/commons-collections/javadocs/commons-collections-3.2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/cache/commons-collections/commons-collections/sources/commons-collections-3.2.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 
