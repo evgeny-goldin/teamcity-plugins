@@ -41,6 +41,7 @@ class MessagesPersistencyTest extends BaseSpecification
         def sentMessages = messagesBean.allMessages
         sleep( 1000 )
 
+        reset()
         messagesBean.restore()
         def receivedMessages = messagesBean.allMessages
 
@@ -54,7 +55,6 @@ class MessagesPersistencyTest extends BaseSpecification
 
         sentMessages.every { Message m -> receivedMessages.contains( m ) }
         receivedMessages.every { Message m -> sentMessages.contains( m ) }
-        receivedMessages == sentMessages
     }
 
 
@@ -68,7 +68,7 @@ class MessagesPersistencyTest extends BaseSpecification
             def messageId            = messagesBean.sendMessage( message )
             messagesMap[ messageId ] = message
 
-            if ( sleepTime ){ sleep( random.nextInt( sleepTime )) }
+            if ( sleepTime > 0 ){ sleep( random.nextInt( sleepTime )) }
         } as Runnable )}
 
         pool.shutdown()
@@ -77,6 +77,7 @@ class MessagesPersistencyTest extends BaseSpecification
         def sentMessages = messagesBean.allMessages
         sleep( 1000 )
 
+        reset()
         messagesBean.restore()
         def receivedMessages = messagesBean.allMessages
 

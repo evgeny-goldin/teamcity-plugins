@@ -25,15 +25,23 @@ class BaseSpecification extends Specification
 
 
     @Before
-    void setup()
+    void setup() { reset() }
+
+
+    void reset ()
     {
         messagesBean.messagesTable.messages.clear()
         messagesBean.messagesTable.messageIdGenerator.set( 1000 )
+
+        assert messagesBean.allMessages.isEmpty()
+
         messagesBean.usersTable.all.clear()
         messagesBean.usersTable.groups.clear()
         messagesBean.usersTable.users.clear()
 
-        assert messagesBean.allMessages.isEmpty()
+        assert messagesBean.usersTable.messagesForAll.isEmpty()
+        assert messagesBean.usersTable.groups.isEmpty()
+        assert messagesBean.usersTable.users.isEmpty()
     }
 
 
