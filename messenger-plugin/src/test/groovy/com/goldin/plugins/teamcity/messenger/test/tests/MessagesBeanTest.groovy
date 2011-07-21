@@ -103,7 +103,7 @@ class MessagesBeanTest extends BaseSpecification
         messageId | dummy
         -1        | ''
          1        | ''
-         1001     | ''
-         1002     | ''
+         10001    | ''
+         10002    | ''
     }
 }

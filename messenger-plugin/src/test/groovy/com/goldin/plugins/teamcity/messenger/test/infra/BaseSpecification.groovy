@@ -2,8 +2,8 @@ package com.goldin.plugins.teamcity.messenger.test.infra
 
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import java.security.SecureRandom
+import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 import com.goldin.plugins.teamcity.messenger.api.*
@@ -22,17 +22,18 @@ class BaseSpecification extends Specification
     @Autowired final MessagesUtil          util
     @Autowired final MessagesTable         messagesTable
     @Autowired final MessagesBean          messagesBean
-    @Autowired final ApplicationContext    springContext
 
 
-    def setupSpec  () { cleanup() }
-    def cleanupSpec() { cleanup() }
-    def setup      () { cleanup() }
-    def cleanup()
+    @Before
+    void setup()
     {
-        if ( messagesBean ) { messagesBean.messagesTable.messages.clear()
-                              messagesBean.messagesTable.messageIdGenerator.set( 1000 ) }
-        if ( messagesFile ) { messagesFile.write( '' ) }
+        messagesBean.messagesTable.messages.clear()
+        messagesBean.messagesTable.messageIdGenerator.set( 1000 )
+        messagesBean.usersTable.all.clear()
+        messagesBean.usersTable.groups.clear()
+        messagesBean.usersTable.users.clear()
+
+        assert messagesBean.allMessages.isEmpty()
     }
 
 

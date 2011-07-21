@@ -14,11 +14,12 @@ import com.goldin.plugins.teamcity.messenger.api.*
 @Invariant({ this.messagesTable && this.usersTable && this.context && this.util && this.persistencyExecutor })
 class MessagesBeanImpl implements MessagesBean
 {
-    private final MessagesTable   messagesTable
-    private final UsersTable      usersTable
-    private final MessagesContext context
-    private final MessagesUtil    util
-    private final TaskExecutor    persistencyExecutor
+    private final MessagesTable       messagesTable
+    private final UsersTable          usersTable
+    private final MessagesPersistency persistency
+    private final MessagesContext     context
+    private final MessagesUtil        util
+    private final TaskExecutor        persistencyExecutor
 
 
     @Delegate( interfaces = true )
@@ -31,6 +32,7 @@ class MessagesBeanImpl implements MessagesBean
     {
         this.messagesTable       = messagesTable
         this.usersTable          = usersTable
+        this.persistency         = persistency
         this.context             = context
         this.util                = util
         this.persistencyExecutor = new TaskExecutor({ persistency.save( messagesTable.persistencyData ) }, context )
@@ -45,9 +47,15 @@ class MessagesBeanImpl implements MessagesBean
             dispatcher.addListener( this )
         }
 
-        /**
-         * Restoring data from persistent storage
-         */
+        restore()
+    }
+
+
+    /**
+     * Restores data from persistent storage
+     */
+    private void restore()
+    {
         messagesTable.restoreFromPersistencyData( persistency.restore())
         usersTable.restore( messagesTable.allMessages )
     }

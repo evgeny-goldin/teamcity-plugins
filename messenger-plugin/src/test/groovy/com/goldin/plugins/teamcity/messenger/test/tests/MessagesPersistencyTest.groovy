@@ -2,22 +2,25 @@ package com.goldin.plugins.teamcity.messenger.test.tests
 
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
-import com.goldin.plugins.teamcity.messenger.api.MessagesBean
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import org.junit.Before
 
 /**
  * Messages persietncy machanism tests.
  */
 class MessagesPersistencyTest extends BaseSpecification
 {
+    @Before
+    void setup   () { assert  messagesFile.with { ( ! isFile()) || delete() }}
+    void cleanup () { assert  messagesFile.with { ( ! isFile()) || delete() }}
+
 
     def "test sending single message"() {
         when:
-        assert messagesFile.size()            == 0
         assert messagesTable.numberOfMessages == 0
 
         def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
@@ -43,8 +46,8 @@ class MessagesPersistencyTest extends BaseSpecification
         def sentMessages = messagesBean.allMessages
         sleep( 500 )
 
-        MessagesBean restoredMessagesBean = ( MessagesBean ) springContext.getBean( 'messages-bean', MessagesBean )
-        def receivedMessages = restoredMessagesBean.allMessages
+        messagesBean.restore()
+        def receivedMessages = messagesBean.allMessages
 
         then:
         messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == n + 1001
@@ -82,8 +85,8 @@ class MessagesPersistencyTest extends BaseSpecification
         def sentMessages = messagesBean.allMessages
         sleep( 500 )
 
-        MessagesBean restoredMessagesBean = ( MessagesBean ) springContext.getBean( 'messages-bean', MessagesBean )
-        def receivedMessages = restoredMessagesBean.allMessages
+        messagesBean.restore()
+        def receivedMessages = messagesBean.allMessages
 
         expect:
         messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == n + 1001
