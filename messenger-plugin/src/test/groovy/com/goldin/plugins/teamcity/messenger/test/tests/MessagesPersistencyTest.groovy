@@ -35,7 +35,7 @@ class MessagesPersistencyTest extends BaseSpecification
     def "test sending multiple messages"() {
 
         when:
-        def n = 1000
+        def n = 400
 
         n.times{ messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) }
         def sentMessages = messagesBean.allMessages
@@ -93,10 +93,10 @@ class MessagesPersistencyTest extends BaseSpecification
         receivedMessages.every { Message m -> sentMessages.contains( m ) }
 
         where:
-        n    | sleepTime
-        100  | 0
-        500  | 50
-        1000 | 100
+        n   | sleepTime
+        100 | 0
+        150 | 50
+        200 | 100
     }
 
 }
