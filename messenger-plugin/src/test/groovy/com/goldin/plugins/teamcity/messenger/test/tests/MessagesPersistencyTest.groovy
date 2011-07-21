@@ -22,7 +22,7 @@ class MessagesPersistencyTest extends BaseSpecification
     def "test sending single message"() {
         when:
         def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
-        sleep( 100 )
+        sleep( 500 )
 
         then:
         messageId                                                    == 1001
