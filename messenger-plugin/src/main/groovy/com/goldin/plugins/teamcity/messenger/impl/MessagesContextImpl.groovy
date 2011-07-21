@@ -92,8 +92,6 @@ $beans"""   )
 
 
     @Override
-    @Requires({ username })
-    @Ensures({ ( result != null ) || ( result == null )})
     SUser getUser ( String username )
     {
         server.userModel.findUserAccount( null, username )
@@ -101,8 +99,6 @@ $beans"""   )
 
 
     @Override
-    @Requires({ username })
-    @Ensures({ result })
     Set<String> getUserGroups ( String username )
     {
         SUser user = getUser( username )

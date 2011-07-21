@@ -45,10 +45,9 @@ interface MessagesContext
     /**
      * Retrieves a user object given its username.
      * @param username username of a user
-     * @return user object
+     * @return user object or null if user is guest user
      */
     @Requires({ username })
-    @Ensures({ isTest() || result })
     SUser getUser( String username )
 
 
@@ -58,6 +57,6 @@ interface MessagesContext
      * @return groups user specified belongs to
      */
     @Requires({ username })
-    @Ensures({ result })
+    @Ensures({ result != null })
     Set<String> getUserGroups( String username )
 }
