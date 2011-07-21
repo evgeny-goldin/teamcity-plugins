@@ -90,5 +90,5 @@ interface MessagesTable
      * @param data persistency data to restore messages table from
      */
     @Requires({ data })
-    void restoreFromPersistencyData ( Map data )
+    void restore ( Map data )
 }

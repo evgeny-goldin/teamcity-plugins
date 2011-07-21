@@ -56,7 +56,7 @@ class MessagesBeanImpl implements MessagesBean
      */
     private void restore()
     {
-        messagesTable.restoreFromPersistencyData( persistency.restore())
+        messagesTable.restore( persistency.restore())
         usersTable.restore( messagesTable.allMessages )
     }
 
