@@ -21,8 +21,6 @@ class MessagesPersistencyTest extends BaseSpecification
 
     def "test sending single message"() {
         when:
-        assert messagesTable.numberOfMessages == 0
-
         def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
         sleep( 100 )
 
@@ -37,9 +35,6 @@ class MessagesPersistencyTest extends BaseSpecification
     def "test sending multiple messages"() {
 
         when:
-        assert messagesFile.size()            == 0
-        assert messagesTable.numberOfMessages == 0
-
         def n = 1000
 
         n.times{ messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) }
@@ -64,9 +59,6 @@ class MessagesPersistencyTest extends BaseSpecification
 
 
     def "test sending multiple messages concurrently"() {
-
-        assert messagesFile.size()            == 0
-        assert messagesTable.numberOfMessages == 0
 
         ExecutorService pool = Executors.newFixedThreadPool( Runtime.runtime.availableProcessors() - 1 ?: 2 )
         def messagesMap      = new ConcurrentHashMap( n )
