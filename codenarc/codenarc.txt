@@ -13,14 +13,17 @@ ruleset {
 
     // rulesets/basic.xml
     AddEmptyString
+    AssignCollectionSort
+    AssignCollectionUnique
     AssignmentInConditional
     BigDecimalInstantiation
+    BitwiseOperatorInConditional
     BooleanGetBoolean
     BooleanMethodReturnsNull
     BrokenOddnessCheck
     ClassForName
     CloneableWithoutClone
-    ClosureAsLastMethodParameter
+    // ClosureAsLastMethodParameter
     CompareToWithoutComparable
     ComparisonOfTwoConstants
     ComparisonWithSelf
@@ -73,8 +76,11 @@ ruleset {
     ForLoopShouldBeWhileLoop
     GStringAsMapKey
     GroovyLangImmutable
+    HardCodedWindowsFileSeparator
+    HardcodedWindowsRootDirectory
     IntegerGetInteger
     InvertedIfElse
+    RandomDoubleCoercedToZero
     RemoveAllOnSelf
     ReturnFromFinallyBlock
     ReturnsNullInsteadOfEmptyArray
@@ -150,7 +156,19 @@ ruleset {
     ThrowRuntimeException
     ThrowThrowable
 
+    // rulesets/formatting.xml
+    // BracesForClass
+    // BracesForForLoop
+    // BracesForIfElse
+    // BracesForMethod
+    // BracesForTryCatchFinally
+    ClassJavadoc
+    LineLength {
+        length = 160
+    }
+
     // rulesets/generic.xml
+    IllegalClassReference
     IllegalPackageReference
     IllegalRegex
     RequiredRegex
@@ -158,6 +176,14 @@ ruleset {
     StatelessClass {
         ignoreFieldNames = 'messageIdCounter, counter, minify, ajaxRequestInterval, messagesLimitPerUser, logCategory, dateFormatPattern, timeFormatPattern, dateFormatter, timeFormatter, data, config, log'
     }
+
+    // rulesets/grails.xml
+    // GrailsDomainHasEquals
+    // GrailsDomainHasToString
+    // GrailsPublicControllerMethod
+    // GrailsServletContextReference
+    // GrailsSessionReference
+    // GrailsStatelessService
 
     // rulesets/imports.xml
     DuplicateImport
@@ -169,6 +195,9 @@ ruleset {
 
     // rulesets/jdbc.xml
     // DirectConnectionManagement
+    // JdbcConnectionReference
+    // JdbcResultSetReference
+    // JdbcStatementReference
 
     // rulesets/junit.xml
     ChainedTest
@@ -253,6 +282,8 @@ ruleset {
     UnnecessaryCollectionCall
     UnnecessaryConstructor
     UnnecessaryDefInMethodDeclaration
+    UnnecessaryDefInVariableDeclaration
+    UnnecessaryDotClass
     UnnecessaryDoubleInstantiation
     UnnecessaryElseStatement
     UnnecessaryFinalOnPrivateMethod
@@ -260,6 +291,7 @@ ruleset {
     UnnecessaryGString
     UnnecessaryGetter
     UnnecessaryIfStatement
+    UnnecessaryInstanceOfCheck
     UnnecessaryInstantiationToGetClass
     UnnecessaryIntegerInstantiation
     UnnecessaryLongInstantiation
@@ -275,6 +307,7 @@ ruleset {
     UnnecessarySelfAssignment
     UnnecessarySemicolon
     UnnecessaryStringInstantiation
+    UnnecessarySubstring
     UnnecessaryTernaryExpression
     UnnecessaryTransientModifier
 

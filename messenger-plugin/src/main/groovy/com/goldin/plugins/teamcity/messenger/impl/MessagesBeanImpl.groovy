@@ -43,7 +43,7 @@ class MessagesBeanImpl implements MessagesBean
         if ( ! context.isTest())
         {
             EventDispatcher<BuildServerListener> dispatcher = ( EventDispatcher ) springContext.getBean( 'serverDispatcher', EventDispatcher )
-            assert dispatcher, "Failed to locate [${ EventDispatcher.class.name }] bean in Spring context"
+            assert dispatcher, "Failed to locate [${ EventDispatcher.name }] bean in Spring context"
             dispatcher.addListener( this )
         }
 

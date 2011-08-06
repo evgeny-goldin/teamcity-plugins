@@ -44,7 +44,9 @@ allprojects {
     apply plugin: 'about'
     apply plugin: 'duplicates'
     apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
-    apply from:   'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
+
+    codenarcRuleSetFiles = [ 'codenarc/codenarc.txt' ]
+    apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
     defaultTasks 'clean', 'build'
 
