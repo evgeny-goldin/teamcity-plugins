@@ -4,14 +4,26 @@
  * https://github.com/evgeny-goldin/gradle-plugins
  * https://github.com/valkolovos/gradle_cobertura
  */
+
+apply plugin: 'idea'
+
+idea {
+    project.jdkName        = '1.6.0_26'
+    module.downloadSources = true
+    module.downloadJavadoc = true
+}
+
+task wrapper( type: Wrapper ) { gradleVersion = '1.0-milestone-4' }
+
+
 buildscript  {
 
     teamCityVersion      = '6.5.1'
-    groovyVersion        = '1.8.0'
+    groovyVersion        = '1.8.1'
     springVersion        = '2.5.6'
     antVersion           = '1.8.2'
     gcontractsVersion    = '1.2.4'
-    spockVersion         = '0.6-groovy-1.8-SNAPSHOT'
+    spockVersion         = '0.5-groovy-1.8'
     junitVersion         = '4.8.2'
     gradlePluginsVersion = '0.1-RC3'
     codenarcConfig       = 'codenarc/codenarc.txt'
@@ -39,7 +51,6 @@ buildscript  {
 
 allprojects {
 
-    apply plugin: 'idea'
     apply plugin: 'groovy'
     apply plugin: 'about'
     apply plugin: 'duplicates'
@@ -61,17 +72,6 @@ allprojects {
     duplicates   { configurations   = ( System.getProperty( 'duplicates' ) ?: 'runtime' ).split( ',' )*.trim()
                    verbose          = true }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
-
-    ideaProject {
-        javaVersion       = '1.6.0_26'
-    }
-    ideaModule {
-        downloadSources   = true
-        downloadJavadoc   = true
-        inheritOutputDirs = false
-        outputDir         = new File(( File ) project.buildDir, 'idea' )
-        testOutputDir     = new File(( File ) project.buildDir, 'idea/test' )
-    }
 }
 
 
@@ -96,8 +96,8 @@ subprojects {
                     'javax.servlet:servlet-api:2.5'
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
         compile     ( 'net.sf.json-lib:json-lib:2.4:jdk15' ) { exclude group: 'commons-collections'  }
-        testCompile "org.spockframework:spock-core:$spockVersion",
-                    "org.spockframework:spock-spring:$spockVersion",
+        testCompile ( "org.spockframework:spock-core:$spockVersion" ){ exclude group: 'org.codehaus.groovy' }
+        testCompile "org.spockframework:spock-spring:$spockVersion",
                     "org.springframework:spring-test:$springVersion",
                     "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion",
