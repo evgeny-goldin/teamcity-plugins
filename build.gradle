@@ -60,7 +60,7 @@ allprojects {
     codenarcPriority3Violations = 2
     apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
-    defaultTasks 'clean', 'build'
+    defaultTasks 'clean', 'codenarc', 'build'
 
     group               = 'com.goldin.teamcity'
     version             = '0.1-RC4'
