@@ -1,102 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/idea"/>
-    <output-test url="file://$MODULE_DIR$/build/idea/test"/>
-    <exclude-output/>
-    <content url="file://$MODULE_DIR$/">
-      <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
-      <excludeFolder url="file://$MODULE_DIR$/build"/>
+    <output url="file://$MODULE_DIR$/build/idea" />
+    <output-test url="file://$MODULE_DIR$/build/idea/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="inheritedJdk"/>
-    <orderEntry type="sourceFolder" forTests="false"/>
-    <orderEntry type="library" name="groovy-1.8.0" level="application"/>
-    <orderEntry type="library" name="groovy-1.8.0" level="application"/>
-    <orderEntry type="library" name="groovy-1.8.0" level="application"/>
-    <orderEntry type="library" name="groovy-1.8.0 (2)" level="application"/>
-    <orderEntry type="library" name="groovy-1.8.1" level="application"/>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="groovy-1.8.0" level="application" />
+    <orderEntry type="library" name="groovy-1.8.0" level="application" />
+    <orderEntry type="library" name="groovy-1.8.0" level="application" />
+    <orderEntry type="library" name="groovy-1.8.0 (2)" level="application" />
+    <orderEntry type="library" name="groovy-1.8.1" level="application" />
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/jars/cobertura-1.9.4.1.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/jars/cobertura-1.9.4.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/javadocs/cobertura-1.9.4.1-javadoc.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/javadocs/cobertura-1.9.4.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/sources/cobertura-1.9.4.1-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/net.sourceforge.cobertura/cobertura/c12498cf18507aa6433a94eb7d3e77d5/sources/cobertura-1.9.4.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/oro/oro/c12498cf18507aa6433a94eb7d3e77d5/jars/oro-2.0.8.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/oro/oro/c12498cf18507aa6433a94eb7d3e77d5/jars/oro-2.0.8.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/oro/oro/3082090696411a673951d8d687ee738f/javadocs/oro-2.0.8-javadoc.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/oro/oro/3082090696411a673951d8d687ee738f/javadocs/oro-2.0.8-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/oro/oro/c12498cf18507aa6433a94eb7d3e77d5/sources/oro-2.0.8-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/oro/oro/c12498cf18507aa6433a94eb7d3e77d5/sources/oro-2.0.8-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/asm/asm/c12498cf18507aa6433a94eb7d3e77d5/jars/asm-3.0.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/asm/asm/c12498cf18507aa6433a94eb7d3e77d5/jars/asm-3.0.jar!/" />
         </CLASSES>
-        <JAVADOC/>
-        <SOURCES/>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/asm/asm-tree/c12498cf18507aa6433a94eb7d3e77d5/jars/asm-tree-3.0.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/asm/asm-tree/c12498cf18507aa6433a94eb7d3e77d5/jars/asm-tree-3.0.jar!/" />
         </CLASSES>
-        <JAVADOC/>
-        <SOURCES/>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/log4j/log4j/c12498cf18507aa6433a94eb7d3e77d5/jars/log4j-1.2.9.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/log4j/log4j/c12498cf18507aa6433a94eb7d3e77d5/jars/log4j-1.2.9.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/log4j/log4j/3082090696411a673951d8d687ee738f/javadocs/log4j-1.2.9-javadoc.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/log4j/log4j/3082090696411a673951d8d687ee738f/javadocs/log4j-1.2.9-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/log4j/log4j/c12498cf18507aa6433a94eb7d3e77d5/sources/log4j-1.2.9-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/log4j/log4j/c12498cf18507aa6433a94eb7d3e77d5/sources/log4j-1.2.9-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant/c12498cf18507aa6433a94eb7d3e77d5/jars/ant-1.7.0.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant/c12498cf18507aa6433a94eb7d3e77d5/jars/ant-1.7.0.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant/3082090696411a673951d8d687ee738f/javadocs/ant-1.7.0-javadoc.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant/3082090696411a673951d8d687ee738f/javadocs/ant-1.7.0-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant/3082090696411a673951d8d687ee738f/sources/ant-1.7.0-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant/3082090696411a673951d8d687ee738f/sources/ant-1.7.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant-launcher/c12498cf18507aa6433a94eb7d3e77d5/jars/ant-launcher-1.7.0.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant-launcher/c12498cf18507aa6433a94eb7d3e77d5/jars/ant-launcher-1.7.0.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant-launcher/3082090696411a673951d8d687ee738f/javadocs/ant-launcher-1.7.0-javadoc.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant-launcher/3082090696411a673951d8d687ee738f/javadocs/ant-launcher-1.7.0-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/evgenyg/.gradle/caches/artifacts/org.apache.ant/ant-launcher/3082090696411a673951d8d687ee738f/sources/ant-launcher-1.7.0-sources.jar!/"/>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts/org.apache.ant/ant-launcher/3082090696411a673951d8d687ee738f/sources/ant-launcher-1.7.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
   </component>
 </module>
+

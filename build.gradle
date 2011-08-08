@@ -56,7 +56,8 @@ allprojects {
     apply plugin: 'duplicates'
     apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
 
-    codenarcRuleSetFiles = [ 'codenarc/codenarc.txt' ]
+    codenarcRuleSetFiles        = [ 'codenarc/codenarc.txt' ]
+    codenarcPriority3Violations = 2
     apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
     defaultTasks 'clean', 'build'
