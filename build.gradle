@@ -1,3 +1,4 @@
+import java.sql.Wrapper
 
 /**
  * Gradle plugins repos:
@@ -19,7 +20,7 @@ buildscript  {
     spockVersion         = '0.5-groovy-1.8'
     junitVersion         = '4.8.2'
     gradlePluginsVersion = '0.1-RC3'
-    codenarcConfig       = 'codenarc/codenarc.txt'
+    codenarcConfig       = 'codenarc/codenarc.groovy'
     coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
     repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
 
@@ -50,7 +51,7 @@ allprojects {
     apply plugin: 'duplicates'
     apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
 
-    codenarcRuleSetFiles        = [ 'codenarc/codenarc.txt' ]
+    codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
     codenarcPriority3Violations = 2
     apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
