@@ -18,7 +18,6 @@ buildscript  {
     spockVersion         = '0.5-groovy-1.8'
     junitVersion         = '4.8.2'
     gradlePluginsVersion = '0.1-RC3'
-    codenarcConfig       = 'codenarc/codenarc.groovy'
     coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
     repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
 
