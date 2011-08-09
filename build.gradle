@@ -1,5 +1,3 @@
-import java.sql.Wrapper
-
 /**
  * Gradle plugins repos:
  * https://github.com/evgeny-goldin/gradle-plugins
