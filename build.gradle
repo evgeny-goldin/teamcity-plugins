@@ -5,15 +5,8 @@
  * https://github.com/valkolovos/gradle_cobertura
  */
 
-apply plugin: 'idea'
 
-idea {
-    project.jdkName        = '1.6.0_26'
-    module.downloadSources = true
-    module.downloadJavadoc = true
-}
-
-task wrapper( type: Wrapper ) { gradleVersion = '1.0-milestone-4' }
+task wrapper( type: Wrapper ) { gradleVersion = '1.0-milestone-3' }
 
 
 buildscript  {
@@ -51,6 +44,7 @@ buildscript  {
 
 allprojects {
 
+    apply plugin: 'idea'
     apply plugin: 'groovy'
     apply plugin: 'about'
     apply plugin: 'duplicates'
@@ -73,6 +67,14 @@ allprojects {
     duplicates   { configurations   = ( System.getProperty( 'duplicates' ) ?: 'runtime' ).split( ',' )*.trim()
                    verbose          = true }
     test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
+
+    ideaProject  {
+        javaVersion     = '1.6.0_26'
+    }
+    ideaModule {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }
 
 
