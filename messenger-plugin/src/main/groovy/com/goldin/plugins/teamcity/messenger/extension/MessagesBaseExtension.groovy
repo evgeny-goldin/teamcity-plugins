@@ -7,6 +7,7 @@ import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.PositionConstraint
 import jetbrains.buildServer.web.openapi.SimplePageExtension
+import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 import org.jdom.Element
 
@@ -19,7 +20,7 @@ abstract class MessagesBaseExtension extends SimplePageExtension implements Main
     final MessagesConfiguration config
 
 
-//    @Ensures({ result != null })
+    @Ensures({ result != null })
     abstract List<String> getFilesToAdd()
 
 
