@@ -12,6 +12,7 @@ import jetbrains.buildServer.web.openapi.CustomTab
 import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.PositionConstraint
+import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 
 /**
@@ -37,7 +38,7 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
 
 
     @Override
-//    @Ensures({ result })
+    @Ensures({ result })
     List<String> getFilesToAdd () { [ 'messages-send.js' ] }
 
 
@@ -47,8 +48,8 @@ class MessagesSendExtension extends MessagesBaseExtension implements CustomTab
 
 
     @Override
-//    @Requires({( model != null ) && server && groupsManager })
-//    @Ensures({ model })
+    @Requires({( model != null ) && server && groupsManager })
+    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
         /**
