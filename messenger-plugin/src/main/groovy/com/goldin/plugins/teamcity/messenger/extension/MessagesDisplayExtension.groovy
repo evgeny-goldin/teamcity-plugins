@@ -8,6 +8,7 @@ import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.PositionConstraint
 import jetbrains.buildServer.web.util.WebUtil
+import org.gcontracts.annotations.Ensures
 import org.gcontracts.annotations.Requires
 
 /**
@@ -23,12 +24,12 @@ class MessagesDisplayExtension extends MessagesBaseExtension
 
 
     @Override
-//    @Ensures({ result })
+    @Ensures({ result })
     List<String> getFilesToAdd () { [ 'messages-display.js' ] }
 
 
     @Override
-//    @Requires({ request })
+    @Requires({ request })
     boolean isAvailable ( final HttpServletRequest request )
     {
         def path = WebUtil.getPathWithoutAuthenticationType( request )
@@ -37,8 +38,8 @@ class MessagesDisplayExtension extends MessagesBaseExtension
 
 
     @Override
-//    @Requires({ model != null })
-//    @Ensures({ model })
+    @Requires({ model != null })
+    @Ensures({ model })
     void fillModel ( Map<String, Object> model, HttpServletRequest request )
     {
         model << [ ajaxRequestInterval : config.ajaxRequestInterval,
