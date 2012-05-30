@@ -1,87 +1,39 @@
-/**
- * Gradle plugins repos:
- * https://github.com/evgeny-goldin/gradle-plugins
- * https://github.com/valkolovos/gradle_cobertura
- */
 
+task wrapper( type: Wrapper ) { gradleVersion = '1.0-rc-3' }
 
-task wrapper( type: Wrapper ) { gradleVersion = '1.0-milestone-3' }
+apply plugin: 'idea'
 
-
-buildscript  {
-
-    teamCityVersion      = '6.5.1'
-    groovyVersion        = '1.8.1'
-    springVersion        = '2.5.6'
-    antVersion           = '1.8.2'
-    gcontractsVersion    = '1.2.4'
-    spockVersion         = '0.5-groovy-1.8'
-    junitVersion         = '4.8.2'
-    gradlePluginsVersion = '0.1-RC3'
-    coberturaPluginUrl   = 'https://github.com/valkolovos/gradle_cobertura/raw/master/ivy'
-    repoUrl              = 'http://evgeny-goldin.org/artifactory/repo/'
-
-    repositories {
-
-        mavenRepo urls: repoUrl
-        add( new org.apache.ivy.plugins.resolver.URLResolver()) {
-            name = 'cobertura'
-            addArtifactPattern "$coberturaPluginUrl/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"
-            addIvyPattern      "$coberturaPluginUrl/[organization]/[module]/[revision]/ivy.xml"
-        }
-    }
-
-    dependencies {
-        classpath "com.goldin.plugins:gradle:$gradlePluginsVersion",
-                  "org.codehaus.groovy:groovy-all:$groovyVersion",
-                  "junit:junit:$junitVersion",
-                  "org.apache.ant:ant:$antVersion"
-        classpath ( 'gradle_cobertura:gradle_cobertura:1.0-rc4' ) { exclude module: 'groovy' }
-    }
+idea.project {
+    jdkName = '1.6'
+    ipr.withXml { provider -> provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git' }
 }
+
+idea.module {
+    downloadSources = true
+    downloadJavadoc = true
+}
+
 
 allprojects {
 
-    apply plugin: 'idea'
     apply plugin: 'groovy'
-    apply plugin: 'about'
-    apply plugin: 'duplicates'
-    apply plugin: com.orbitz.gradle.cobertura.CoberturaPlugin
-
-    codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
-    codenarcPriority3Violations = 2
-    apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
     defaultTasks 'clean', 'codenarc', 'build'
 
-    group               = 'com.goldin.teamcity'
-    version             = '0.1-RC4'
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
-    toolReportsDir      = new File(( File ) project.buildDir, 'reports'    )
-
-    repositories { mavenRepo urls: repoUrl }
-    about        { dumpDependencies = true }
-    duplicates   { configurations   = ( System.getProperty( 'duplicates' ) ?: 'runtime' ).split( ',' )*.trim()
-                   verbose          = true }
-    test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
-
-    ideaProject  {
-        javaVersion     = '1.6.0_26'
+    ext {
+        groovyVersion     = '1.8.6'
+        teamCityVersion   = '6.5.1'
+        springVersion     = '2.5.6'
+        antVersion        = '1.8.3'
+        gcontractsVersion = '1.2.5'
+        spockVersion      = '0.6-groovy-1.8'
+        junitVersion      = '4.10'
     }
-    ideaModule {
-        downloadSources = true
-        downloadJavadoc = true
-    }
-}
 
-
-subprojects {
-
-    File        teamCityDir    = new File( System.getProperty( 'teamCityDir' ) ?: System.getProperty( 'user.home' ) + '/app/java/teamcity' )
-    String      appName        = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
-    File        destinationZip = new File(( File ) project.buildDir, "${project.name}.zip" )
-    Set<String> apiPatterns    = [ '**/api/**' ]
+    group                = 'com.github.goldin.teamcity'
+    version              = '0.1'
+    sourceCompatibility  = 1.6
+    targetCompatibility  = 1.6
 
     configurations {
         provided
@@ -102,14 +54,28 @@ subprojects {
                     "org.springframework:spring-test:$springVersion",
                     "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion",
+                    "log4j:log4j:1.2.17",
                     'commons-collections:commons-collections:3.2.1'
     }
 
-    cobertura {
-        coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
-        coverageReportDir = new File(( File ) toolReportsDir, 'cobertura' )
-    }
+    final toolReportsDir            = new File(( File ) project.buildDir, 'reports' )
+    ext.codenarcRuleSetFiles        = [ 'codenarc.groovy' ]
+    ext.codenarcPriority1Violations = 0
+    ext.codenarcPriority2Violations = 72 // TODO!
+    ext.codenarcPriority3Violations = 1
+    apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
+    repositories { mavenRepo url: 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }
+    test         { testReportDir    = new File(( File ) toolReportsDir, 'unit-tests' ) }
+}
+
+
+subprojects {
+
+    File        teamCityDir    = new File( System.getProperty( 'teamCityDir' ) ?: System.getProperty( 'user.home' ) + '/app/java/teamcity' )
+    String      appName        = System.getProperty( 'teamCityAppName' ) ?: 'ROOT'
+    File        destinationZip = new File(( File ) project.buildDir, "${project.name}.zip" )
+    Set<String> apiPatterns    = [ '**/api/**' ]
 
     /**
      * Default compilation options
@@ -122,7 +88,7 @@ subprojects {
     /**
      * Compiles API sources
      */
-    task compileGroovyApi ( type: GroovyCompile, dependsOn: duplicates ) {
+    task compileGroovyApi ( type: GroovyCompile ) {
         description    = 'Compiles API sources.'
         classpath      = compileGroovy.classpath
         source         = compileGroovy.source
@@ -201,7 +167,7 @@ subprojects {
 
     task compileGroovy ( overwrite: true, dependsOn: [ compileGroovyApi, compileGroovyImpl ] )
     task assemble      ( overwrite: true, dependsOn: [ assembleApi,      assembleImpl      ] )
-    build.dependsOn( duplicates, assemblePlugin )
+    build.dependsOn( assemblePlugin )
 
 
     /**

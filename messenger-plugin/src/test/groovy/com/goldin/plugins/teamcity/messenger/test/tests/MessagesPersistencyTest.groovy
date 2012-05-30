@@ -22,13 +22,13 @@ class MessagesPersistencyTest extends BaseSpecification
     def "test sending single message"() {
         when:
         def messageId = messagesBean.sendMessage( messageNoId( Urgency.INFO, true ))
-        sleep( 1000 )
+        sleep( 2000 )
 
         then:
         messageId                                                    == 1001
         messagesBean.sendMessage( messageNoId( Urgency.INFO, true )) == 1002
         messagesBean.allMessages.size() == 2
-        messagesFile.size()              > 200
+        messagesFile.size()             > 200
     }
 
 
