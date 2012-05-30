@@ -2,3 +2,5 @@ build
 out
 .gradle
 *.iws
+*.iml
+*.ipr
