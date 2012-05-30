@@ -52,14 +52,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cec01667-17d6-410d-988a-05326876cc53" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_All.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLinters/jshint.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLinters/jslint.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_Inspection.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_Inspection.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="teamcity-plugins.iws" />
@@ -118,10 +111,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="jquery-plugins.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="jquery-plugins.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/messenger-plugin/src/main/resources/buildServerResources/js/jquery-plugins.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="9" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.7799672">
+            <state line="74" column="9" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="19" selection-start="70" selection-end="70" vertical-scroll-proportion="0.16748768">
               <folding />
             </state>
           </provider>
@@ -301,24 +303,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teamcity-plugins" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="teamcity-plugins" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="messenger-plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -482,11 +466,6 @@
         <state line="172" column="4" selection-start="5905" selection-end="5905" vertical-scroll-proportion="0.33268672" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="51" selection-end="51" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/messenger-plugin/src/main/resources/buildServerResources/js/messages-send.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="409" selection-start="417" selection-end="417" vertical-scroll-proportion="0.0" />
@@ -528,7 +507,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/messenger-plugin/src/main/resources/buildServerResources/js/jquery-plugins.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="9" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.7799672">
+        <state line="74" column="9" selection-start="2307" selection-end="2307" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="19" selection-start="70" selection-end="70" vertical-scroll-proportion="0.16748768">
           <folding />
         </state>
       </provider>

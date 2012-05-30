@@ -4,3 +4,4 @@ out
 *.iws
 teamcity-plugins.iml
 *.ipr
+.idea/workspace.xml
