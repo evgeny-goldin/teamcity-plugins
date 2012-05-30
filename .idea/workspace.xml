@@ -7,7 +7,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cec01667-17d6-410d-988a-05326876cc53" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_Inspection.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/JS_Inspection.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="teamcity-plugins.iws" />
@@ -33,7 +32,7 @@
       <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="0" selection-start="24" selection-end="24" vertical-scroll-proportion="0.065955386">
+            <state line="6" column="0" selection-start="51" selection-end="51" vertical-scroll-proportion="0.09893308">
               <folding />
             </state>
           </provider>
@@ -296,7 +295,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="24" selection-end="24" vertical-scroll-proportion="0.065955386">
+        <state line="6" column="0" selection-start="51" selection-end="51" vertical-scroll-proportion="0.09893308">
           <folding />
         </state>
       </provider>

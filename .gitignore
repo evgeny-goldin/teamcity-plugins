@@ -2,4 +2,5 @@ build
 out
 .gradle
 *.iws
+teamcity-plugins.iml
 *.ipr
