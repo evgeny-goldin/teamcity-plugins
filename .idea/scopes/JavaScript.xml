@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JavaScript" pattern="file:messenger-plugin/src/main/resources/buildServerResources/js/jquery-plugins.js||file:messenger-plugin/src/main/resources/buildServerResources/js/messages-constants.js||file:messenger-plugin/src/main/resources/buildServerResources/js/messages-display.js||file:messenger-plugin/src/main/resources/buildServerResources/js/messages-send.js" />
+</component>
