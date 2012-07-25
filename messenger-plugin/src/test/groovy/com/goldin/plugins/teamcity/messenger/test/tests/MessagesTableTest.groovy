@@ -9,6 +9,7 @@ import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 /**
  * {@link MessagesTable} test
  */
+@SuppressWarnings([ 'JUnitPublicNonTestMethod' ])
 class MessagesTableTest extends BaseSpecification
 {
     private List<Message> newMessages() {

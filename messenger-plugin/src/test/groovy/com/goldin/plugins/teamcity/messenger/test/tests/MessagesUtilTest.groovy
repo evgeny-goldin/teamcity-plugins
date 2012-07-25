@@ -10,6 +10,7 @@ import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 /**
  * {@link MessagesUtil} tests
  */
+@SuppressWarnings([ 'JUnitPublicNonTestMethod' ])
 class MessagesUtilTest extends BaseSpecification
 {
 
@@ -66,7 +67,7 @@ class MessagesUtilTest extends BaseSpecification
 
         expect:
         ! ( util.intersect( [], [] ) || util.intersect( [1], [] ) || util.intersect( [], [2] ))
-        
+
         permutations( s1, s2 ) { List l1, List l2 ->
             assert ! ( util.intersect( l1, l2 ) || util.intersect( l2, l1 ))
         }

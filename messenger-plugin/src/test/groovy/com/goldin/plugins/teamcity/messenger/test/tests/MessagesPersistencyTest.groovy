@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Messages persietncy machanism tests.
  */
+@SuppressWarnings([ 'JUnitPublicNonTestMethod' ])
 class MessagesPersistencyTest extends BaseSpecification
 {
     def cleanup () { messagesFile.write( '' ) }

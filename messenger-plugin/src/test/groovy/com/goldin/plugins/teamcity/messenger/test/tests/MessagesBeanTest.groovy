@@ -5,9 +5,11 @@ import com.goldin.plugins.teamcity.messenger.api.MessagesBean
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
 import spock.lang.FailsWith
 
+
 /**
  * {@link MessagesBean} test
  */
+@SuppressWarnings([ 'JUnitPublicNonTestMethod' ])
 class MessagesBeanTest extends BaseSpecification
 {
 
