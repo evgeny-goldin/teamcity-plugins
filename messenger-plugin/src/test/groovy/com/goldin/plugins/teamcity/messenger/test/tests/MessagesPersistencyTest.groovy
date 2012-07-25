@@ -1,22 +1,20 @@
 package com.goldin.plugins.teamcity.messenger.test.tests
-
 import com.goldin.plugins.teamcity.messenger.api.Message
 import com.goldin.plugins.teamcity.messenger.api.Message.Urgency
 import com.goldin.plugins.teamcity.messenger.test.infra.BaseSpecification
+
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import org.junit.After
-import org.junit.Before
+
 
 /**
  * Messages persietncy machanism tests.
  */
 class MessagesPersistencyTest extends BaseSpecification
 {
-    @Before void setup   () { messagesFile.write( '' ) }
-    @After  void cleanup () { messagesFile.write( '' ) }
+    def cleanup () { messagesFile.write( '' ) }
 
 
     def "test sending single message"() {

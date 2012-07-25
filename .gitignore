@@ -1,7 +1,6 @@
+*.ipr
+*.iml
+*.iws
 build
 out
 .gradle
-*.iws
-teamcity-plugins.iml
-*.ipr
-.idea/workspace.xml

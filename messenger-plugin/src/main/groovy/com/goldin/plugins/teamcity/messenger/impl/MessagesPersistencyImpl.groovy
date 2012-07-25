@@ -2,10 +2,12 @@ package com.goldin.plugins.teamcity.messenger.impl
 
 import com.goldin.plugins.teamcity.messenger.api.MessagesContext
 import com.goldin.plugins.teamcity.messenger.api.MessagesPersistency
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 import jetbrains.buildServer.serverSide.ServerPaths
-import net.sf.json.JSONObject
 import org.gcontracts.annotations.Invariant
 import org.gcontracts.annotations.Requires
+
 
 /**
  * {@link MessagesPersistency} implementation
@@ -43,7 +45,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
             long t         = System.currentTimeMillis()
             int  nMessages = (( List<Map> ) data[ 'messages' ] ?: [] ).size()
 
-            jsonFile.write( JSONObject.fromObject( data ).toString())
+            jsonFile.write( new JsonBuilder( data ).toString())
 
             context.log.with { debugEnabled && debug(
                  "Data of [$nMessages] message${ nMessages == 1 ? '' : 's' } " +
@@ -64,7 +66,7 @@ class MessagesPersistencyImpl implements MessagesPersistency
         try
         {
             long t         = System.currentTimeMillis()
-            Map data       = ( jsonData ? JSONObject.fromObject( jsonData ) : [:] )
+            Map data       = ( jsonData ? new JsonSlurper().parseText( jsonData ) as Map : [:] )
             int  nMessages = (( List<Map> ) data[ 'messages' ] ?: [] ).size()
 
             context.log.with { debugEnabled && debug(
