@@ -12,7 +12,6 @@ idea.project {
     ipr.withXml { provider -> provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git' }
 }
 
-
 final teamCityVersion   = '7.0.4'
 final springVersion     = '3.0.5.RELEASE'
 final antVersion        = '1.8.4'
@@ -28,33 +27,18 @@ subprojects {
 
     apply plugin: 'groovy'
     apply plugin: 'idea'
+    apply from:   "file:$rootDir/teamcity-${teamCityVersion}.gradle"
 
     group                = 'com.github.goldin.teamcity'
     version              = '0.1-SNAPSHOT'
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
-    repositories {
-        mavenCentral()
-        mavenRepo url: 'http://evgenyg.artifactoryonline.com/evgenyg/teamcity/'
-    }
-
-    configurations {
-        teamcity
-        compile { extendsFrom teamcity }
-    }
+    repositories { mavenCentral() }
 
     dependencies   {
         groovy      localGroovy()
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
-        teamcity    "org.jetbrains.teamcity:common-api:$teamCityVersion",
-                    "org.jetbrains.teamcity:server-api:$teamCityVersion",
-                    "org.jetbrains.teamcity:agent-api:$teamCityVersion",
-                    "org.jetbrains.teamcity:util:$teamCityVersion",
-                    "org.springframework:spring-core:$springVersion",
-                    "org.springframework:spring-webmvc:$springVersion",
-                    'org.jdom:jdom:1.1',
-                    'javax.servlet:servlet-api:2.5'
         testCompile ( "org.spockframework:spock-core:$spockVersion" )       { exclude group: 'org.codehaus.groovy'  }
         testCompile "org.spockframework:spock-spring:$spockVersion",
                     "org.springframework:spring-test:$springVersion",
