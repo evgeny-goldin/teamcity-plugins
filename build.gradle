@@ -12,6 +12,7 @@ idea.project {
     ipr.withXml { provider -> provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git' }
 }
 
+
 final teamCityVersion   = '7.0.4'
 final springVersion     = '3.0.5.RELEASE'
 final antVersion        = '1.8.4'
@@ -27,7 +28,7 @@ subprojects {
 
     apply plugin: 'groovy'
     apply plugin: 'idea'
-    apply from:   "file:$rootDir/teamcity-${teamCityVersion}.gradle"
+    apply from:   "file:c:/Projects/gradle-plugins/teamcity/teamcity-${teamCityVersion}.gradle"
 
     group                = 'com.github.goldin.teamcity'
     version              = '0.1-SNAPSHOT'

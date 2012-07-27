@@ -18,3 +18,39 @@ dependencies   {
                 'org.jdom:jdom:1.1',
                 'javax.servlet:servlet-api:2.5'
 }
+
+
+/**
+ * Creates plugin Zip archive
+ */
+task assemblePlugin( description : 'Creates TeamCity plugin Zip archive.') << {
+
+    File tempFile = File.createTempFile( project.name, null )
+    tempFile.write( file( 'src/main/resources/teamcity-plugin.xml' ).text.
+                    replaceAll( '@name@',    project.name    ).
+                    replaceAll( '@version@', project.version ))
+
+    /**
+     * Copying all required libraries except provided ones by TeamCity server
+     */
+    File compileLibs = new File(( File ) project.buildDir, 'compile-libs' )
+
+    ( configurations.compile.files - configurations.provided.files ).each {
+        File file -> ant.copy( file: file, todir: compileLibs )
+    }
+
+    /**
+     * Creating plugin Zip archive
+     */
+    ant.zip( destfile: destinationZip ) {
+        zipfileset( file: tempFile,                 fullpath: 'teamcity-plugin.xml' )
+        zipfileset( file: assembleApi.archivePath,  prefix  : 'server' )
+        zipfileset( file: assembleImpl.archivePath, prefix  : 'server' )
+        zipfileset( dir:  compileLibs,              prefix  : 'server' )
+    }
+
+    assert tempFile.delete()
+}
+
+
+assemble.dependsOn assemblePlugin
