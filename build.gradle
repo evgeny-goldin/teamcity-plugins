@@ -1,5 +1,15 @@
-
 apply plugin: 'idea'
+
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenRepo url: 'http://evgenyg.artifactoryonline.com/evgenyg/repo/'
+    }
+    dependencies {
+        classpath 'com.github.goldin.plugins:teamcity:0.1.4-SNAPSHOT'
+    }
+}
 
 
 ext.codenarcRuleSetFiles = [ 'codenarc.groovy' ]
@@ -13,7 +23,6 @@ idea.project {
 }
 
 
-final teamCityVersion   = '7.0.4'
 final springVersion     = '3.0.5.RELEASE'
 final antVersion        = '1.8.4'
 final gcontractsVersion = '1.2.5'
@@ -21,21 +30,22 @@ final spockVersion      = '0.6-groovy-1.8'
 final junitVersion      = '4.10'
 
 
-defaultTasks 'clean', 'codenarc', 'build'
+defaultTasks 'clean', 'codenarc', 'build', 'install'
 
 
 subprojects {
 
     apply plugin: 'groovy'
     apply plugin: 'idea'
-    apply from:   "file:c:/Projects/gradle-plugins/teamcity/teamcity-${teamCityVersion}.gradle"
+    apply plugin: 'maven'
+    apply from:   "https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/scripts/teamcity-7.0.4.gradle"
 
     group                = 'com.github.goldin.teamcity'
     version              = '0.1-SNAPSHOT'
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
-    repositories { mavenCentral() }
+    repositories {  mavenCentral() }
 
     dependencies   {
         groovy      localGroovy()
@@ -55,7 +65,31 @@ subprojects {
 
     idea.module {
         downloadSources = true
-        downloadJavadoc = true
+        downloadJavadoc = false
+    }
+
+    task sourcesJar( type: Jar, dependsOn: classes ) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+         archives sourcesJar
+    }
+
+    assembleTeamcityPluginConfig {
+        serverConfigurations configurations.compile
+        serverJars           jar
+    }
+}
+
+
+project( ':messenger-plugin' ) {
+    assembleTeamcityPluginConfig {
+        displayName 'Messenger Plugin'
+        description 'Plugin for sending messages between TeamCity users'
+        vendorName  'Evgeny Goldin'
+        vendorUrl   'http://evgeny-goldin.com'
     }
 }
 
