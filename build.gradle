@@ -28,6 +28,7 @@ final antVersion        = '1.8.4'
 final gcontractsVersion = '1.2.5'
 final spockVersion      = '0.6-groovy-1.8'
 final junitVersion      = '4.10'
+final teamCityVersion   = '7.0.4'
 
 
 defaultTasks 'clean', 'codenarc', 'build', 'install'
@@ -38,14 +39,16 @@ subprojects {
     apply plugin: 'groovy'
     apply plugin: 'idea'
     apply plugin: 'maven'
-    apply from:   "https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/scripts/teamcity-7.0.4.gradle"
+    apply from:   "https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/scripts/teamcity-${teamCityVersion}.gradle"
 
     group                = 'com.github.goldin.teamcity'
     version              = '0.1-SNAPSHOT'
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
-    repositories {  mavenCentral() }
+    repositories   { mavenCentral() }
+
+    configurations { compile { extendsFrom teamcityServer }}
 
     dependencies   {
         groovy      localGroovy()
