@@ -31,7 +31,7 @@ final junitVersion      = '4.10'
 final teamCityVersion   = '7.0.4'
 
 
-defaultTasks 'clean', 'codenarc', 'build', 'install'
+defaultTasks 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'install'
 
 
 subprojects {
@@ -63,6 +63,9 @@ subprojects {
     }
 
 
+    assembleTeamcityPlugin.dependsOn test, jar
+
+
     clean { delete( "$rootDir/out", "$rootDir/build" ) }
 
 
@@ -79,20 +82,17 @@ subprojects {
     artifacts {
          archives sourcesJar
     }
-
-    assembleTeamcityPluginConfig {
-        serverConfigurations configurations.compile
-        serverJars           jar
-    }
 }
 
 
 project( ':messenger-plugin' ) {
+    Project p ->
     assembleTeamcityPluginConfig {
-        displayName 'Messenger Plugin'
-        description 'Plugin for sending messages between TeamCity users'
-        vendorName  'Evgeny Goldin'
-        vendorUrl   'http://evgeny-goldin.com'
+        displayName    'Messenger Plugin'
+        description    'Plugin for sending messages between TeamCity users'
+        vendorName     'Evgeny Goldin'
+        vendorUrl      'http://evgeny-goldin.com'
+        serverProjects p
     }
 }
 
