@@ -63,9 +63,6 @@ subprojects {
     }
 
 
-    assembleTeamcityPlugin.dependsOn test, jar
-
-
     clean { delete( "$rootDir/out", "$rootDir/build" ) }
 
 
