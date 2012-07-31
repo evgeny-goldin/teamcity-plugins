@@ -39,7 +39,7 @@ subprojects {
     apply plugin: 'groovy'
     apply plugin: 'idea'
     apply plugin: 'maven'
-    apply from:   "https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/scripts/teamcity-${teamCityVersion}.gradle"
+    apply from:   "https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/scripts/teamcity-${ teamCityVersion }.gradle"
 
     group                = 'com.github.goldin.teamcity'
     version              = '0.1-SNAPSHOT'
@@ -94,4 +94,4 @@ project( ':messenger-plugin' ) {
 }
 
 
-task wrapper( type: Wrapper ) { gradleVersion = '1.0' }
+task wrapper( type: Wrapper ) { gradleVersion = '1.1' }
