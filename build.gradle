@@ -53,6 +53,8 @@ subprojects {
     dependencies   {
         groovy      localGroovy()
         compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
+        compile     'commons-logging:commons-logging-api:1.1',
+                    'org.jdom:jdom:1.1.3'
         testCompile ( "org.spockframework:spock-core:$spockVersion" )       { exclude group: 'org.codehaus.groovy'  }
         testCompile "org.spockframework:spock-spring:$spockVersion",
                     "org.springframework:spring-test:$springVersion",
