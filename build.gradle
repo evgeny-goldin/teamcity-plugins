@@ -91,7 +91,8 @@ project( ':messenger-plugin' ) {
         description    'Plugin for sending messages between TeamCity users'
         vendorName     'Evgeny Goldin'
         vendorUrl      'http://evgeny-goldin.com'
-        serverProjects p
+        server         p
+        artifacts      p
     }
 }
 
