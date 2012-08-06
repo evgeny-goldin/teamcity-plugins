@@ -28,6 +28,7 @@ final antVersion        = '1.8.4'
 final gcontractsVersion = '1.2.5'
 final spockVersion      = '0.6-groovy-1.8'
 final junitVersion      = '4.10'
+ext.teamCityVersion     = '7.0.4' // Read by "teamcity.gradle" applied below
 
 
 defaultTasks 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'install'
