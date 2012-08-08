@@ -23,12 +23,6 @@ idea.project {
 }
 
 
-final springVersion     = '3.0.5.RELEASE'
-final antVersion        = '1.8.4'
-final gcontractsVersion = '1.2.5'
-final spockVersion      = '0.6-groovy-1.8'
-final junitVersion      = '4.10'
-
 
 defaultTasks 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'install'
 
@@ -53,13 +47,13 @@ subprojects {
 
     dependencies   {
         groovy      localGroovy()
-        compile     ( "org.gcontracts:gcontracts-core:$gcontractsVersion" ) { exclude group: 'junit' }
+        compile     ( "org.gcontracts:gcontracts-core:1.2.5" ) { exclude group: 'junit' }
         compile     'commons-logging:commons-logging-api:1.1'
-        testCompile ( "org.spockframework:spock-core:$spockVersion" )       { exclude group: 'org.codehaus.groovy'  }
-        testCompile "org.spockframework:spock-spring:$spockVersion",
-                    "org.springframework:spring-test:$springVersion",
-                    "org.apache.ant:ant:$antVersion",
-                    "junit:junit:$junitVersion",
+        testCompile ( "org.spockframework:spock-core:0.6-groovy-1.8" )       { exclude group: 'org.codehaus.groovy'  }
+        testCompile "org.spockframework:spock-spring:0.6-groovy-1.8",
+                    "org.springframework:spring-test:3.0.5.RELEASE",
+                    "org.apache.ant:ant:1.8.4",
+                    "junit:junit:4.10",
                     "log4j:log4j:1.2.17",
                     'com.google.guava:guava:13.0'
     }
