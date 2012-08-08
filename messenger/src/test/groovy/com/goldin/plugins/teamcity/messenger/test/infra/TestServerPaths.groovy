@@ -7,6 +7,11 @@ import jetbrains.buildServer.serverSide.ServerPaths
  */
 class TestServerPaths extends ServerPaths
 {
+    TestServerPaths ()
+    {
+        super( "${ System.getProperty( 'user.home' ) }/.BuildServer" )
+    }
+
     @Override
     File getPluginDataDirectory () { new File ( Constants.MESSAGES_DIR ) }
 }

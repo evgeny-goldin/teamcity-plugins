@@ -13,7 +13,7 @@ buildscript {
 
 
 ext.codenarcRuleSetFiles = [ 'codenarc.groovy' ]
-ext.codenarcSources      = project.subprojects*.name.collect{ [ "$it/src/main/groovy", "$it/src/test/groovy" ] }.flatten()
+ext.codenarcSources      = project.subprojects*.name.collect{[ "$it/src/main/groovy", "$it/src/test/groovy" ]}.flatten()
 apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main/groovy/CodeNarc.gradle'
 
 
@@ -28,13 +28,14 @@ final antVersion        = '1.8.4'
 final gcontractsVersion = '1.2.5'
 final spockVersion      = '0.6-groovy-1.8'
 final junitVersion      = '4.10'
-ext.teamCityVersion     = '7.0.4' // Read by "teamcity.gradle" applied below
 
 
 defaultTasks 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'install'
 
 
 subprojects {
+
+    Project p ->
 
     apply plugin: 'groovy'
     apply plugin: 'idea'
@@ -60,7 +61,7 @@ subprojects {
                     "org.apache.ant:ant:$antVersion",
                     "junit:junit:$junitVersion",
                     "log4j:log4j:1.2.17",
-                    'com.google.guava:guava:13.0-rc2'
+                    'com.google.guava:guava:13.0'
     }
 
 
@@ -72,26 +73,29 @@ subprojects {
         downloadJavadoc = false
     }
 
-    task sourcesJar( type: Jar, dependsOn: classes ) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
 
-    artifacts {
-         archives sourcesJar
+    assembleTeamcityPlugin.dependsOn jar, test
+    assembleTeamcityPluginConfig {
+        vendorName   'Evgeny Goldin'
+        vendorUrl    'http://evgeny-goldin.com'
+        server       p
+        artifacts    p
     }
 }
 
 
-project( ':messenger-plugin' ) {
-    Project p ->
+project( ':messenger' ) {
     assembleTeamcityPluginConfig {
-        displayName    'Messenger Plugin'
-        description    'Plugin for sending messages between TeamCity users'
-        vendorName     'Evgeny Goldin'
-        vendorUrl      'http://evgeny-goldin.com'
-        server         p
-        artifacts      p
+        displayName 'Messenger Plugin'
+        description 'Plugin for sending messages between TeamCity users'
+    }
+}
+
+
+project( ':github' ) {
+    assembleTeamcityPluginConfig {
+        displayName 'GitHub Plugin'
+        description 'Plugin for integrating TeamCity with GitHub issue tracker'
     }
 }
 
