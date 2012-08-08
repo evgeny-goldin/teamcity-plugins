@@ -94,4 +94,12 @@ project( ':github' ) {
 }
 
 
+project( ':report' ) {
+    assembleTeamcityPluginConfig {
+        displayName 'Reporting Plugin'
+        description 'Plugin displaying Spring context content'
+    }
+}
+
+
 task wrapper( type: Wrapper ) { gradleVersion = '1.1' }
