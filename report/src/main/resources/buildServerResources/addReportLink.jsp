@@ -1,10 +1,11 @@
 <%@ include file="/include.jsp" %>
 
-<c:url value='${teamcityPluginResourcesPath}report.jsp' var="reportUrl"/>
+<c:url value = '${action}' var = 'reportUrl'/>
 
 <script type="text/javascript">
     ( function( j ){
-        j( function(){
+        j( function()
+        {
             j( 'ul.tabs' ).append( j( 'div#reportLink' ).children())
         });
     })( jQuery );
@@ -15,10 +16,3 @@
         <p><a class="tabs" href="${reportUrl}">Report</a></p>
     </li>
 </div>
-
-
-<%--<jsp:useBean id="serverTable" scope="request" type="java.util.Map"/>--%>
-<%----%>
-<%--<h1>Server</h1>--%>
-
-${serverTable}
