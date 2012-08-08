@@ -5,15 +5,15 @@
 
 
 <table border="0">
-    <%-- Every "table" is 3-elements list: description, description link, values map --%>
+    <%-- Every "table" is 2-elements list: link, values map --%>
     <c:forEach items="${tables}" var="table">
         <tr>
-            <td colspan="2" style="text-align: center;"><h1><a href="${ table[1] }"><c:out value="${ table[0] }"/></a></h1></td>
+            <td colspan="2" style="text-align: center"><h1>${ table[0] }</h1></td>
         </tr>
-        <c:forEach items="${table[2].keySet()}" var="key">
+        <c:forEach items="${table[1].keySet()}" var="key">
         <tr>
             <td><code><c:out value="[${key}]"/></code></td>
-            <td><code><c:out value="[${table[2].get( key )}]"/></code></td>
+            <td><code>${table[1].get( key )}</code></td>
         </tr>
         </c:forEach>
     </c:forEach>

@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletResponse
 
 class ReportController extends BaseController
 {
-    static final String MAPPING = 'displayReport.html'
+    static final String         MAPPING      = 'displayReport.html'
+    private static final String JAVADOC_BASE = 'http://javadoc.jetbrains.net/teamcity/openapi/current'
 
     private final SBuildServer       server
     private final ApplicationContext context
@@ -44,13 +45,15 @@ class ReportController extends BaseController
         final model       = []
         final serverTable = [:]
         final pathsTable  = [:]
+        final link        = {
+            Class c, boolean useSimpleName = true ->
+            "<a href='$JAVADOC_BASE/${ c.name.replace( '.', '/' )}.html'>${ useSimpleName ? c.simpleName : c.name }</a>"
+        }
 
         serverTable[ 'TeamCity Version' ] = server.fullServerVersion
         serverTable[ 'Root Path'        ] = server.serverRootPath
 
-        model << [ 'Server',
-                   'http://javadoc.jetbrains.net/teamcity/openapi/current/jetbrains/buildServer/serverSide/SBuildServer.html',
-                   serverTable ]
+        model << [ link( SBuildServer ), serverTable ]
 
         pathsTable[ 'Artifacts'     ] = paths.artifactsDirectory.canonicalPath
         pathsTable[ 'Backups'       ] = paths.backupDir
@@ -63,21 +66,24 @@ class ReportController extends BaseController
         pathsTable[ 'Plugins'       ] = paths.pluginsDir
         pathsTable[ 'System'        ] = paths.systemDir
 
-        model << [ 'Server Paths',
-                   'http://javadoc.jetbrains.net/teamcity/openapi/current/jetbrains/buildServer/serverSide/ServerPaths.html',
-                   pathsTable ]
+        model << [ link( ServerPaths ), pathsTable ]
+
+        final openApiClasses = this.class.getResource( '/open-api-classes.txt' ).
+                               getText( 'UTF-8' ).readLines()*.trim().toSet()
 
         for ( ApplicationContext c = context; c; c = c.parent )
         {
             final contextMap = c.getBeanNamesForType( Object ).sort().inject([:]){
                 Map m, String beanName ->
                 //noinspection GroovyGetterCallCanBePropertyAccess
-                m[ beanName ] = c.getBean( beanName ).getClass().name
+                final beanClass     = c.getBean( beanName ).getClass()
+                final beanClassName = beanClass.name
+                m[ beanName ]       = beanClassName in openApiClasses ? link( beanClass, false ) : beanClassName
                 m
             }
 
-            model << [ ( c == context ) ? 'Spring Context' : 'Parent Spring Context',
-                       'http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html',
+            final title = ( c == context ) ? 'Spring Context' : 'Parent Spring Context'
+            model << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
                        contextMap ]
         }
 
