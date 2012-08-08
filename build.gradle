@@ -75,6 +75,19 @@ subprojects {
         server       p
         artifacts    p
     }
+
+
+    /**
+      * Copies all plugin archives into ".BuildServer/plugins"
+      */
+     task cp( dependsOn: assembleTeamcityPlugin ) << {
+
+         final pluginsDir = "${ System.getProperty( 'user.home' )}/.BuildServer/plugins"
+         final archive    = assembleTeamcityPlugin.archive
+
+         delete( "$pluginsDir/$archive.name" )
+         copy { from archive; into pluginsDir }
+     }
 }
 
 
