@@ -74,6 +74,7 @@ subprojects {
         vendorUrl    'http://evgeny-goldin.com'
         server       p
         artifacts    p
+        parameter    name: 'name', value: p.name
     }
 
 
