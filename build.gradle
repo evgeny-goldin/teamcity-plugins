@@ -95,9 +95,10 @@ subprojects {
       * Copies plugin's static resources into TeamCity instance.
       */
      task cps() << {
+         final teamCityApp = System.getProperty( 'TeamCityApp' ) ?: System.getenv( 'TeamCityApp' ) ?: 'c:/Winny/java/TeamCity/webapps/bs'
          copy {
              from 'src/main/resources/buildServerResources'
-             into "c:/Winny/java/TeamCity/webapps/bs/plugins/${ p.name }"
+             into "$teamCityApp/plugins/${ p.name }"
          }
      }
 }
