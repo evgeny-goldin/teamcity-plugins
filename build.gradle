@@ -79,15 +79,26 @@ subprojects {
 
 
     /**
-      * Copies all plugin archives into ".BuildServer/plugins"
+      * Copies plugin's Zip archive into ".BuildServer/plugins".
       */
-     task cp( dependsOn: assembleTeamcityPlugin ) << {
+     task cpz( dependsOn: assembleTeamcityPlugin ) << {
 
          final pluginsDir = "${ System.getProperty( 'user.home' )}/.BuildServer/plugins"
          final archive    = assembleTeamcityPlugin.archive
 
          delete( "$pluginsDir/$archive.name" )
          copy { from archive; into pluginsDir }
+     }
+
+
+    /**
+      * Copies plugin's static resources into TeamCity instance.
+      */
+     task cps() << {
+         copy {
+             from 'src/main/resources/buildServerResources'
+             into "c:/Winny/java/TeamCity/webapps/bs/plugins/${ p.name }"
+         }
      }
 }
 
