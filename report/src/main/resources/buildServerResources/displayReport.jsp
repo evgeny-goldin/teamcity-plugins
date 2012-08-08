@@ -4,7 +4,7 @@
 <jsp:useBean id="tables" scope="request" type="java.util.List"/>
 
 
-<table border="0">
+<table border="1">
     <%-- Every "table" is 2-elements list: link, values map --%>
     <c:forEach items="${tables}" var="table">
         <tr>
@@ -12,7 +12,7 @@
         </tr>
         <c:forEach items="${table[1].keySet()}" var="key">
         <tr>
-            <td><code><c:out value="[${key}]"/></code></td>
+            <td><code>${key}</code></td>
             <td><code>${table[1].get( key )}</code></td>
         </tr>
         </c:forEach>

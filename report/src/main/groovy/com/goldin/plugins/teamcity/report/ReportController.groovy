@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse
 
 class ReportController extends BaseController
 {
-    static final String         MAPPING      = 'displayReport.html'
-    private static final String JAVADOC_BASE = 'http://javadoc.jetbrains.net/teamcity/openapi/current'
+    static final String         MAPPING     = 'displayReport.html'
+    private static final String API_JAVADOC = 'http://javadoc.jetbrains.net/teamcity/openapi/current'
 
     private final SBuildServer       server
     private final ApplicationContext context
@@ -46,14 +46,14 @@ class ReportController extends BaseController
         final serverTable = [:]
         final pathsTable  = [:]
         final link        = {
-            Class c, boolean useSimpleName = true ->
-            "<a href='$JAVADOC_BASE/${ c.name.replace( '.', '/' )}.html'>${ useSimpleName ? c.simpleName : c.name }</a>"
+            Class c, boolean useFullName = true ->
+            "<a href='$API_JAVADOC/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
         }
 
         serverTable[ 'TeamCity Version' ] = server.fullServerVersion
         serverTable[ 'Root Path'        ] = server.serverRootPath
 
-        model << [ link( SBuildServer ), serverTable ]
+        model << [ link( SBuildServer, false ), serverTable ]
 
         pathsTable[ 'Artifacts'     ] = paths.artifactsDirectory.canonicalPath
         pathsTable[ 'Backups'       ] = paths.backupDir
@@ -66,19 +66,25 @@ class ReportController extends BaseController
         pathsTable[ 'Plugins'       ] = paths.pluginsDir
         pathsTable[ 'System'        ] = paths.systemDir
 
-        model << [ link( ServerPaths ), pathsTable ]
+        model << [ link( ServerPaths, false ), pathsTable ]
 
-        final openApiClasses = this.class.getResource( '/open-api-classes.txt' ).
-                               getText( 'UTF-8' ).readLines()*.trim().toSet()
+        final allApiClasses = this.class.getResource( '/open-api-classes.txt' ).
+                              getText( 'UTF-8' ).readLines()*.trim().toSet()
 
         for ( ApplicationContext c = context; c; c = c.parent )
         {
             final contextMap = c.getBeanNamesForType( Object ).sort().inject([:]){
                 Map m, String beanName ->
                 //noinspection GroovyGetterCallCanBePropertyAccess
-                final beanClass     = c.getBean( beanName ).getClass()
-                final beanClassName = beanClass.name
-                m[ beanName ]       = beanClassName in openApiClasses ? link( beanClass, false ) : beanClassName
+                final beanClass        = c.getBean( beanName ).getClass()
+                m[ beanClass.name in allApiClasses ? link( beanClass ) : beanClass.name ] = beanName
+//                final parentApiClasses = parentClasses( beanClass ).findAll{ it.name in allApiClasses }
+
+//                if ( parentApiClasses )
+//                {
+//                    m[ beanName ] += "<br/>Extends / Implements:<br/>${ parentApiClasses.collect{ link( it )}.join( '<br/> ') }"
+//                }
+
                 m
             }
 
@@ -89,5 +95,21 @@ class ReportController extends BaseController
 
         new ModelAndView( descriptor.getPluginResourcesPath( 'displayReport.jsp' ),
                           [ tables: model ] )
+    }
+
+
+    Set<Class> parentClasses( Class c )
+    {
+        assert c
+
+        final classes = [] as Set
+        classes.addAll( c.interfaces )
+
+        for ( Class superC = c.superclass; superC; superC = superC.superclass )
+        {
+            classes.addAll( parentClasses( superC ))
+        }
+
+        classes
     }
 }
