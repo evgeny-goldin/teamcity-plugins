@@ -50,23 +50,23 @@ class ReportController extends BaseController
             "<a href='$API_JAVADOC/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
         }
 
-        serverTable[ 'TeamCity Version' ] = server.fullServerVersion
-        serverTable[ 'Root Path'        ] = server.serverRootPath
+        serverTable[ 'getFullServerVersion()' ] = server.fullServerVersion
+        serverTable[ 'getServerRootPath()'    ] = server.serverRootPath
 
-        model << [ link( SBuildServer, false ), serverTable ]
+        model << [ link( SBuildServer, false ), 'Key', 'Value', serverTable ]
 
-        pathsTable[ 'Artifacts'     ] = paths.artifactsDirectory.canonicalPath
-        pathsTable[ 'Backups'       ] = paths.backupDir
-        pathsTable[ 'Caches'        ] = paths.cachesDir
-        pathsTable[ 'Configuration' ] = paths.configDir
-        pathsTable[ 'Data'          ] = paths.dataDirectory.canonicalPath
-        pathsTable[ 'Lib'           ] = paths.libDir
-        pathsTable[ 'Logs'          ] = paths.logsPath.canonicalPath
-        pathsTable[ 'Plugins Data'  ] = paths.pluginDataDirectory
-        pathsTable[ 'Plugins'       ] = paths.pluginsDir
-        pathsTable[ 'System'        ] = paths.systemDir
+        pathsTable[ 'getArtifactsDirectory()'  ] = paths.artifactsDirectory.canonicalPath
+        pathsTable[ 'getBackupDir()'           ] = paths.backupDir
+        pathsTable[ 'getCachesDir()'           ] = paths.cachesDir
+        pathsTable[ 'getConfigDir()'           ] = paths.configDir
+        pathsTable[ 'getDataDirectory()'       ] = paths.dataDirectory.canonicalPath
+        pathsTable[ 'getLibDir()'              ] = paths.libDir
+        pathsTable[ 'getLogsPath()'            ] = paths.logsPath.canonicalPath
+        pathsTable[ 'getPluginDataDirectory()' ] = paths.pluginDataDirectory
+        pathsTable[ 'getPluginsDir()'          ] = paths.pluginsDir
+        pathsTable[ 'getSystemDir()'           ] = paths.systemDir
 
-        model << [ link( ServerPaths, false ), pathsTable ]
+        model << [ link( ServerPaths, false ), 'Key', 'Value', pathsTable ]
 
         final allApiClasses = this.class.getResource( '/open-api-classes.txt' ).
                               getText( 'UTF-8' ).readLines()*.trim().toSet()
@@ -76,20 +76,24 @@ class ReportController extends BaseController
             final contextMap = c.getBeanNamesForType( Object ).sort().inject([:]){
                 Map m, String beanName ->
                 //noinspection GroovyGetterCallCanBePropertyAccess
-                final beanClass        = c.getBean( beanName ).getClass()
-                m[ beanClass.name in allApiClasses ? link( beanClass ) : beanClass.name ] = beanName
-//                final parentApiClasses = parentClasses( beanClass ).findAll{ it.name in allApiClasses }
+                final beanClass  = c.getBean( beanName ).getClass()
+                final beanTitle  = beanClass.name in allApiClasses ? link( beanClass ) : beanClass.name
+                final apiClasses = parentClasses( beanClass ).findAll{ it.name in allApiClasses }.sort {
+                    c1, c2 -> c1.name <=> c2.name
+                }
 
-//                if ( parentApiClasses )
-//                {
-//                    m[ beanName ] += "<br/>Extends / Implements:<br/>${ parentApiClasses.collect{ link( it )}.join( '<br/> ') }"
-//                }
+                if ( apiClasses )
+                {
+                    beanTitle += "<br/>Extends / Implements:<br/>- ${ apiClasses.collect{ link( it )}.join( '<br/>- ') }"
+                }
 
+                m[ beanTitle ] = beanName
                 m
             }
 
             final title = ( c == context ) ? 'Spring Context' : 'Parent Spring Context'
             model << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
+                       'Bean Class', 'Bean Name',
                        contextMap ]
         }
 
@@ -103,10 +107,15 @@ class ReportController extends BaseController
         assert c
 
         final classes = [] as Set
-        classes.addAll( c.interfaces )
+
+        c.interfaces.each {
+            classes << it
+            classes.addAll( parentClasses( it ))
+        }
 
         for ( Class superC = c.superclass; superC; superC = superC.superclass )
         {
+            classes << superC
             classes.addAll( parentClasses( superC ))
         }
 
