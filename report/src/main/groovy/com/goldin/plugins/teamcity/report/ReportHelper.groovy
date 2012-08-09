@@ -5,18 +5,50 @@ import jetbrains.buildServer.serverSide.ServerPaths
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
+
+
 /**
  * Various helper methods.
  */
 class ReportHelper
 {
-    private final Set<String> apiClasses = this.class.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).readLines()*.trim().toSet()
+    private final Set<String> API_CLASSES =
+        ReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
+        readLines()*.trim().toSet().asImmutable()
+
+    /**
+     * Retrieves reporting tables.
+     *
+     * @param server current {@link SBuildServer} instance
+     * @param paths  current {@link ServerPaths} instance
+     * @param context current {@link ApplicationContext} instance
+     * @return reporting tables
+     */
+    List<List<?>> getReport ( SBuildServer server, ServerPaths paths, ApplicationContext context )
+    {
+        assert server && paths && context
+
+        final tables = []
+        tables << [ javadocLink( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable( server )]
+        tables << [ javadocLink( ServerPaths,  false ), 'Method Name', 'Value Returned', pathsTable ( paths  )]
+
+        for ( ApplicationContext c = context; c; c = c.parent )
+        {
+            final title = (( c == context ) ? 'Plugin' : 'Parent' ) + ' Spring Context'
+            tables << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
+                        'Bean Class', 'Bean Name',
+                        contextTable( c )]
+        }
+
+        tables
+    }
+
 
     /**
      * Retrieves {@link jetbrains.buildServer.serverSide.SBuildServer} report table.
      * @return {@link jetbrains.buildServer.serverSide.SBuildServer} report table
      */
-    Map<String, ?> serverTable( SBuildServer server )
+    private Map<String, ?> serverTable( SBuildServer server )
     {
         propertiesMap(
             server,
@@ -28,7 +60,7 @@ class ReportHelper
      * Retrieves {@link jetbrains.buildServer.serverSide.ServerPaths} report table.
      * @return {@link jetbrains.buildServer.serverSide.ServerPaths} report table
      */
-    Map<String, ?> pathsTable ( ServerPaths paths )
+    private Map<String, ?> pathsTable ( ServerPaths paths )
     {
         propertiesMap (
             paths,
@@ -43,7 +75,7 @@ class ReportHelper
      * @param allApiClasses Open API list of classes available as public Javadoc
      * @return {@link org.springframework.context.ApplicationContext} report table
      */
-    Map<String, ?> contextTable( ApplicationContext context )
+    private Map<String, ?> contextTable( ApplicationContext context )
     {
         assert context
 
@@ -51,8 +83,8 @@ class ReportHelper
             Map m, String beanName ->
             //noinspection GroovyGetterCallCanBePropertyAccess
             final beanClass  = context.getBean( beanName ).getClass()
-            final beanTitle  = beanClass.name in this.apiClasses ? javadocLink( beanClass ) : beanClass.name
-            final apiClasses = parentClasses( beanClass ).findAll{ it.name in this.apiClasses }
+            final beanTitle  = beanClass.name in API_CLASSES ? javadocLink( beanClass ) : beanClass.name
+            final apiClasses = parentClasses( beanClass ).findAll{ it.name in API_CLASSES }
 
             if ( apiClasses )
             {
@@ -72,9 +104,9 @@ class ReportHelper
      * @param useFullName whether full class name or simple name should be used as link title
      * @return HTML link to class Javadoc
      */
-    String javadocLink ( Class c, boolean useFullName = true )
+    private String javadocLink ( Class c, boolean useFullName = true )
     {
-        assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
+        assert ( c && ( c.name in API_CLASSES )), "Class [$c.name] is not part of an Open API"
         "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
     }
 

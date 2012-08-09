@@ -2,8 +2,11 @@
 <%@ include file="/include.jsp" %>
 
 <%-- com.goldin.plugins.teamcity.report.ReportExtension#fillModel() --%>
-<jsp:useBean id="tables" scope="request" type="java.util.List"/>
-<jsp:useBean id="action" scope="request" type="java.lang.String"/>
+<jsp:useBean id="tables"     scope="request" type="java.util.List"/>
+<jsp:useBean id="action"     scope="request" type="java.lang.String"/>
+<jsp:useBean id="evalCode"   scope="request" type="java.lang.String"/>
+<jsp:useBean id="evalResult" scope="request" type="java.lang.String"/>
+
 
 <style type="text/css">
     table#reportTable    { border       : 1px dotted }
@@ -24,18 +27,11 @@
 <c:url var="formAction" value="${ action }"/>
 
 <form action="${ formAction }" method="post" id="scriptForm">
-<textarea name="script" id="script" cols="80" rows="15">
-# Type your script and click "Send"
-# Variables available in the script context:
-# * "request" - instance of javax.servlet.http.HttpServletRequest
-# * "context" - instance of org.springframework.context.ApplicationContext
-# * "server"  - instance of jetbrains.buildServer.serverSide.SBuildServer
-# To retrieve currently logged in user:
-# * jetbrains.buildServer.web.util.SessionUser.getUser( request )
 
+<textarea name="evalCode" id="evalCode" cols="80" rows="15">${ evalCode }</textarea>
+<a href="#" id="sendLink" style="padding-bottom: 40px;">Evaluate</a>
+<textarea name="evalResult" id="evalResult" cols="80" rows="15">${ evalResult }</textarea>
 
-</textarea>
-    <a href="#" id="sendLink">Send</a>
 </form>
 
 <table id="reportTable">

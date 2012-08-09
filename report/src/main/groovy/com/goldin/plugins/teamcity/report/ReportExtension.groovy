@@ -11,8 +11,9 @@ import org.springframework.context.ApplicationContext
 import javax.servlet.http.HttpServletRequest
 
 
+
 /**
- * Adds "Reports" tab to Administration => Diagnostics.
+ * Adds "Report" tab to Administration => Diagnostics.
  */
 class ReportExtension extends SimpleCustomTab
 {
@@ -21,6 +22,9 @@ class ReportExtension extends SimpleCustomTab
     private final ApplicationContext context
     private final PluginDescriptor   descriptor
     private final ServerPaths        paths
+
+    static final String EVAL_CODE   = 'evalCode'
+    static final String EVAL_RESULT = 'evalResult'
 
 
     ReportExtension ( PagePlaces         pagePlaces,
@@ -36,6 +40,7 @@ class ReportExtension extends SimpleCustomTab
         this.descriptor = descriptor
         this.paths      = paths
 
+        assert tabId
         register()
     }
 
@@ -50,18 +55,29 @@ class ReportExtension extends SimpleCustomTab
     @Override
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
-        model.tables = []
-        model.action = ReportController.MAPPING
+        final evalCode   = request.session.getAttribute( EVAL_CODE ) ?: '''
+# Type your script and click "Evaluate", lines starting with '#' are ignored.
 
-        model.tables << [ helper.javadocLink( SBuildServer, false ), 'Method Name', 'Value Returned', helper.serverTable( server )]
-        model.tables << [ helper.javadocLink( ServerPaths,  false ), 'Method Name', 'Value Returned', helper.pathsTable ( paths  )]
+# Variables available in the script context:
+# * "request" - instance of javax.servlet.http.HttpServletRequest
+# * "context" - instance of org.springframework.context.ApplicationContext
+# * "server"  - instance of jetbrains.buildServer.serverSide.SBuildServer
 
-        for ( ApplicationContext context = this.context; context; context = context.parent )
-        {
-            final title = (( context == this.context ) ? 'Plugin' : 'Parent' ) + ' Spring Context'
-            model.tables << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
-                              'Bean Class', 'Bean Name',
-                              helper.contextTable( context )]
-        }
+# To retrieve currently logged in user:
+# Class.forName( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
+
+# To retrieve SBuildServer instance:
+# context.getBean( Class.forName( 'jetbrains.buildServer.serverSide.SBuildServer' ))
+'''
+        final evalResult = request.session.getAttribute( EVAL_RESULT )
+
+        request.session.removeAttribute( EVAL_CODE )
+        request.session.removeAttribute( EVAL_RESULT )
+
+        //noinspection GroovyConditionalCanBeElvis
+        model << [ tables     : helper.getReport( server, paths, context ),
+                   action     : ReportController.MAPPING,
+                   evalCode   : ( evalCode   ?: '' ),
+                   evalResult : ( evalResult ?: '' )]
     }
 }
