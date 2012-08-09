@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import java.lang.reflect.Method
 
 
 class ReportController extends BaseController
@@ -152,13 +153,19 @@ class ReportController extends BaseController
     {
         assert o && propertyNames
 
-        final map = [:]
+        final Map<String,?>      map     = [:]
+        final Collection<Method> methods = o.class.methods
 
         for ( propertyName in propertyNames )
         {
-            final Object value = o."$propertyName"
-            assert value != null, "Object [$o] has no property [$propertyName]"
-            map[ "get${ propertyName.capitalize()}()"] = ( transformer ? transformer( value ) : value )
+            final String methodName = "get${ propertyName.capitalize()}".toString()
+            final Method method     = methods.find { it.name == methodName }
+            assert method, "Object [$o] of class [${ o.class.name }] doesn't have method [$methodName]"
+
+            final  value = method.invoke( o )
+            assert value != null, "Method [$methodName] of object's [$o] returned null"
+
+            map[ "$methodName()" ] = ( transformer ? transformer( value ) : value )
         }
 
         map
