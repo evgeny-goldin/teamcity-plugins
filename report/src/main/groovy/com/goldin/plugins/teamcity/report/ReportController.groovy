@@ -14,9 +14,8 @@ import javax.servlet.http.HttpServletResponse
 
 class ReportController extends BaseController
 {
-    static final String         MAPPING     = 'displayReport.html'
-    private static final String API_JAVADOC = 'http://javadoc.jetbrains.net/teamcity/openapi/current'
-
+    static final String              MAPPING    = 'displayReport.html'
+    private final Set<String>        apiClasses = this.class.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).readLines()*.trim().toSet()
     private final SBuildServer       server
     private final ApplicationContext context
     private final PluginDescriptor   descriptor
@@ -42,59 +41,17 @@ class ReportController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  httpServletRequest,
                                       HttpServletResponse httpServletResponse )
     {
-        final model       = []
-        final serverTable = [:]
-        final pathsTable  = [:]
-        final link        = {
-            Class c, boolean useFullName = true ->
-            "<a href='$API_JAVADOC/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
-        }
+        final model = []
 
-        serverTable[ 'getFullServerVersion()' ] = server.fullServerVersion
-        serverTable[ 'getServerRootPath()'    ] = server.serverRootPath
+        model << [ link( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable()]
+        model << [ link( ServerPaths,  false ), 'Method Name', 'Value Returned', pathsTable ()]
 
-        model << [ link( SBuildServer, false ), 'Key', 'Value', serverTable ]
-
-        pathsTable[ 'getArtifactsDirectory()'  ] = paths.artifactsDirectory.canonicalPath
-        pathsTable[ 'getBackupDir()'           ] = paths.backupDir
-        pathsTable[ 'getCachesDir()'           ] = paths.cachesDir
-        pathsTable[ 'getConfigDir()'           ] = paths.configDir
-        pathsTable[ 'getDataDirectory()'       ] = paths.dataDirectory.canonicalPath
-        pathsTable[ 'getLibDir()'              ] = paths.libDir
-        pathsTable[ 'getLogsPath()'            ] = paths.logsPath.canonicalPath
-        pathsTable[ 'getPluginDataDirectory()' ] = paths.pluginDataDirectory
-        pathsTable[ 'getPluginsDir()'          ] = paths.pluginsDir
-        pathsTable[ 'getSystemDir()'           ] = paths.systemDir
-
-        model << [ link( ServerPaths, false ), 'Key', 'Value', pathsTable ]
-
-        final allApiClasses = this.class.getResource( '/open-api-classes.txt' ).
-                              getText( 'UTF-8' ).readLines()*.trim().toSet()
-
-        for ( ApplicationContext c = context; c; c = c.parent )
+        for ( ApplicationContext context = this.context; context; context = context.parent )
         {
-            final contextMap = c.getBeanNamesForType( Object ).sort().inject([:]){
-                Map m, String beanName ->
-                //noinspection GroovyGetterCallCanBePropertyAccess
-                final beanClass  = c.getBean( beanName ).getClass()
-                final beanTitle  = beanClass.name in allApiClasses ? link( beanClass ) : beanClass.name
-                final apiClasses = parentClasses( beanClass ).findAll{ it.name in allApiClasses }.sort {
-                    c1, c2 -> c1.name <=> c2.name
-                }
-
-                if ( apiClasses )
-                {
-                    beanTitle += "<br/>Extends / Implements:<br/>- ${ apiClasses.collect{ link( it )}.join( '<br/>- ') }"
-                }
-
-                m[ beanTitle ] = beanName
-                m
-            }
-
-            final title = ( c == context ) ? 'Spring Context' : 'Parent Spring Context'
+            final title = ( context == this.context ) ? 'Spring Context' : 'Parent Spring Context'
             model << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
                        'Bean Class', 'Bean Name',
-                       contextMap ]
+                       contextTable( context )]
         }
 
         new ModelAndView( descriptor.getPluginResourcesPath( 'displayReport.jsp' ),
@@ -102,21 +59,129 @@ class ReportController extends BaseController
     }
 
 
-    Set<Class> parentClasses( Class c )
+    /**
+     * Normalizes path of the object specified.
+     * @param o object to normalize its path, can be {@link File}
+     * @return normalized path of the object specified
+     */
+    private normalizePath( Object o )
+    {
+        (( o instanceof File ) ? o : new File( o.toString())).canonicalPath.replace( '\\', '/' )
+    }
+
+
+    /**
+     * Retrieves {@link SBuildServer} report table.
+     * @return {@link SBuildServer} report table
+     */
+    private Map<String, ?> serverTable()
+    {
+        propertiesMap(
+            server,
+            'fullServerVersion serverRootPath'.tokenize())
+    }
+
+
+
+    /**
+     * Retrieves {@link ServerPaths} report table.
+     * @return {@link ServerPaths} report table
+     */
+    private Map<String, ?> pathsTable ()
+    {
+        propertiesMap (
+            paths,
+            'dataDirectory artifactsDirectory backupDir cachesDir configDir libDir logsPath pluginDataDirectory pluginsDir systemDir'.tokenize(),
+            this.&normalizePath )
+    }
+
+
+    /**
+     * Retrieves {@link ApplicationContext} report table.
+     * @param context       context to read the data from
+     * @param allApiClasses Open API list of classes available as public Javadoc
+     * @return {@link ApplicationContext} report table
+     */
+    private Map<String, ?> contextTable( ApplicationContext context )
+    {
+        assert context
+
+        context.getBeanNamesForType( Object ).sort().inject([:]){
+            Map m, String beanName ->
+            //noinspection GroovyGetterCallCanBePropertyAccess
+            final beanClass  = context.getBean( beanName ).getClass()
+            final beanTitle  = beanClass.name in this.apiClasses ? link( beanClass ) : beanClass.name
+            final apiClasses = parentClasses( beanClass ).findAll{ it.name in this.apiClasses }.sort {
+                c1, c2 -> c1.name <=> c2.name
+            }
+
+            if ( apiClasses )
+            {
+                beanTitle += ":<br/>- ${ apiClasses.collect{ link( it )}.join( '<br/>- ') }"
+            }
+
+            m[ beanTitle ] = beanName
+            m
+        }
+    }
+
+
+    /**
+     * Constructs a link to an Open API class Javadoc.
+     *
+     * @param c           class to construct the link for
+     * @param useFullName whether full class name or simple name should be used as link title
+     * @return HTML link to class Javadoc
+     */
+    private String link( Class c, boolean useFullName = true )
+    {
+        assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
+        "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
+    }
+
+
+    /**
+     * Creates a {@link Map} of properties of the object specified.
+     *
+     * @param o             object to read its properties
+     * @param propertyNames names of properties to read
+     * @param transformer   closure transforming property value
+     * @return {@link Map} of properties of the object specified
+     */
+    private Map<String,?> propertiesMap( Object o, List<String> propertyNames, Closure transformer = null )
+    {
+        assert o && propertyNames
+
+        final map = [:]
+
+        for ( propertyName in propertyNames )
+        {
+            final Object value = o."$propertyName"
+            assert value != null, "Object [$o] has no property [$propertyName]"
+            map[ "get${ propertyName.capitalize()}()"] = ( transformer ? transformer( value ) : value )
+        }
+
+        map
+    }
+
+
+    /**
+     * Retrieves all parent classes and interfaces of the class specified.
+     *
+     * @param c class to retrieve its parent classes
+     * @return all parent classes and interfaces of the class specified
+     */
+    private Set<Class> parentClasses( Class c )
     {
         assert c
 
         final classes = [] as Set
 
-        c.interfaces.each {
-            classes << it
-            classes.addAll( parentClasses( it ))
-        }
+        c.interfaces.each { classes.addAll( parentClasses( it ) + it )}
 
         for ( Class superC = c.superclass; superC; superC = superC.superclass )
         {
-            classes << superC
-            classes.addAll( parentClasses( superC ))
+            classes.addAll( parentClasses( superC ) + superC )
         }
 
         classes
