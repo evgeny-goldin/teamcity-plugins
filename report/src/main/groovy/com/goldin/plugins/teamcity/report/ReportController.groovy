@@ -112,9 +112,7 @@ class ReportController extends BaseController
             //noinspection GroovyGetterCallCanBePropertyAccess
             final beanClass  = context.getBean( beanName ).getClass()
             final beanTitle  = beanClass.name in this.apiClasses ? link( beanClass ) : beanClass.name
-            final apiClasses = parentClasses( beanClass ).findAll{ it.name in this.apiClasses }.sort {
-                c1, c2 -> c1.name <=> c2.name
-            }
+            final apiClasses = parentClasses( beanClass ).findAll{ it.name in this.apiClasses }
 
             if ( apiClasses )
             {
@@ -184,11 +182,15 @@ class ReportController extends BaseController
 
         final classes = [] as Set
 
-        c.interfaces.each { classes.addAll( parentClasses( it ) + it )}
+        c.interfaces.each {
+            classes << it
+            classes.addAll( parentClasses( it ))
+        }
 
         for ( Class superC = c.superclass; superC; superC = superC.superclass )
         {
-            classes.addAll( parentClasses( superC ) + superC )
+            classes << superC
+            classes.addAll( parentClasses( superC ))
         }
 
         classes

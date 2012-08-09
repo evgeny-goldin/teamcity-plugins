@@ -4,7 +4,7 @@
 <jsp:useBean id="tables" scope="request" type="java.util.List"/>
 
 
-<table border="1">
+<table border="1" width="100%">
     <%-- Every "table" is 2-elements list: link, values map --%>
     <c:forEach items="${tables}" var="table">
         <tr>
