@@ -1,3 +1,4 @@
+<%@ page import="jetbrains.buildServer.web.util.SessionUser" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ include file="/include.jsp" %>
 
@@ -10,7 +11,7 @@
     </head>
     <body>
         <table border="1" width="100%">
-            <%-- Every "table" is 2-elements list: link, values map --%>
+            <%-- Every "table" is a 4-elements list: table title, left column header, right column header, values map --%>
             <c:forEach items="${tables}" var="table">
                 <tr>
                     <td colspan="2" style="text-align: center; vertical-align: middle;"><h2>${ table[ 0 ] }</h2></td>

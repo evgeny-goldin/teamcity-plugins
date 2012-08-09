@@ -4,6 +4,7 @@ import jetbrains.buildServer.web.openapi.PagePlaces
 import jetbrains.buildServer.web.openapi.PlaceId
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.SimplePageExtension
+import jetbrains.buildServer.web.util.SessionUser
 
 import javax.servlet.http.HttpServletRequest
 
@@ -22,5 +23,12 @@ class ReportExtension extends SimplePageExtension
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
         model.action = ReportController.MAPPING
+    }
+
+
+    @Override
+    boolean isAvailable ( HttpServletRequest request )
+    {
+        SessionUser.getUser( request )?.systemAdministratorRoleGranted
     }
 }

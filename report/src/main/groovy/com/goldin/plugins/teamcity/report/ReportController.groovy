@@ -5,6 +5,7 @@ import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths
 import jetbrains.buildServer.web.openapi.PluginDescriptor
 import jetbrains.buildServer.web.openapi.WebControllerManager
+import jetbrains.buildServer.web.util.SessionUser
 import org.springframework.context.ApplicationContext
 import org.springframework.web.servlet.ModelAndView
 
@@ -39,9 +40,15 @@ class ReportController extends BaseController
 
 
     @Override
-    protected ModelAndView doHandle ( HttpServletRequest  httpServletRequest,
-                                      HttpServletResponse httpServletResponse )
+    protected ModelAndView doHandle ( HttpServletRequest  request,
+                                      HttpServletResponse response )
     {
+        if ( ! SessionUser.getUser( request )?.systemAdministratorRoleGranted )
+        {
+            response.sendRedirect( '' ) // Overview page
+            return null
+        }
+
         final model = []
 
         model << [ link( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable()]
