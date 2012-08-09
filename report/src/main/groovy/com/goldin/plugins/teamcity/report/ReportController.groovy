@@ -32,6 +32,7 @@ class ReportController extends BaseController
 
 
     @Override
+    @SuppressWarnings([ 'CatchThrowable' ])
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {

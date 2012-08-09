@@ -12,7 +12,7 @@ import java.lang.reflect.Method
  */
 class ReportHelper
 {
-    private final Set<String> API_CLASSES =
+    private final Set<String> apiClasses =
         ReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
         readLines()*.trim().toSet().asImmutable()
 
@@ -64,8 +64,9 @@ class ReportHelper
     {
         propertiesMap (
             paths,
-            'dataDirectory artifactsDirectory backupDir cachesDir configDir libDir logsPath pluginDataDirectory pluginsDir systemDir'.tokenize(),
-            { Object o -> (( o instanceof File ) ? o : new File( o.toString())).canonicalPath.replace( '\\', '/' ) })
+            'dataDirectory artifactsDirectory backupDir cachesDir configDir libDir logsPath pluginDataDirectory pluginsDir systemDir'.tokenize()) {
+            Object o -> (( o instanceof File ) ? o : new File( o.toString())).canonicalPath.replace( '\\', '/' )
+        }
     }
 
 
@@ -83,8 +84,8 @@ class ReportHelper
             Map m, String beanName ->
             //noinspection GroovyGetterCallCanBePropertyAccess
             final beanClass  = context.getBean( beanName ).getClass()
-            final beanTitle  = beanClass.name in API_CLASSES ? javadocLink( beanClass ) : beanClass.name
-            final apiClasses = parentClasses( beanClass ).findAll{ it.name in API_CLASSES }
+            final beanTitle  = beanClass.name in apiClasses ? javadocLink( beanClass ) : beanClass.name
+            final apiClasses = parentClasses( beanClass ).findAll{ it.name in apiClasses }
 
             if ( apiClasses )
             {
@@ -106,7 +107,7 @@ class ReportHelper
      */
     private String javadocLink ( Class c, boolean useFullName = true )
     {
-        assert ( c && ( c.name in API_CLASSES )), "Class [$c.name] is not part of an Open API"
+        assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
         "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
     }
 
