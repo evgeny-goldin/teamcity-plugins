@@ -58,7 +58,7 @@ class ReportExtension extends SimpleCustomTab
 
         for ( ApplicationContext context = this.context; context; context = context.parent )
         {
-            final title = ( context == this.context ) ? 'Spring Context' : 'Parent Spring Context'
+            final title = (( context == this.context ) ? 'Plugin' : 'Parent' ) + ' Spring Context'
             model.tables << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
                               'Bean Class', 'Bean Name',
                               helper.contextTable( context )]

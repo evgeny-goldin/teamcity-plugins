@@ -5,19 +5,27 @@
 <jsp:useBean id="tables" scope="request" type="java.util.List"/>
 <jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
+<style type="text/css">
+    table#reportTable    { border       : 1px dotted }
+    table#reportTable td,
+    table#reportTable th { border-bottom: 1px dotted;
+                           border-right : 1px dotted }
+</style>
 
 <script type="text/javascript">
     ( function( j ){
         j( function()
         {
-            j( '#sendLink' ).click( function(){ alert( 'aaaa' ); j( '#scriptForm' ).submit() })
+            j( '#sendLink' ).click( function(){ j( '#scriptForm' ).submit() })
         });
     })( jQuery );
 </script>
 
-<form action="${action}" method="post" id="scriptForm">
-<textarea name="script" id="script" cols="80" rows="20">
-# Type your script and press Enter
+<c:url var="formAction" value="${ action }"/>
+
+<form action="${ formAction }" method="post" id="scriptForm">
+<textarea name="script" id="script" cols="80" rows="15">
+# Type your script and click "Send"
 # Variables available in the script context:
 # * "request" - instance of javax.servlet.http.HttpServletRequest
 # * "context" - instance of org.springframework.context.ApplicationContext
@@ -30,7 +38,7 @@
     <a href="#" id="sendLink">Send</a>
 </form>
 
-<table style="border: 0.5px dotted;">
+<table id="reportTable">
     <c:forEach items="${tables}" var="table">
 
         <%-- Every "table" is a 4-elements list: table title, left column header, right column header, data table --%>

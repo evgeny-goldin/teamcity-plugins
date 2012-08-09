@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletResponse
 
 class ReportController extends BaseController
 {
-    static final String MAPPING = 'displayReport.html'
+    static final String MAPPING = '/displayReport.html'
 
 
     ReportController ( SBuildServer         server,
                        WebControllerManager manager )
     {
         super( server )
-        manager.registerController( "/$MAPPING", this )
+        manager.registerController( MAPPING, this )
     }
 
 
