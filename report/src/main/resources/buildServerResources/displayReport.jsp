@@ -14,12 +14,14 @@
     table#reportTable td,
     table#reportTable th { border-bottom: 1px dotted;
                            border-right : 1px dotted }
+    .title { text-align: center }
 </style>
 
 <script type="text/javascript">
     ( function( j ){
         j( function()
         {
+            j( '#evalCode'     ).focus();
             j( '#evaluateLink' ).click( function(){
                 j.post( "${ ajaxAction }", // Goes to ReportController
                         { code: j( '#evalCode' ).val() },
@@ -33,21 +35,30 @@
     })( jQuery );
 </script>
 
+<br/>
+<p/>
 
 <table id="reportTable">
     <tr>
         <td colspan="2">
+            <h2 class="title"><a href="http://javadoc.jetbrains.net/teamcity/openapi/current/">Open API Javadoc</a></h2>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             <form action="#" id="codeForm">
 <textarea name="evalCode" id="evalCode" style="width: 100%;" rows="20">
-# Type your script and click "Evaluate", lines starting with '#' are ignored.
+# Type your script and click "Evaluate" or press Tab + Enter.
+# Lines starting with '#' are ignored.
 
 # Variables available in the script context:
-# * "request" - instance of javax.servlet.http.HttpServletRequest
-# * "context" - instance of org.springframework.context.ApplicationContext
-# * "server"  - instance of jetbrains.buildServer.serverSide.SBuildServer
+# - "request" - instance of type javax.servlet.http.HttpServletRequest
+# - "context" - instance of type org.springframework.context.ApplicationContext
+# - "server"  - instance of type jetbrains.buildServer.serverSide.SBuildServer
 
-# To retrieve currently logged in user (note the convenience 'c()' method):
-# Class.forName( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
+# Convenience c(..) method delegates to Class.forName(..) and allows to omit 'jetbrains.buildServer.' from the class name.
+
+# To retrieve currently logged in user:
 # c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
 # c( 'web.util.SessionUser' ).getUser( request )
 
@@ -57,7 +68,7 @@
 # context.getBean( 'buildServer' )
 </textarea>
             <br/>
-                <h2 style="text-align: center"><a href="#" id="evaluateLink">Evaluate</a></h2>
+                <h2 class="title"><a href="#" id="evaluateLink" class="title">Evaluate</a></h2>
 <textarea name="evalResult" id="evalResult" style="width: 100%;" rows="5"></textarea>
             </form>
         </td>
@@ -71,7 +82,7 @@
         <c:set var="dataTable"   value="${ table[ 3 ] }"/>
 
         <tr>
-            <td colspan="2" style="text-align: center; vertical-align: middle;"><h2>${ title }</h2></td>
+            <td colspan="2" class="title"><h2 class="title">${ title }</h2></td>
         </tr>
         <tr>
             <th>${ leftHeader  }</th>
