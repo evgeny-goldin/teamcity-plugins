@@ -129,8 +129,8 @@ class EvalController extends BaseController
      */
     private Object loadBean( Object o )
     {
-        final beans        = []   // Single beans
-        final beansOfType  = [:]  // "Beans of type X", mapping from bean name to bean instances
+        final beans        = [] as Set // Single beans
+        final beansOfType  = [:]       // "Beans of type X", mapping from bean name to bean instances
         final loadBeanFrom = {
             ApplicationContext c ->
 
@@ -145,7 +145,7 @@ class EvalController extends BaseController
         loadBeanFrom( context.parent )
         loadBeanFrom( context.parent.parent )
 
-        return ( beans && ( ! beansOfType )) ? ( beans.size() == 1 ? beans.first() : beans ) :
+        return ( beans && ( ! beansOfType )) ? ( beans.size() == 1 ? beans.toList().first() : beans ) :
                (( ! beans ) && beansOfType ) ? beansOfType :
                                                beans + beansOfType // List of beans plus a Map element
     }

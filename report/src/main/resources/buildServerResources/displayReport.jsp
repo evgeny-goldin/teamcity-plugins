@@ -50,24 +50,24 @@
 <textarea name="evalCode" id="evalCode" style="width: 100%" rows="20">
 # Type your script and click "Evaluate" or press Tab + Enter. Lines starting with '#' are ignored.
 
-# Variables available in the script context:
-# - "request" - instance of type javax.servlet.http.HttpServletRequest
-# - "context" - instance of type org.springframework.context.ApplicationContext
-# - "server"  - instance of type jetbrains.buildServer.serverSide.SBuildServer
+# Variables available:
+# - 'request' - current HTTP request,     instance of type javax.servlet.http.HttpServletRequest
+# - 'context' - plugins's Spring context, instance of type org.springframework.context.ApplicationContext
+# - 'server'  - server Spring bean,       instance of type jetbrains.buildServer.serverSide.SBuildServer
 
-# c('..') calls ClassLoader.loadClass('..') and allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead.
+# Helper methods available:
+# - c( 'className' )         - ClassLoader.loadClass( 'className' ) wrapper, allows to omit 'jetbrains.buildServer.' in class name or use 'j.b.' instead.
+# - b( 'name' / c( 'type' )) - attempts to retrieve Spring bean or beans specified in all contexts.
 
-# To retrieve request headers:
+# Examples:
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
-
-# To retrieve currently logged in user and its groups:
 # c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request ).allUserGroups
-# c( 'j.b.web.util.SessionUser'                   ).getUser( request ).allUserGroups
 # c( 'web.util.SessionUser'                       ).getUser( request ).allUserGroups
-
-# To retrieve context bean instance and read its properties:
 # context.getBean( c( 'serverSide.SBuildServer' )).properties
 # context.getBean( 'buildServer'                 ).dump()
+# b( c( 'serverSide.SBuildServer' )).properties
+# b( 'buildServer'                 ).dump()
+# assert b( 'buildServer' ) == server
 </textarea>
             <br/>
                 <h2 class="title"><a href="#" id="evaluateLink" class="title">Evaluate</a></h2>
