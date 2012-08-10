@@ -55,18 +55,19 @@
 # - "context" - instance of type org.springframework.context.ApplicationContext
 # - "server"  - instance of type jetbrains.buildServer.serverSide.SBuildServer
 
-# Convenience c(..) method delegates to Class.forName(..) and allows to omit 'jetbrains.buildServer.' from the class name.
+# c('..') calls Class.forName('..') and allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead.
 
 # To retrieve request headers:
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
 
 # To retrieve currently logged in user and its groups:
 # c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request ).allUserGroups
-# c( 'web.util.SessionUser' ).getUser( request ).allUserGroups
+# c( 'j.b.web.util.SessionUser'                   ).getUser( request ).allUserGroups
+# c( 'web.util.SessionUser'                       ).getUser( request ).allUserGroups
 
-# To retrieve SBuildServer instance:
-# context.getBean( c( 'serverSide.SBuildServer' ))
-# context.getBean( 'buildServer' )
+# To retrieve SBuildServer bean instance and read its properties:
+# context.getBean( c( 'serverSide.SBuildServer' )).properties
+# context.getBean( 'buildServer'                 ).properties
 </textarea>
             <br/>
                 <h2 class="title"><a href="#" id="evaluateLink" class="title">Evaluate</a></h2>

@@ -71,14 +71,16 @@ class ReportController extends BaseController
         {
             final c = {
                 String className ->
-                try
+
+                for ( name in [ className,
+                                'jetbrains.buildServer.' + className,
+                                'jetbrains.buildServer.' + className.replace( 'j.b.', '' ) ])
                 {
-                    Class.forName( className )
+                    try   { return Class.forName( name )}
+                    catch ( ClassNotFoundException ignored ){}
                 }
-                catch ( ClassNotFoundException ignored )
-                {
-                    Class.forName( 'jetbrains.buildServer.' + className )
-                }
+
+                throw new ClassNotFoundException( className )
             }
 
             new GroovyShell( new Binding([ request : request,
