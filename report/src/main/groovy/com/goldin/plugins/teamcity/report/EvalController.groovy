@@ -86,7 +86,8 @@ class EvalController extends BaseController
             new GroovyShell( new Binding([ request : request,
                                            context : context,
                                            server  : myServer,
-                                           c       : this.&loadClass ]), compilerConfiguration ).
+                                           c       : this.&loadClass,
+                                           b       : this.&loadBean ]), compilerConfiguration ).
             evaluate( expression )
         }
         catch ( Throwable t )
@@ -99,7 +100,7 @@ class EvalController extends BaseController
 
 
     /**
-     * {@link ClassLoader#loadClass(java.lang.String)} convenience wrapper, provided as "c" in code console.
+     * {@link ClassLoader#loadClass(java.lang.String)} convenience wrapper, provided as 'c' method in the code console.
      *
      * @param className name of the class to load, can omit 'jetbrains.buildServer.' or use 'j.b.' instead
      * @return class loaded
@@ -107,15 +108,73 @@ class EvalController extends BaseController
      */
     private Class loadClass ( String className )
     {
+        assert className
+
         for ( name in [ className,
                         'jetbrains.buildServer.' + className,
                         'jetbrains.buildServer.' + className.replace( 'j.b.', '' ) ])
         {
-            try   { return this.class.classLoader.loadClass( name )}
-            catch ( ClassNotFoundException ignored ){}
+            final c  = tryIt { this.class.classLoader.loadClass( name ) } as Class
+            if  ( c != null ){ return c }
         }
 
         throw new ClassNotFoundException( className )
+    }
+
+
+    /**
+     * {@link ApplicationContext#getBean} convenience wrapper, provided as 'b' method in the code console.
+     * @param o object to use for retrieving a bean, should be {@link String} or {@link Class}
+     * @return single bean, beans list or beans maps found
+     */
+    private Object loadBean( Object o )
+    {
+        final beans        = []   // Single beans
+        final beansOfType  = [:]  // "Beans of type X", mapping from bean name to bean instances
+        final loadBeanFrom = {
+            ApplicationContext c ->
+
+            final result = loadBean( o, c )
+            if (( ! ( result instanceof Map )) && ( result != null ))    { beans       << result }
+            if (( result instanceof Map      ) && ( ! result.isEmpty())) { beansOfType << result }
+        }
+
+        assert context.parent.parent.parent == null // There are only 3 contexts: plugin's and its two parents
+
+        loadBeanFrom( context )
+        loadBeanFrom( context.parent )
+        loadBeanFrom( context.parent.parent )
+
+        return ( beans && ( ! beansOfType )) ? ( beans.size() == 1 ? beans.first() : beans ) :
+               (( ! beans ) && beansOfType ) ? beansOfType :
+                                               beans + beansOfType // List of beans plus a Map element
+    }
+
+
+    /**
+     * Attempts to load a bean from the context specified.
+     *
+     * @param o object to use for retrieving a bean, should be {@link String} or {@link Class}
+     * @param c context to use for for retrieving a bean
+     * @return bean located or mapping of beans returned by {@link ApplicationContext#getBeansOfType}
+     */
+    private Object loadBean( Object o, ApplicationContext c )
+    {
+        assert (( o instanceof String ) || ( o instanceof Class )) && c
+
+        if ( o instanceof String )
+        {
+            tryIt { c.getBean(( String ) o )}
+        }
+        else if ( o instanceof Class )
+        {
+            tryIt( c.getBeansOfType(( Class ) o )){ c.getBean(( Class ) o )}
+        }
+        else
+        {
+            throw new RuntimeException(
+                "Object of type [${ o.class.name }] specified should be of type 'String' or 'Class'" )
+        }
     }
 
 
@@ -133,7 +192,7 @@ class EvalController extends BaseController
                                                          Set<String> forbiddenProperties,
                                                          Set<String> forbiddenConstants )
     {
-        final is         = { Closure c -> try { c() } catch ( ignored ){ false }}
+        final is         = { Closure c -> tryIt( false, c )}
         final customizer = new SecureASTCustomizer()
         customizer.addExpressionCheckers({
             Expression e ->
@@ -159,5 +218,19 @@ class EvalController extends BaseController
         config.addCompilationCustomizers( customizer )
 
         config
+    }
+
+
+    /**
+     * Attempts to invoke the closure specified and return its value.
+     *
+     * @param   defaultValue default value to return if closure invocation throws an Exception
+     * @param c closure to invoke
+     * @return  closure return value or default value
+     */
+    private tryIt( Object defaultValue = null, Closure c )
+    {
+        assert c
+        try { c() } catch ( ignored ) { defaultValue }
     }
 }
