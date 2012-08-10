@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletRequest
  */
 class ReportExtension extends SimpleCustomTab
 {
-    private final ReportHelper       helper = new ReportHelper()
+    static  final String             DELIMITER = '---------------'
+    private final ReportHelper       helper    = new ReportHelper()
     private final SBuildServer       server
     private final ApplicationContext context
     private final ServerPaths        paths
@@ -50,7 +51,8 @@ class ReportExtension extends SimpleCustomTab
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
         //noinspection GroovyConditionalCanBeElvis
-        model << [ report : helper.getReport( server, paths, context ),
-                   action : ReportController.MAPPING ]
+        model << [ report    : helper.getReport( server, paths, context ),
+                   action    : ReportController.MAPPING,
+                   delimiter : DELIMITER ]
     }
 }

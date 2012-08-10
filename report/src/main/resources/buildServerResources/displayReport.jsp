@@ -3,8 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- com.goldin.plugins.teamcity.report.ReportExtension#fillModel() --%>
-<jsp:useBean id="report" scope="request" type="java.util.List"/>
-<jsp:useBean id="action" scope="request" type="java.lang.String"/>
+<jsp:useBean id="report"    scope="request" type="java.util.List"/>
+<jsp:useBean id="action"    scope="request" type="java.lang.String"/>
+<jsp:useBean id="delimiter" scope="request" type="java.lang.String"/>
 
 <c:url var="ajaxAction" value="${ action }"/>
 
@@ -20,12 +21,11 @@
         j( function()
         {
             j( '#evaluateLink' ).click( function(){
+                var code = j( '#evalCode' ).val();
                 j.post( "${ ajaxAction }", // Goes to ReportController
-                        { code: j( '#evalCode' ).val()},
-                        function( response ) {
-                            j( '#evalResult' ).val( response );
-                            j( '#evalCode'   ).focus();
-                        },
+                        { code: code },
+                        function( response ) { j( '#evalCode' ).val( code + "\n\n${ delimiter }\n\n" + response ).
+                                                                focus() },
                         'text' );
             })
         });
@@ -33,10 +33,11 @@
 </script>
 
 
-
-<form action="#" id="codeForm">
-
-<textarea name="evalCode" id="evalCode" cols="80" rows="15">
+<table id="reportTable">
+    <tr>
+        <td colspan="2">
+            <form action="#" id="codeForm">
+<textarea name="evalCode" id="evalCode" style="width: 100%;" rows="20">
 # Type your script and click "Evaluate", lines starting with '#' are ignored.
 
 # Variables available in the script context:
@@ -44,18 +45,21 @@
 # * "context" - instance of org.springframework.context.ApplicationContext
 # * "server"  - instance of jetbrains.buildServer.serverSide.SBuildServer
 
-# To retrieve currently logged in user:
+# To retrieve currently logged in user (note the convenience 'c()' method):
 # Class.forName( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
+# c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
+# c( 'web.util.SessionUser' ).getUser( request )
 
 # To retrieve SBuildServer instance:
-# context.getBean( Class.forName( 'jetbrains.buildServer.serverSide.SBuildServer' ))
+# context.getBean( c( 'jetbrains.buildServer.serverSide.SBuildServer' ))
+# context.getBean( c( 'serverSide.SBuildServer' ))
+# context.getBean( 'buildServer' )
 </textarea>
-<a href="#" id="evaluateLink">Evaluate</a>
-<textarea name="evalResult" id="evalResult" cols="80" rows="15"></textarea>
-
-</form>
-
-<table id="reportTable">
+            <br/>
+            <a href="#" id="evaluateLink">Evaluate</a>
+            </form>
+        </td>
+    </tr>
     <c:forEach items="${report}" var="table">
 
         <%-- Every "table" is a 4-elements list: table title, left column header, right column header, data table --%>

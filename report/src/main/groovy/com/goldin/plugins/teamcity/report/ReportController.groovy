@@ -43,10 +43,19 @@ class ReportController extends BaseController
         String code = request.getParameter( 'code' )?.trim()
         if   ( code )
         {
-            code = code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) }.join( '\n' )
-            if ( code )
+            final   linesOfCode    = []
+            boolean delimiterFound = false
+
+            for ( line in code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) })
             {
-                final responseBytes    = ( getValue( request, code )?.toString() ?: 'null' ).getBytes( 'UTF-8' )
+                delimiterFound = ( delimiterFound || ( line == ReportExtension.DELIMITER ))
+                if ( delimiterFound ) { break }
+                linesOfCode << line
+            }
+
+            if ( linesOfCode )
+            {
+                final responseBytes    = ( getValue( request, linesOfCode.join( '\n' ))?.toString() ?: 'null' ).getBytes( 'UTF-8' )
                 response.contentLength = responseBytes.size()
                 response.contentType   = 'Content-Type: text/plain; charset=utf-8'
                 response.outputStream.write( responseBytes )
@@ -72,7 +81,22 @@ class ReportController extends BaseController
 
         try
         {
-            new GroovyShell( new Binding([ request: request, context: context, server: myServer ])).
+            final c = {
+                String className ->
+                try
+                {
+                    Class.forName( className )
+                }
+                catch ( ClassNotFoundException ignored )
+                {
+                    Class.forName( 'jetbrains.buildServer.' + className )
+                }
+            }
+
+            new GroovyShell( new Binding([ request : request,
+                                           context : context,
+                                           server  : myServer,
+                                           c       : c ])).
             evaluate( expression )
         }
         catch ( Throwable t )

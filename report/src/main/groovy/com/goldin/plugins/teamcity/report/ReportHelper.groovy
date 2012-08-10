@@ -84,7 +84,7 @@ class ReportHelper
             Map m, String beanName ->
             //noinspection GroovyGetterCallCanBePropertyAccess
             final beanClass  = context.getBean( beanName ).getClass()
-            final beanTitle  = beanClass.name in apiClasses ? javadocLink( beanClass ) : beanClass.name
+            final beanTitle  = beanClass.name in apiClasses ? javadocLink( beanClass ) : shorten( beanClass.name )
             final apiClasses = parentClasses( beanClass ).findAll{ it.name in apiClasses }
 
             if ( apiClasses )
@@ -92,9 +92,22 @@ class ReportHelper
                 beanTitle += ":<br/>- ${ apiClasses.collect{ javadocLink( it )}.join( '<br/>- ') }"
             }
 
-            m[ beanTitle ] = beanName
+            m[ beanTitle ] = ( beanName.size() > 70 ? beanName.substring( 0, 70 ) + '..' : beanName )
             m
         }
+    }
+
+
+    /**
+     * Shortens class name.
+     * @param className class name to make shorter
+     * @return class name made shorter
+     */
+    private shorten( String className )
+    {
+        assert className
+        className.startsWith( 'jetbrains.buildServer.' ) ? "j.b.${ className.substring( 'jetbrains.buildServer.'.length())}" :
+                                                           className
     }
 
 
@@ -108,7 +121,9 @@ class ReportHelper
     private String javadocLink ( Class c, boolean useFullName = true )
     {
         assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
-        "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>${ useFullName ? c.name : c.simpleName }</a>"
+        "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>" +
+            ( useFullName ? shorten( c.name ) : c.simpleName ) +
+        "</a>"
     }
 
 
