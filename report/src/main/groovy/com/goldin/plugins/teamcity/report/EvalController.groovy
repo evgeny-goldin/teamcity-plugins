@@ -76,7 +76,7 @@ class EvalController extends BaseController
                                 'jetbrains.buildServer.' + className,
                                 'jetbrains.buildServer.' + className.replace( 'j.b.', '' ) ])
                 {
-                    try   { return Class.forName( name )}
+                    try   { return this.class.classLoader.loadClass( name )}
                     catch ( ClassNotFoundException ignored ){}
                 }
 

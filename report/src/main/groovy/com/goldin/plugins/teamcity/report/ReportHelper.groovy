@@ -92,7 +92,7 @@ class ReportHelper
                 beanTitle += ":<br/>- ${ apiClasses.collect{ javadocLink( it )}.join( '<br/>- ') }"
             }
 
-            m[ beanTitle ] = ( beanName.size() > 70 ? beanName.substring( 0, 70 ) + '..' : beanName )
+            m[ beanTitle ] = ( beanName.size() > 70 ? beanName[ 0 .. 70 ] + '..' : beanName )
             m
         }
     }
@@ -106,7 +106,7 @@ class ReportHelper
     private shorten( String className )
     {
         assert className
-        className.startsWith( 'jetbrains.buildServer.' ) ? "j.b.${ className.substring( 'jetbrains.buildServer.'.length())}" :
+        className.startsWith( 'jetbrains.buildServer.' ) ? "j.b.${ className[ 'jetbrains.buildServer.'.length() .. -1 ]}" :
                                                            className
     }
 
@@ -123,7 +123,7 @@ class ReportHelper
         assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
         "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>" +
             ( useFullName ? shorten( c.name ) : c.simpleName ) +
-        "</a>"
+        '</a>'
     }
 
 

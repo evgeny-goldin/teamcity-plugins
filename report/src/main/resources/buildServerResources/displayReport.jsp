@@ -55,7 +55,7 @@
 # - "context" - instance of type org.springframework.context.ApplicationContext
 # - "server"  - instance of type jetbrains.buildServer.serverSide.SBuildServer
 
-# c('..') calls Class.forName('..') and allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead.
+# c('..') calls ClassLoader.loadClass('..') and allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead.
 
 # To retrieve request headers:
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
