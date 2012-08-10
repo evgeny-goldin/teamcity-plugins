@@ -25,7 +25,13 @@ class EvalController extends BaseController
      * Classes that are not allowed to be used when evaluating the code.
      */
     private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader ] as Set
-    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses*.name )
+    private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName' ] as Set
+    private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
+    private final Set<String>           forbiddenConstants    = forbiddenClasses*.name
+    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses,
+                                                                                       forbiddenMethods,
+                                                                                       forbiddenProperties,
+                                                                                       forbiddenConstants )
 
 
     EvalController ( SBuildServer         server,
@@ -115,24 +121,39 @@ class EvalController extends BaseController
 
     /**
      * Creates {@link CompilerConfiguration} instance secured from running any of {@link #forbiddenClasses}.
-     * @param forbiddenClasses fully-qualified name of classes that are not allowed to be used
-     * @return {@link CompilerConfiguration} instance secured from running any of {@link #forbiddenClasses}
+     *
+     * @param forbiddenClasses    fully-qualified name of classes that are not allowed to be used
+     * @param forbiddenMethods    name of methods that are not allowed to be used
+     * @param forbiddenProperties name of object properties that are not allowed to be used
+     * @param forbiddenConstants  name of constants that are not allowed to be used
+     * @return {@link CompilerConfiguration} instance secured from running forbidden code
      */
-    private CompilerConfiguration compilerConfiguration( Collection<String> forbiddenClasses )
+    private CompilerConfiguration compilerConfiguration( Set<Class>  forbiddenClasses,
+                                                         Set<String> forbiddenMethods,
+                                                         Set<String> forbiddenProperties,
+                                                         Set<String> forbiddenConstants )
     {
-        /**
-         * Code evaluation method checker is based on
-         * http://www.jroller.com/melix/entry/customizing_groovy_compilation_process
-         */
-
+        final is         = { Closure c -> try { c() } catch ( ignored ){ false }}
         final customizer = new SecureASTCustomizer()
         customizer.addExpressionCheckers({
             Expression e ->
 
-            try   { ! ( e.objectExpression.type.name in forbiddenClasses ) }
-            catch ( ignored ){ true }
+            boolean forbiddenCall = is { e.objectExpression.type.name in forbiddenClasses*.name } ||
+                                    is { e.methodAsString             in forbiddenMethods       } ||
+                                    is { e.propertyAsString           in forbiddenProperties    } ||
+                                    is { e.value                      in forbiddenConstants     }
+            ( ! forbiddenCall )
 
         } as SecureASTCustomizer.ExpressionChecker )
+
+        /**
+         * Various "attacks" to check:
+         * System.gc()
+         * System."${ 'gc' }"()
+         * System.methods.find{ it.name == 'gc' }.invoke( null )
+         * Class.forName( 'java.lang.System' )."${ 'gc' }"()
+         * this.class.classLoader.loadClass( 'java.lang.System' )."${ 'gc' }"()
+         */
 
         final config = new CompilerConfiguration()
         config.addCompilationCustomizers( customizer )
