@@ -3,10 +3,7 @@ import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import jetbrains.buildServer.web.util.SessionUser
-import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.Expression
-import org.codehaus.groovy.ast.expr.MethodCallExpression
-import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import org.springframework.context.ApplicationContext
@@ -14,8 +11,6 @@ import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-
-
 /**
  * Reads code evaluation ajax request and returns the evaluation result.
  */
@@ -29,8 +24,8 @@ class EvalController extends BaseController
     /**
      * Classes that are not allowed to be used when evaluating the code.
      */
-    private final Set<String>           forbiddenClasses      = [ Object.name, System.name, Runtime.name ] as Set
-    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses )
+    private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader ] as Set
+    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses*.name )
 
 
     EvalController ( SBuildServer         server,
@@ -134,9 +129,8 @@ class EvalController extends BaseController
         customizer.addExpressionCheckers({
             Expression e ->
 
-            ! ((( e instanceof MethodCallExpression ) || ( e instanceof PropertyExpression )) &&
-               ( e.objectExpression instanceof ClassExpression    ) &&
-               ( e.objectExpression.type.name in forbiddenClasses ))
+            try   { ! e.objectExpression.type.name in forbiddenClasses }
+            catch ( ignored ){ true }
 
         } as SecureASTCustomizer.ExpressionChecker )
 
