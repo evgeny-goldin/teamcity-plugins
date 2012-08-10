@@ -14,7 +14,7 @@ class ReportHelper
 {
     private final Set<String> apiClasses =
         ReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
-        readLines()*.trim().toSet().asImmutable()
+        readLines()*.trim().grep().toSet().asImmutable()
 
     /**
      * Retrieves reporting tables.

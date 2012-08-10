@@ -10,65 +10,76 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
+/**
+ * Reads code evaluation ajax request and returns the evaluation result.
+ */
 class ReportController extends BaseController
 {
     static final String MAPPING = '/displayReport.html'
 
     private final ApplicationContext context
-    private final ReportExtension    extension
 
 
     ReportController ( SBuildServer         server,
                        WebControllerManager manager,
-                       ApplicationContext   context,
-                       ReportExtension      extension )
+                       ApplicationContext   context )
     {
         super( server )
 
         manager.registerController( MAPPING, this )
-        this.context    = context
-        this.extension  = extension
+        this.context = context
     }
 
 
     @Override
-    @SuppressWarnings([ 'CatchThrowable' ])
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
         if ( ! SessionUser.getUser( request )?.systemAdministratorRoleGranted )
         {
-            response.sendRedirect( '' ) // Overview page
             return null
         }
 
-        String evalCode = request.getParameter( 'evalCode' )
-        request.session.setAttribute( ReportExtension.EVAL_CODE, evalCode )
-
-        if ( evalCode )
+        String code = request.getParameter( 'code' )?.trim()
+        if   ( code )
         {
-            final code = evalCode.readLines()*.trim().findAll{ ! it.startsWith( '#' ) }.join( '\n' ).trim()
+            code = code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) }.join( '\n' )
             if ( code )
             {
-                Object evalValue
-
-                try
-                {
-                    evalValue = new GroovyShell( new Binding( [ request: request, context: context, server: myServer ] )).
-                                evaluate( code )
-                }
-                catch ( Throwable t )
-                {
-                    evalValue = t.toString()
-                }
-
-                //noinspection GroovyConditionalCanBeElvis
-                request.session.setAttribute( ReportExtension.EVAL_RESULT, ( evalValue?.toString() ?: '&lt;null&gt;' ))
+                final responseBytes    = ( getValue( request, code )?.toString() ?: 'null' ).getBytes( 'UTF-8' )
+                response.contentLength = responseBytes.size()
+                response.contentType   = 'Content-Type: text/plain; charset=utf-8'
+                response.outputStream.write( responseBytes )
+                response.flushBuffer()
             }
         }
 
-        // "Report" tab in Administration => Diagnostics
-        response.sendRedirect( "admin/admin.html?item=diagnostics&tab=${ extension.tabId }" )
         null
+    }
+
+
+    /**
+     * Evaluates expression specified and returns the result.
+     *
+     * @param request    current HTTP request to pass to binding
+     * @param expression expression to evaluate
+     * @return           evaluation result or stack trace as a String
+     */
+    @SuppressWarnings([ 'CatchThrowable' ])
+    private Object getValue( HttpServletRequest request, String expression )
+    {
+        assert request && expression
+
+        try
+        {
+            new GroovyShell( new Binding([ request: request, context: context, server: myServer ])).
+            evaluate( expression )
+        }
+        catch ( Throwable t )
+        {
+            final writer = new StringWriter()
+            t.printStackTrace( new PrintWriter( writer ))
+            writer.toString()
+        }
     }
 }

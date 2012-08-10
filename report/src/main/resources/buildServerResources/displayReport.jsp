@@ -1,12 +1,12 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ include file="/include.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%-- com.goldin.plugins.teamcity.report.ReportExtension#fillModel() --%>
-<jsp:useBean id="tables"     scope="request" type="java.util.List"/>
-<jsp:useBean id="action"     scope="request" type="java.lang.String"/>
-<jsp:useBean id="evalCode"   scope="request" type="java.lang.String"/>
-<jsp:useBean id="evalResult" scope="request" type="java.lang.String"/>
+<jsp:useBean id="report" scope="request" type="java.util.List"/>
+<jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
+<c:url var="ajaxAction" value="${ action }"/>
 
 <style type="text/css">
     table#reportTable    { border       : 1px dotted }
@@ -19,23 +19,44 @@
     ( function( j ){
         j( function()
         {
-            j( '#sendLink' ).click( function(){ j( '#scriptForm' ).submit() })
+            j( '#evaluateLink' ).click( function(){
+                j.post( "${ ajaxAction }", // Goes to ReportController
+                        { code: j( '#evalCode' ).val()},
+                        function( response ) {
+                            j( '#evalResult' ).val( response );
+                            j( '#evalCode'   ).focus();
+                        },
+                        'text' );
+            })
         });
     })( jQuery );
 </script>
 
-<c:url var="formAction" value="${ action }"/>
 
-<form action="${ formAction }" method="post" id="scriptForm">
 
-<textarea name="evalCode" id="evalCode" cols="80" rows="15">${ evalCode }</textarea>
-<a href="#" id="sendLink" style="padding-bottom: 40px;">Evaluate</a>
-<textarea name="evalResult" id="evalResult" cols="80" rows="15">${ evalResult }</textarea>
+<form action="#" id="codeForm">
+
+<textarea name="evalCode" id="evalCode" cols="80" rows="15">
+# Type your script and click "Evaluate", lines starting with '#' are ignored.
+
+# Variables available in the script context:
+# * "request" - instance of javax.servlet.http.HttpServletRequest
+# * "context" - instance of org.springframework.context.ApplicationContext
+# * "server"  - instance of jetbrains.buildServer.serverSide.SBuildServer
+
+# To retrieve currently logged in user:
+# Class.forName( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
+
+# To retrieve SBuildServer instance:
+# context.getBean( Class.forName( 'jetbrains.buildServer.serverSide.SBuildServer' ))
+</textarea>
+<a href="#" id="evaluateLink">Evaluate</a>
+<textarea name="evalResult" id="evalResult" cols="80" rows="15"></textarea>
 
 </form>
 
 <table id="reportTable">
-    <c:forEach items="${tables}" var="table">
+    <c:forEach items="${report}" var="table">
 
         <%-- Every "table" is a 4-elements list: table title, left column header, right column header, data table --%>
         <c:set var="title"       value="${ table[ 0 ] }"/>
