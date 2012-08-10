@@ -65,7 +65,7 @@
 # c( 'j.b.web.util.SessionUser'                   ).getUser( request ).allUserGroups
 # c( 'web.util.SessionUser'                       ).getUser( request ).allUserGroups
 
-# To retrieve SBuildServer bean instance and read its properties:
+# To retrieve context bean instance and read its properties:
 # context.getBean( c( 'serverSide.SBuildServer' )).properties
 # context.getBean( 'buildServer'                 ).properties
 </textarea>

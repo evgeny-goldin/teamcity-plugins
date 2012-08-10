@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletResponse
 /**
  * Reads code evaluation ajax request and returns the evaluation result.
  */
-class ReportController extends BaseController
+class EvalController extends BaseController
 {
-    static final String MAPPING = '/displayReport.html'
+    static final String MAPPING = '/evalCode.html'
 
     private final ApplicationContext context
 
 
-    ReportController ( SBuildServer         server,
+    EvalController ( SBuildServer         server,
                        WebControllerManager manager,
                        ApplicationContext   context )
     {

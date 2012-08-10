@@ -52,7 +52,7 @@ class ReportExtension extends SimpleCustomTab
     {
         //noinspection GroovyConditionalCanBeElvis
         model << [ report    : helper.getReport( server, paths, context ),
-                   action    : ReportController.MAPPING,
+                   action    : EvalController.MAPPING,
                    delimiter : DELIMITER ]
     }
 }
