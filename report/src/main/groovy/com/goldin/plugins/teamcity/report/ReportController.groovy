@@ -35,27 +35,15 @@ class ReportController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
-        if ( ! SessionUser.getUser( request )?.systemAdministratorRoleGranted )
-        {
-            return null
-        }
-
         String code = request.getParameter( 'code' )?.trim()
-        if   ( code )
+
+        if ( code && SessionUser.getUser( request )?.systemAdministratorRoleGranted )
         {
-            final   linesOfCode    = []
-            boolean delimiterFound = false
+            code = code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) }.join( '\n' )
 
-            for ( line in code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) })
+            if ( code )
             {
-                delimiterFound = ( delimiterFound || ( line == ReportExtension.DELIMITER ))
-                if ( delimiterFound ) { break }
-                linesOfCode << line
-            }
-
-            if ( linesOfCode )
-            {
-                final responseBytes    = ( getValue( request, linesOfCode.join( '\n' ))?.toString() ?: 'null' ).getBytes( 'UTF-8' )
+                final responseBytes    = ( getValue( request, code )?.toString() ?: 'null' ).getBytes( 'UTF-8' )
                 response.contentLength = responseBytes.size()
                 response.contentType   = 'Content-Type: text/plain; charset=utf-8'
                 response.outputStream.write( responseBytes )

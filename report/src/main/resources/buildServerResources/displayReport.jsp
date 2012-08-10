@@ -21,11 +21,12 @@
         j( function()
         {
             j( '#evaluateLink' ).click( function(){
-                var code = j( '#evalCode' ).val();
                 j.post( "${ ajaxAction }", // Goes to ReportController
-                        { code: code },
-                        function( response ) { j( '#evalCode' ).val( code + "\n\n${ delimiter }\n\n" + response ).
-                                                                focus() },
+                        { code: j( '#evalCode' ).val() },
+                        function( response ) {
+                            j( '#evalResult' ).val( response );
+                            j( '#evalCode'   ).focus();
+                        },
                         'text' );
             })
         });
@@ -56,7 +57,8 @@
 # context.getBean( 'buildServer' )
 </textarea>
             <br/>
-            <a href="#" id="evaluateLink">Evaluate</a>
+                <h2 style="text-align: center"><a href="#" id="evaluateLink">Evaluate</a></h2>
+<textarea name="evalResult" id="evalResult" style="width: 100%;" rows="5"></textarea>
             </form>
         </td>
     </tr>
