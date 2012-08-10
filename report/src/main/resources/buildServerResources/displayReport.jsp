@@ -67,7 +67,7 @@
 
 # To retrieve context bean instance and read its properties:
 # context.getBean( c( 'serverSide.SBuildServer' )).properties
-# context.getBean( 'buildServer'                 ).properties
+# context.getBean( 'buildServer'                 ).dump()
 </textarea>
             <br/>
                 <h2 class="title"><a href="#" id="evaluateLink" class="title">Evaluate</a></h2>
