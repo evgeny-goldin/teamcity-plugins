@@ -129,7 +129,7 @@ class EvalController extends BaseController
         customizer.addExpressionCheckers({
             Expression e ->
 
-            try   { ! e.objectExpression.type.name in forbiddenClasses }
+            try   { ! ( e.objectExpression.type.name in forbiddenClasses ) }
             catch ( ignored ){ true }
 
         } as SecureASTCustomizer.ExpressionChecker )
