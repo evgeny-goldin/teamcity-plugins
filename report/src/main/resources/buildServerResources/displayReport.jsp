@@ -48,8 +48,7 @@
         <td colspan="2">
             <form action="#" id="codeForm">
 <textarea name="evalCode" id="evalCode" style="width: 100%" rows="20">
-# Type your script and click "Evaluate" or press Tab + Enter.
-# Lines starting with '#' are ignored.
+# Type your script and click "Evaluate" or press Tab + Enter. Lines starting with '#' are ignored.
 
 # Variables available in the script context:
 # - "request" - instance of type javax.servlet.http.HttpServletRequest
