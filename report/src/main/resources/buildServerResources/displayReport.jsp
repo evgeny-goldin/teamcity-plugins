@@ -47,7 +47,7 @@
     <tr>
         <td colspan="2">
             <form action="#" id="codeForm">
-<textarea name="evalCode" id="evalCode" style="width: 100%;" rows="20">
+<textarea name="evalCode" id="evalCode" style="width: 100%" rows="20">
 # Type your script and click "Evaluate" or press Tab + Enter.
 # Lines starting with '#' are ignored.
 
@@ -58,18 +58,20 @@
 
 # Convenience c(..) method delegates to Class.forName(..) and allows to omit 'jetbrains.buildServer.' from the class name.
 
-# To retrieve currently logged in user:
-# c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request )
-# c( 'web.util.SessionUser' ).getUser( request )
+# To retrieve request headers:
+# request.headerNames.collect{ [ it, request.getHeader( it )] }
+
+# To retrieve currently logged in user and its groups:
+# c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request ).allUserGroups
+# c( 'web.util.SessionUser' ).getUser( request ).allUserGroups
 
 # To retrieve SBuildServer instance:
-# context.getBean( c( 'jetbrains.buildServer.serverSide.SBuildServer' ))
 # context.getBean( c( 'serverSide.SBuildServer' ))
 # context.getBean( 'buildServer' )
 </textarea>
             <br/>
                 <h2 class="title"><a href="#" id="evaluateLink" class="title">Evaluate</a></h2>
-<textarea name="evalResult" id="evalResult" style="width: 100%;" rows="5"></textarea>
+<textarea name="evalResult" id="evalResult" style="width: 100%;" rows="10"></textarea>
             </form>
         </td>
     </tr>
