@@ -3,6 +3,12 @@ import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
 import jetbrains.buildServer.web.util.SessionUser
+import org.codehaus.groovy.ast.expr.ClassExpression
+import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.PropertyExpression
+import org.codehaus.groovy.control.CompilerConfiguration
+import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import org.springframework.context.ApplicationContext
 import org.springframework.web.servlet.ModelAndView
 
@@ -20,9 +26,16 @@ class EvalController extends BaseController
     private final ApplicationContext context
 
 
+    /**
+     * Classes that are not allowed to be used when evaluating the code.
+     */
+    private final Set<String>           forbiddenClasses      = [ Object.name, System.name, Runtime.name ] as Set
+    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses )
+
+
     EvalController ( SBuildServer         server,
-                       WebControllerManager manager,
-                       ApplicationContext   context )
+                     WebControllerManager manager,
+                     ApplicationContext   context )
     {
         super( server )
 
@@ -69,24 +82,10 @@ class EvalController extends BaseController
 
         try
         {
-            final c = {
-                String className ->
-
-                for ( name in [ className,
-                                'jetbrains.buildServer.' + className,
-                                'jetbrains.buildServer.' + className.replace( 'j.b.', '' ) ])
-                {
-                    try   { return this.class.classLoader.loadClass( name )}
-                    catch ( ClassNotFoundException ignored ){}
-                }
-
-                throw new ClassNotFoundException( className )
-            }
-
             new GroovyShell( new Binding([ request : request,
                                            context : context,
                                            server  : myServer,
-                                           c       : c ])).
+                                           c       : this.&loadClass ]), compilerConfiguration ).
             evaluate( expression )
         }
         catch ( Throwable t )
@@ -95,5 +94,55 @@ class EvalController extends BaseController
             t.printStackTrace( new PrintWriter( writer ))
             writer.toString()
         }
+    }
+
+
+    /**
+     * {@link ClassLoader#loadClass(java.lang.String)} convenience wrapper, provided as "c" in code console.
+     *
+     * @param className name of the class to load, can omit 'jetbrains.buildServer.' or use 'j.b.' instead
+     * @return class loaded
+     * @throws ClassNotFoundException if no attempts resulted in class loaded successfully
+     */
+    private Class loadClass ( String className )
+    {
+        for ( name in [ className,
+                        'jetbrains.buildServer.' + className,
+                        'jetbrains.buildServer.' + className.replace( 'j.b.', '' ) ])
+        {
+            try   { return this.class.classLoader.loadClass( name )}
+            catch ( ClassNotFoundException ignored ){}
+        }
+
+        throw new ClassNotFoundException( className )
+    }
+
+
+    /**
+     * Creates {@link CompilerConfiguration} instance secured from running any of {@link #forbiddenClasses}.
+     * @param forbiddenClasses fully-qualified name of classes that are not allowed to be used
+     * @return {@link CompilerConfiguration} instance secured from running any of {@link #forbiddenClasses}
+     */
+    private CompilerConfiguration compilerConfiguration( Collection<String> forbiddenClasses )
+    {
+        /**
+         * Code evaluation method checker is based on
+         * http://www.jroller.com/melix/entry/customizing_groovy_compilation_process
+         */
+
+        final customizer = new SecureASTCustomizer()
+        customizer.addExpressionCheckers({
+            Expression e ->
+
+            ! ((( e instanceof MethodCallExpression ) || ( e instanceof PropertyExpression )) &&
+               ( e.objectExpression instanceof ClassExpression    ) &&
+               ( e.objectExpression.type.name in forbiddenClasses ))
+
+        } as SecureASTCustomizer.ExpressionChecker )
+
+        final config = new CompilerConfiguration()
+        config.addCompilationCustomizers( customizer )
+
+        config
     }
 }
