@@ -1,5 +1,4 @@
 package com.goldin.plugins.teamcity.console
-
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths
 import org.springframework.context.ApplicationContext
@@ -10,24 +9,40 @@ import java.lang.reflect.Method
 /**
  * Various helper methods.
  */
-class ReportHelper
+class ContextReportHelper
 {
     private final Set<String> apiClasses =
-        ReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
+        ContextReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
         readLines()*.trim().grep().toSet().asImmutable()
 
-    /**
-     * Retrieves reporting tables.
-     *
-     * @param server current {@link SBuildServer} instance
-     * @param paths  current {@link ServerPaths} instance
-     * @param context current {@link ApplicationContext} instance
-     * @return reporting tables
-     */
-    List<List<?>> getReport ( SBuildServer server, ServerPaths paths, ApplicationContext context )
+
+    private final SBuildServer       server
+    private final ServerPaths        paths
+    private final ApplicationContext context
+
+
+    ContextReportHelper ( SBuildServer       server,
+                          ServerPaths        paths,
+                          ApplicationContext context )
     {
         assert server && paths && context
+        this.server  = server
+        this.paths   = paths
+        this.context = context
+    }
 
+
+    /**
+     * Retrieves context report tables.
+     *
+     * @return context report tables, every element in list returned is a 4-elements list:
+     *  - table title
+     *  - left column header
+     *  - right column header
+     *  - data table
+     */
+    List<List<?>> getContextReport ()
+    {
         final tables = []
         tables << [ javadocLink( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable( server )]
         tables << [ javadocLink( ServerPaths,  false ), 'Method Name', 'Value Returned', pathsTable ( paths  )]

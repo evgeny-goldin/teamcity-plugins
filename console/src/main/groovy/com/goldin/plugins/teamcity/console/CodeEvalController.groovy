@@ -1,4 +1,5 @@
 package com.goldin.plugins.teamcity.console
+
 import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
@@ -16,9 +17,9 @@ import javax.servlet.http.HttpServletResponse
 /**
  * Reads code evaluation ajax request and returns the evaluation result.
  */
-class EvalController extends BaseController
+class CodeEvalController extends BaseController
 {
-    static final String MAPPING = '/evalCode.html'
+    static final String MAPPING = '/consoleCodeEval.html'
 
     private final ApplicationContext context
 
@@ -36,7 +37,7 @@ class EvalController extends BaseController
                                                                                        forbiddenConstants )
 
 
-    EvalController ( SBuildServer         server,
+    CodeEvalController ( SBuildServer         server,
                      WebControllerManager manager,
                      ApplicationContext   context )
     {

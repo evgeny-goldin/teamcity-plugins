@@ -5,6 +5,8 @@
        xsi:schemaLocation = "http://www.springframework.org/schema/beans
                              http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean name="consoleExtension" class="com.goldin.plugins.teamcity.console.ConsoleExtension"/>
-    <bean name="evalController"   class="com.goldin.plugins.teamcity.console.EvalController"/>
+    <bean name="consoleExtension"    class="com.goldin.plugins.teamcity.console.ConsoleExtension"/>
+    <bean name="contextExtension"    class="com.goldin.plugins.teamcity.console.ContextExtension"/>
+    <bean name="codeEvalController"  class="com.goldin.plugins.teamcity.console.CodeEvalController"/>
+    <bean name="contextReportHelper" class="com.goldin.plugins.teamcity.console.ContextReportHelper"/>
 </beans>

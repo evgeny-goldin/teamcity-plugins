@@ -10,15 +10,21 @@ import javax.servlet.http.HttpServletRequest
 
 
 /**
- * Adds "Console" tab to Administration => Diagnostics.
+ * Adds "Context" tab to Administration => Diagnostics.
  */
-class ConsoleExtension extends SimpleCustomTab
+class ContextExtension extends SimpleCustomTab
 {
-    ConsoleExtension ( PagePlaces         pagePlaces,
-                       PluginDescriptor   descriptor )
+    private final ContextReportHelper helper
+
+
+    ContextExtension ( PagePlaces          pagePlaces,
+                       PluginDescriptor    descriptor,
+                       ContextReportHelper helper )
     {
         super( pagePlaces, PlaceId.ADMIN_SERVER_DIAGNOSTIC_TAB, descriptor.getParameterValue( 'name' ),
-               'displayConsole.jsp', 'Console' )
+               'displayContext.jsp', 'Context' )
+
+        this.helper = helper
         register()
     }
 
@@ -30,6 +36,6 @@ class ConsoleExtension extends SimpleCustomTab
     @Override
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
-        model << [ action : CodeEvalController.MAPPING ]
+        model << [ context : helper.contextReport ]
     }
 }
