@@ -56,6 +56,7 @@ class ContextExtension extends SimplePageExtension implements CustomTab
     @Override
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
-        model << [ context : helper.contextReport ]
+        model << [ context  : helper.contextReport,
+                   idPrefix : ContextExtension.name.replace( '.', '_' ) ]
     }
 }

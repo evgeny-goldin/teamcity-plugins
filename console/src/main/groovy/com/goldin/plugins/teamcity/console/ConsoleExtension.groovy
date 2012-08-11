@@ -30,6 +30,7 @@ class ConsoleExtension extends SimpleCustomTab
     @Override
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
-        model << [ action : CodeEvalController.MAPPING ]
+        model << [ action   : CodeEvalController.MAPPING,
+                   idPrefix : ConsoleExtension.name.replace( '.', '_' ) ]
     }
 }
