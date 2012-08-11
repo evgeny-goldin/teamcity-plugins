@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.report
+package com.goldin.plugins.teamcity.console
 import jetbrains.buildServer.controllers.BaseController
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.web.openapi.WebControllerManager
@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
+
 /**
  * Reads code evaluation ajax request and returns the evaluation result.
  */

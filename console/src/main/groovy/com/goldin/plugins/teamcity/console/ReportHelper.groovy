@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.report
+package com.goldin.plugins.teamcity.console
 
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths

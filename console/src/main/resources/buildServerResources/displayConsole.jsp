@@ -2,10 +2,9 @@
 <%@ include file="/include.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- com.goldin.plugins.teamcity.report.ReportExtension#fillModel() --%>
-<jsp:useBean id="report"    scope="request" type="java.util.List"/>
-<jsp:useBean id="action"    scope="request" type="java.lang.String"/>
-<jsp:useBean id="delimiter" scope="request" type="java.lang.String"/>
+<%-- ConsoleExtension#fillModel() --%>
+<jsp:useBean id="report" scope="request" type="java.util.List"/>
+<jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
 <c:url var="ajaxAction" value="${ action }"/>
 
@@ -23,7 +22,7 @@
         {
             j( '#evalCode'     ).focus();
             j( '#evaluateLink' ).click( function(){
-                j.post( "${ ajaxAction }", // Goes to ReportController
+                j.post( "${ ajaxAction }", // Goes to EvalController
                         { code: j( '#evalCode' ).val() },
                         function( response ) {
                             j( '#evalResult' ).val( response );

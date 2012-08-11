@@ -1,4 +1,4 @@
-package com.goldin.plugins.teamcity.report
+package com.goldin.plugins.teamcity.console
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths
 import jetbrains.buildServer.web.openapi.PagePlaces
@@ -15,22 +15,21 @@ import javax.servlet.http.HttpServletRequest
 /**
  * Adds "Report" tab to Administration => Diagnostics.
  */
-class ReportExtension extends SimpleCustomTab
+class ConsoleExtension extends SimpleCustomTab
 {
-    static  final String             DELIMITER = '---------------'
-    private final ReportHelper       helper    = new ReportHelper()
+    private final ReportHelper       helper = new ReportHelper()
     private final SBuildServer       server
     private final ApplicationContext context
     private final ServerPaths        paths
 
 
-    ReportExtension ( PagePlaces         pagePlaces,
+    ConsoleExtension ( PagePlaces         pagePlaces,
                       SBuildServer       server,
                       ApplicationContext context,
                       PluginDescriptor   descriptor,
                       ServerPaths        paths )
     {
-        super( pagePlaces, PlaceId.ADMIN_SERVER_DIAGNOSTIC_TAB, descriptor.getParameterValue( 'name' ), 'displayReport.jsp', 'Report' )
+        super( pagePlaces, PlaceId.ADMIN_SERVER_DIAGNOSTIC_TAB, descriptor.getParameterValue( 'name' ), 'displayConsole.jsp', 'Console' )
 
         this.server  = server
         this.context = context
@@ -51,8 +50,7 @@ class ReportExtension extends SimpleCustomTab
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
         //noinspection GroovyConditionalCanBeElvis
-        model << [ report    : helper.getReport( server, paths, context ),
-                   action    : EvalController.MAPPING,
-                   delimiter : DELIMITER ]
+        model << [ report : helper.getReport( server, paths, context ),
+                   action : EvalController.MAPPING ]
     }
 }

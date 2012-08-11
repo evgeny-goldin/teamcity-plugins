@@ -136,10 +136,10 @@ project( ':github' ) {
 }
 
 
-project( ':report' ) {
+project( ':console' ) {
     assembleTeamcityPluginConfig {
-        displayName 'Reporting Plugin'
-        description 'Plugin displaying Spring context content'
+        displayName 'Console Plugin'
+        description 'Plugin allowing to evaluate various code snippets in TeamCity environment'
     }
 }
 
