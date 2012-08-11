@@ -35,11 +35,9 @@ class CodeEvalController extends BaseController
                                                                                        forbiddenMethods,
                                                                                        forbiddenProperties,
                                                                                        forbiddenConstants )
-
-
     CodeEvalController ( SBuildServer         server,
-                     WebControllerManager manager,
-                     ApplicationContext   context )
+                         WebControllerManager manager,
+                         ApplicationContext   context )
     {
         super( server )
 

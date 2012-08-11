@@ -1,4 +1,6 @@
 package com.goldin.plugins.teamcity.console
+
+import jetbrains.buildServer.serverSide.BuildServerAdapter
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths
 import org.springframework.context.ApplicationContext
@@ -9,7 +11,7 @@ import java.lang.reflect.Method
 /**
  * Various helper methods.
  */
-class ContextReportHelper
+class ContextReportHelper extends BuildServerAdapter
 {
     private final Set<String> apiClasses =
         ContextReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
@@ -19,16 +21,27 @@ class ContextReportHelper
     private final SBuildServer       server
     private final ServerPaths        paths
     private final ApplicationContext context
+                  List<List<?>>      contextReport // Initialized upon TeamCity startup
 
 
     ContextReportHelper ( SBuildServer       server,
                           ServerPaths        paths,
                           ApplicationContext context )
     {
-        assert server && paths && context
+        assert server && paths
+
         this.server  = server
         this.paths   = paths
         this.context = context
+
+        this.server.addListener( this )
+    }
+
+
+    @Override
+    void serverStartup()
+    {
+        contextReport = createContextReport()
     }
 
 
@@ -41,7 +54,7 @@ class ContextReportHelper
      *  - right column header
      *  - data table
      */
-    List<List<?>> getContextReport ()
+    private List<List<?>> createContextReport ()
     {
         final tables = []
         tables << [ javadocLink( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable( server )]

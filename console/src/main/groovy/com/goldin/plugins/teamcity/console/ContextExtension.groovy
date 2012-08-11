@@ -38,7 +38,7 @@ class ContextExtension extends SimplePageExtension implements CustomTab
 
 
     @Override
-    String getTabId(){ descriptor.getParameterValue( 'name' ) + 'Context' }
+    String getTabId(){ 'context' }
 
 
     @Override
