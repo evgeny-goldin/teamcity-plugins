@@ -11,9 +11,9 @@ import java.lang.reflect.Method
 /**
  * Various helper methods.
  */
-class ContextReportHelper extends BuildServerAdapter
+final class ContextReportHelper extends BuildServerAdapter
 {
-    private final Set<String> apiClasses =
+    final Set<String> apiClasses =
         ContextReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
         readLines()*.trim().grep().toSet().asImmutable()
 
@@ -57,8 +57,8 @@ class ContextReportHelper extends BuildServerAdapter
     private List<List<?>> createContextReport ()
     {
         final tables = []
-        tables << [ javadocLink( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable( server )]
-        tables << [ javadocLink( ServerPaths,  false ), 'Method Name', 'Value Returned', pathsTable ( paths  )]
+        tables << [ javadocHtmlLink( SBuildServer, false ), 'Method Name', 'Value Returned', serverTable( server )]
+        tables << [ javadocHtmlLink( ServerPaths,  false ), 'Method Name', 'Value Returned', pathsTable ( paths  )]
 
         for ( ApplicationContext c = context; c; c = c.parent )
         {
@@ -112,12 +112,12 @@ class ContextReportHelper extends BuildServerAdapter
             Map m, String beanName ->
             //noinspection GroovyGetterCallCanBePropertyAccess
             final beanClass  = context.getBean( beanName ).getClass()
-            final beanTitle  = beanClass.name in apiClasses ? javadocLink( beanClass ) : shorten( beanClass.name )
+            final beanTitle  = beanClass.name in apiClasses ? javadocHtmlLink( beanClass ) : shorten( beanClass.name )
             final apiClasses = parentClasses( beanClass ).findAll{ it.name in apiClasses }
 
             if ( apiClasses )
             {
-                beanTitle += ":<br/>- ${ apiClasses.collect{ javadocLink( it )}.join( '<br/>- ') }"
+                beanTitle += ":<br/>- ${ apiClasses.collect{ javadocHtmlLink( it )}.join( '<br/>- ') }"
             }
 
             m[ beanTitle ] = ( beanName.size() > 70 ? beanName[ 0 .. 70 ] + '..' : beanName )
@@ -142,16 +142,27 @@ class ContextReportHelper extends BuildServerAdapter
     /**
      * Constructs a link to an Open API class Javadoc.
      *
-     * @param c           class to construct the link for
-     * @param useFullName whether full class name or simple name should be used as link title
-     * @return HTML link to class Javadoc
+     * @param c class to construct the link for
+     * @return  link to class Javadoc
      */
-    private String javadocLink ( Class c, boolean useFullName = true )
+    final String javadocLink ( Class c )
     {
         assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
-        "<a href='http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html'>" +
-            ( useFullName ? shorten( c.name ) : c.simpleName ) +
-        '</a>'
+        "http://javadoc.jetbrains.net/teamcity/openapi/current/${ c.name.replace( '.', '/' )}.html"
+    }
+
+
+    /**
+     * Constructs an html link to an Open API class Javadoc.
+     *
+     * @param c           class to construct the link for
+     * @param useFullName whether full class name or simple name should be used as link title
+     * @return            HTML link to class Javadoc
+     */
+    private final String javadocHtmlLink ( Class c, boolean useFullName = true )
+    {
+        assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
+        "<a href='${ javadocLink( c )}'>${ useFullName ? shorten( c.name ) : c.simpleName }</a>"
     }
 
 
@@ -192,7 +203,7 @@ class ContextReportHelper extends BuildServerAdapter
      * @param c class to retrieve its parent classes
      * @return all parent classes and interfaces of the class specified
      */
-    private Set<Class> parentClasses( Class c )
+    final Set<Class> parentClasses( Class c )
     {
         assert c
 

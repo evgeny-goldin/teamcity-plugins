@@ -17,16 +17,18 @@ import javax.servlet.http.HttpServletResponse
 /**
  * Reads code evaluation ajax request and returns the evaluation result.
  */
-class CodeEvalController extends BaseController
+final class CodeEvalController extends BaseController
 {
     static final String MAPPING = '/consoleCodeEval.html'
 
-    private final ApplicationContext context
+    private final ApplicationContext  context
+    private final ContextReportHelper reportHelper
 
 
     /**
-     * Classes that are not allowed to be used when evaluating the code.
+     * Classes, methods, properties and constants that are not allowed to be used when evaluating the code.
      */
+
     private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader ] as Set
     private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName' ] as Set
     private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
@@ -37,12 +39,14 @@ class CodeEvalController extends BaseController
                                                                                        forbiddenConstants )
     CodeEvalController ( SBuildServer         server,
                          WebControllerManager manager,
-                         ApplicationContext   context )
+                         ApplicationContext   context,
+                         ContextReportHelper  reportHelper )
     {
         super( server )
 
         manager.registerController( MAPPING, this )
-        this.context = context
+        this.context      = context
+        this.reportHelper = reportHelper
     }
 
 
@@ -58,7 +62,7 @@ class CodeEvalController extends BaseController
 
             if ( code )
             {
-                final responseBytes    = ( getValue( request, code )?.toString() ?: 'null' ).getBytes( 'UTF-8' )
+                final responseBytes    = javadocValue( getValue( request, code )).getBytes( 'UTF-8' )
                 response.contentLength = responseBytes.size()
                 response.contentType   = 'Content-Type: text/plain; charset=utf-8'
                 response.outputStream.write( responseBytes )
@@ -97,6 +101,47 @@ class CodeEvalController extends BaseController
             t.printStackTrace( new PrintWriter( writer ))
             writer.toString()
         }
+    }
+
+
+    /**
+     * Adds "Implements interfaces" and "Extends classes" Open API links to the code evaluation value.
+     *
+     * @param o code evaluation value
+     * @return code evaluation value Stringified plus Open API interfaces super-classes links.
+     */
+    private String javadocValue( Object o )
+    {
+        if ( o == null ) { return 'null' }
+
+        final builder    = new StringBuilder( o.toString())
+        final interfaces = []
+        final classes    = []
+
+        for ( c in reportHelper.parentClasses( o.class ).findAll{ it.name in reportHelper.apiClasses })
+        {
+            ( c.interface ? interfaces : classes ) << reportHelper.javadocLink( c )
+        }
+
+        if ( interfaces || classes )
+        {
+            builder.append( '\n\n----------------------------\n\n' )
+        }
+
+        if ( interfaces )
+        {
+            builder.append( 'Implements interfaces:\n' ).
+                    append( interfaces.join( '\n' )).
+                    append( '\n\n' )
+        }
+
+        if ( classes )
+        {
+            builder.append( 'Extends classes:\n' ).
+                    append( classes.join( '\n' ))
+        }
+
+        builder.toString()
     }
 
 

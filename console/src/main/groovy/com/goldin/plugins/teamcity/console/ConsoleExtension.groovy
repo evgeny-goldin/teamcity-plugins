@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest
 /**
  * Adds "Console" tab to Administration => Diagnostics.
  */
-class ConsoleExtension extends SimpleCustomTab
+final class ConsoleExtension extends SimpleCustomTab
 {
     ConsoleExtension ( PagePlaces         pagePlaces,
                        PluginDescriptor   descriptor )
