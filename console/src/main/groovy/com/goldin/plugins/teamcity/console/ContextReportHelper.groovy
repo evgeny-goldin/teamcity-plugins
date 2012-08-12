@@ -159,7 +159,7 @@ final class ContextReportHelper extends BuildServerAdapter
      * @param useFullName whether full class name or simple name should be used as link title
      * @return            HTML link to class Javadoc
      */
-    private final String javadocHtmlLink ( Class c, boolean useFullName = true )
+    private String javadocHtmlLink ( Class c, boolean useFullName = true )
     {
         assert ( c && ( c.name in apiClasses )), "Class [$c.name] is not part of an Open API"
         "<a href='${ javadocLink( c )}'>${ useFullName ? shorten( c.name ) : c.simpleName }</a>"

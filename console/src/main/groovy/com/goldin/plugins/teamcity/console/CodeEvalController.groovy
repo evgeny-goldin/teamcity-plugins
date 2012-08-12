@@ -33,10 +33,10 @@ final class CodeEvalController extends BaseController
     private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName' ] as Set
     private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
     private final Set<String>           forbiddenConstants    = forbiddenClasses*.name
-    private final CompilerConfiguration compilerConfiguration = compilerConfiguration( forbiddenClasses,
-                                                                                       forbiddenMethods,
-                                                                                       forbiddenProperties,
-                                                                                       forbiddenConstants )
+    private final CompilerConfiguration compilerConfiguration = createCompilerConfiguration( forbiddenClasses,
+                                                                                             forbiddenMethods,
+                                                                                             forbiddenProperties,
+                                                                                             forbiddenConstants )
     CodeEvalController ( SBuildServer         server,
                          WebControllerManager manager,
                          ApplicationContext   context,
@@ -191,9 +191,9 @@ final class CodeEvalController extends BaseController
         loadBeanFrom( context.parent )
         loadBeanFrom( context.parent.parent )
 
-        return ( beans && ( ! beansOfType )) ? ( beans.size() == 1 ? beans.toList().first() : beans ) :
-               (( ! beans ) && beansOfType ) ? beansOfType :
-                                               beans + beansOfType // List of beans plus a Map element
+        ( beans && ( ! beansOfType )) ? ( beans.size() == 1 ? beans.toList().first() : beans ) :
+        (( ! beans ) && beansOfType ) ? beansOfType :
+                                        beans + beansOfType // List of beans plus a Map element
     }
 
 
@@ -212,14 +212,9 @@ final class CodeEvalController extends BaseController
         {
             tryIt { c.getBean(( String ) o )}
         }
-        else if ( o instanceof Class )
-        {
-            tryIt( c.getBeansOfType(( Class ) o )){ c.getBean(( Class ) o )}
-        }
         else
         {
-            throw new RuntimeException(
-                "Object of type [${ o.class.name }] specified should be of type 'String' or 'Class'" )
+            tryIt( c.getBeansOfType(( Class ) o )){ c.getBean(( Class ) o )}
         }
     }
 
@@ -233,10 +228,10 @@ final class CodeEvalController extends BaseController
      * @param forbiddenConstants  name of constants that are not allowed to be used
      * @return {@link CompilerConfiguration} instance secured from running forbidden code
      */
-    private CompilerConfiguration compilerConfiguration( Set<Class>  forbiddenClasses,
-                                                         Set<String> forbiddenMethods,
-                                                         Set<String> forbiddenProperties,
-                                                         Set<String> forbiddenConstants )
+    private CompilerConfiguration createCompilerConfiguration ( Set<Class>  forbiddenClasses,
+                                                                Set<String> forbiddenMethods,
+                                                                Set<String> forbiddenProperties,
+                                                                Set<String> forbiddenConstants )
     {
         final is         = { Closure c -> tryIt( false, c )}
         final customizer = new SecureASTCustomizer()

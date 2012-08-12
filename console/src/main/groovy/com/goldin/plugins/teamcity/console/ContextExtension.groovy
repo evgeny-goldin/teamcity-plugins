@@ -23,6 +23,11 @@ final class ContextExtension extends SimplePageExtension implements CustomTab
     private final ContextReportHelper reportHelper
     private final PluginDescriptor    descriptor
 
+    // CustomTab methods implementations (properties instead of getters)
+    final String  tabId    = 'context'
+    final String  tabTitle = 'Context'
+    final boolean visible  = true
+
 
     ContextExtension ( PagePlaces          pagePlaces,
                        PluginDescriptor    descriptor,
@@ -35,18 +40,6 @@ final class ContextExtension extends SimplePageExtension implements CustomTab
         this.descriptor   = descriptor
         register()
     }
-
-
-    @Override
-    String getTabId(){ 'context' }
-
-
-    @Override
-    String getTabTitle(){ 'Context' }
-
-
-    @Override
-    boolean isVisible (){ true }
 
 
     @Override
