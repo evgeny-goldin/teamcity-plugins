@@ -29,7 +29,7 @@
 
 <tr>
     <td colspan="2">
-        <form action="#" id="codeForm">
+        <form action="#">
 <textarea name="${ evalCodeId }" id="${ evalCodeId }" style="width: 100%" rows="15">
 # Type your script and click "Evaluate" or press "Tab" + "Enter". Lines starting with '#' are ignored.
 
@@ -43,9 +43,10 @@
 # - b( 'name' / c( 'type' )) - attempts to retrieve Spring bean or beans specified in all contexts.
 
 # Examples:
+# request.request.dump()
+# new String( request.request.postData )
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
-# c( 'jetbrains.buildServer.web.util.SessionUser' ).getUser( request ).allUserGroups
-# c( 'web.util.SessionUser' ).getUser( request ).allModifications
+# c( 'web.util.SessionUser' ).getUser( request ).allUserGroups
 # b( c( 'serverSide.SBuildServer' )).properties
 # b( 'buildServer'                 ).dump()
 # b( c( 'web.openapi.SimplePageExtension' )).entrySet()*.key
