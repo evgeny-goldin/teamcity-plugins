@@ -32,6 +32,7 @@
         <form action="#">
 <textarea name="${ evalCodeId }" id="${ evalCodeId }" style="width: 100%" rows="15">
 # Type your script and click "Evaluate" or press "Tab" + "Enter". Lines starting with '#' are ignored.
+# Use o.properties and o.dump() to see internal details of any object.
 
 # Variables available in script context:
 # - "request" - current HTTP request,     instance of type javax.servlet.http.HttpServletRequest
