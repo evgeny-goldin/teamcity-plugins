@@ -64,8 +64,7 @@ final class CodeEvalController extends BaseController
             {
                 final responseBytes    = javadocValue( getValue( request, code )).getBytes( 'UTF-8' )
                 response.contentLength = responseBytes.size()
-//              Throws error - TokenMgrError: Lexical error at line 1, column 13.  Encountered: ":" (58), after : ""
-//              response.contentType   = 'Content-Type: text/plain; charset=utf-8'
+                response.contentType   = 'text/plain;charset=utf-8'
                 response.outputStream.write( responseBytes )
                 response.flushBuffer()
             }
