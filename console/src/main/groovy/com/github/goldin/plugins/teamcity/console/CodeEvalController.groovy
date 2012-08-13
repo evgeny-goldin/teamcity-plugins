@@ -50,7 +50,8 @@ final class CodeEvalController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
-        assert SessionUser.getUser( request )?.systemAdministratorRoleGranted
+        assert SessionUser.getUser( request ).systemAdministratorRoleGranted
+        assert 'POST'           == request.method
         assert 'XMLHttpRequest' == request.getHeader( 'x-requested-with' )
         assert request.getHeader( 'referer' ).endsWith( 'admin/admin.html?item=diagnostics&tab=console' )
 

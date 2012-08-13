@@ -5,29 +5,34 @@
 <jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
 <c:url var="evalAction"       value="${ action }"/>
-<c:url var="hotkeysSrc"       value="${ teamcityPluginResourcesPath }js/jquery.hotkeys.js"/>
+<c:url var="resources"        value="${ teamcityPluginResourcesPath }"/>
 
 <c:set var="evalCodeId"       value="${ idPrefix }_evalCode"/>
 <c:set var="evalCodeFunction" value="${ idPrefix }_evalCodeFunction"/>
 <c:set var="evalLinkId"       value="${ idPrefix }_evalLink"/>
 <c:set var="evalResultId"     value="${ idPrefix }_evalResult"/>
 <c:set var="timeId"           value="${ idPrefix }_time"/>
+<c:set var="progressId"       value="${ idPrefix }_progress"/>
 
-<script type="text/javascript" src="${ hotkeysSrc }"></script>
+<script type="text/javascript" src="${ resources }js/jquery.hotkeys.js"></script>
 <script type="text/javascript">
     ( function( j ){
         //noinspection NestedFunctionJS
         function ${ evalCodeFunction }()
         {
-            var time = new Date().getTime()
-            j.post( "${ evalAction }", // Goes to CodeEvalController
-                    { code: j( '#${ evalCodeId }' ).val() },
-                    function( response ) {
-                        j( '#${ evalResultId }' ).val( response );
-                        j( '#${ evalCodeId }'   ).focus();
-                        j( '#${ timeId }'       ).html( '<code>[' + ( new Date().getTime() - time ) + '] ms</code>' )
-                    },
-                    'text' );
+            var time = new Date().getTime();
+            j( '#${ timeId }' ).html( j( '#${ progressId }' ).html());
+            j.ajax({ url      : "${ evalAction }", // Goes to CodeEvalController
+                     type     : 'POST',
+                     data     : { code: j( '#${ evalCodeId }' ).val() },
+                     dataType : 'text',
+                     complete : function(){
+                         j( '#${ timeId }'     ).html( '<code>[' + ( new Date().getTime() - time ) + '] ms</code>' );
+                         j( '#${ evalCodeId }' ).focus();
+                     },
+                     error    : function()           { j( '#${ evalResultId }' ).val( 'Failed to send request' )},
+                     success  : function( response ) { j( '#${ evalResultId }' ).val( response )}
+                   });
         }
 
         j( function()
@@ -42,7 +47,9 @@
     <td colspan="2">
         <form action="#">
 <textarea name="${ evalCodeId }" id="${ evalCodeId }" style="width: 100%" rows="15">
-# Type your script and click "Evaluate" or press "Alt+R" or "Tab"+"Enter". Lines starting with '#' are ignored.
+# This a Groovy console where you can evaluate your code in TeamCity environment.
+# Type your script and click "Evaluate" or press "Alt + R" or "Tab" + "Enter".
+# Lines starting with '#' are ignored.
 # Use o.properties and o.dump() to see internal details of any object - see examples below.
 
 # Variables available in script context:
@@ -71,9 +78,10 @@
             <br/>
 <h2 class="title"><a href="#" id="${ evalLinkId }" class="title">Evaluate</a></h2>
 <textarea name="${ evalResultId }" id="${ evalResultId }" style="width: 100%;" rows="15"></textarea>
-<span style="float: right; margin-right: 10px;" id="${ timeId }"></span>
+<span id="${ timeId }" style="float: right; margin-right: 10px"></span>
         </form>
     </td>
 </tr>
+<span id="${ progressId }" style="display: none"><img src="${ resources }img/progress.gif"/></span>
 
 <%@ include file="after.jsp" %>
