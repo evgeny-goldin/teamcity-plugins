@@ -62,7 +62,7 @@
 # c( 'web.util.SessionUser' ).getUser( request ).associatedUser.descriptiveName
 # b( c( 'serverSide.SBuildServer' )).properties
 # b( 'buildServer'                 ).dump()
-# b( c( 'web.openapi.SimplePageExtension' )).entrySet()*.key
+# b( c( 'web.openapi.SimplePageExtension' )).values()
 
 </textarea>
             <br/>

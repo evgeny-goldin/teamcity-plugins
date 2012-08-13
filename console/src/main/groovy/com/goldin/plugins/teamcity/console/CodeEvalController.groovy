@@ -122,7 +122,8 @@ final class CodeEvalController extends BaseController
         final interfaces = []
         final classes    = []
 
-        for ( c in reportHelper.parentClasses( o.class ).findAll{ it.name in reportHelper.apiClasses })
+        //noinspection GroovyGetterCallCanBePropertyAccess
+        for ( c in reportHelper.parentClasses( o.getClass()).findAll{ it.name in reportHelper.apiClasses })
         {
             ( c.interface ? interfaces : classes ) << reportHelper.javadocLink( c )
         }

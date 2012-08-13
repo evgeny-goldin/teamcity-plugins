@@ -180,6 +180,7 @@ final class ContextReportHelper extends BuildServerAdapter
         assert o && propertyNames
 
         final Map<String,?>      map     = [:]
+        //noinspection GroovyGetterCallCanBePropertyAccess
         final Collection<Method> methods = o.class.methods
 
         for ( propertyName in propertyNames )
