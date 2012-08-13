@@ -10,7 +10,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~ -->
     <!-- Plugin log category -->
     <!-- ~~~~~~~~~~~~~~~~~~~ -->
-    <logCategory>com.goldin.plugins</logCategory>
+    <logCategory>com.github.goldin.plugins</logCategory>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Whether JS/CSS resources should be minified -->

@@ -128,14 +128,6 @@ project( ':messenger' ) {
 }
 
 
-project( ':github' ) {
-    assembleTeamcityPluginConfig {
-        displayName 'GitHub Plugin'
-        description 'Plugin for integrating TeamCity with GitHub issue tracker'
-    }
-}
-
-
 project( ':console' ) {
     assembleTeamcityPluginConfig {
         displayName 'Console Plugin'

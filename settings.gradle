@@ -1,3 +1,3 @@
 rootProject.name = 'teamcity-plugins'
-include 'messenger', 'github', 'console'
+include 'messenger', 'console'
 
