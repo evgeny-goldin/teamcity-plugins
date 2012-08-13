@@ -11,6 +11,7 @@
 <c:set var="evalCodeFunction" value="${ idPrefix }_evalCodeFunction"/>
 <c:set var="evalLinkId"       value="${ idPrefix }_evalLink"/>
 <c:set var="evalResultId"     value="${ idPrefix }_evalResult"/>
+<c:set var="timeId"           value="${ idPrefix }_time"/>
 
 <script type="text/javascript" src="${ hotkeysSrc }"></script>
 <script type="text/javascript">
@@ -18,11 +19,13 @@
         //noinspection NestedFunctionJS
         function ${ evalCodeFunction }()
         {
+            var time = new Date().getTime()
             j.post( "${ evalAction }", // Goes to CodeEvalController
                     { code: j( '#${ evalCodeId }' ).val() },
                     function( response ) {
                         j( '#${ evalResultId }' ).val( response );
                         j( '#${ evalCodeId }'   ).focus();
+                        j( '#${ timeId }'       ).html( '<code>[' + ( new Date().getTime() - time ) + '] ms</code>' )
                     },
                     'text' );
         }
@@ -68,6 +71,7 @@
             <br/>
 <h2 class="title"><a href="#" id="${ evalLinkId }" class="title">Evaluate</a></h2>
 <textarea name="${ evalResultId }" id="${ evalResultId }" style="width: 100%;" rows="15"></textarea>
+<span style="float: right; margin-right: 10px;" id="${ timeId }"></span>
         </form>
     </td>
 </tr>
