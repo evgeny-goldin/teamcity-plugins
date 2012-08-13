@@ -55,6 +55,7 @@
 # - b( 'beanName' / c( 'beanClass' )) - attempts to retrieve Spring bean or beans specified in all contexts
 
 # Examples:
+# [ request, context, server ]
 # request.request.dump()
 # new String( request.request.postData )
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
