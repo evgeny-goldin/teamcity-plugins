@@ -55,6 +55,7 @@
 # request.request.dump()
 # new String( request.request.postData )
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
+# server
 # server.projectManager.activeProjects
 # server.history.getEntries( true ).join( '\n' )
 # assert server == context.getBean( 'buildServer' )
