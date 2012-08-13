@@ -54,9 +54,13 @@ final class CodeEvalController extends BaseController
     protected ModelAndView doHandle ( HttpServletRequest  request,
                                       HttpServletResponse response )
     {
+        assert SessionUser.getUser( request )?.systemAdministratorRoleGranted
+        assert 'XMLHttpRequest' == request.getHeader( 'x-requested-with' )
+        assert request.getHeader( 'referer' ).endsWith( 'admin/admin.html?item=diagnostics&tab=console' )
+
         String code = request.getParameter( 'code' )?.trim()
 
-        if ( code && SessionUser.getUser( request )?.systemAdministratorRoleGranted )
+        if ( code )
         {
             code = code.readLines()*.trim().grep().findAll{ ! it.startsWith( '#' ) }.join( '\n' )
 
@@ -180,7 +184,7 @@ final class CodeEvalController extends BaseController
         final loadBeanFrom = {
             ApplicationContext c ->
 
-            final result = loadBean( o, c )
+            final result = loadBeanFromContext( o, c )
             if (( ! ( result instanceof Map )) && ( result != null ))    { beans       << result }
             if (( result instanceof Map      ) && ( ! result.isEmpty())) { beansOfType << result }
         }
@@ -204,7 +208,7 @@ final class CodeEvalController extends BaseController
      * @param c context to use for for retrieving a bean
      * @return bean located or mapping of beans returned by {@link ApplicationContext#getBeansOfType}
      */
-    private Object loadBean( Object o, ApplicationContext c )
+    private Object loadBeanFromContext ( Object o, ApplicationContext c )
     {
         assert (( o instanceof String ) || ( o instanceof Class )) && c
 
