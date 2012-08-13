@@ -31,7 +31,7 @@ final class CodeEvalController extends BaseController
      */
 
     private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader ] as Set
-    private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName' ] as Set
+    private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName', 'sleep' ] as Set
     private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
     private final Set<String>           forbiddenConstants    = forbiddenClasses*.name
     private final CompilerConfiguration compilerConfiguration = createCompilerConfiguration( forbiddenClasses,
