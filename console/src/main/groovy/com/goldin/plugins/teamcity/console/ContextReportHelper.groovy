@@ -62,10 +62,11 @@ final class ContextReportHelper extends BuildServerAdapter
 
         for ( ApplicationContext c = context; c; c = c.parent )
         {
-            final title = (( c == context ) ? 'Plugin' : 'Parent' ) + ' Spring Context'
-            tables << [ "<a href='http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationContext.html'>$title</a>",
+            final table = contextTable( c )
+            tables << [ "${ c == context ? 'Plugin' : 'Parent' } Spring Context - ${ table.size() } bean${ table.size() == 1 ? '' : 's' }<p/>" +
+                        "<code style='font-size: 82%'>${ context.toString() }</code>",
                         'Bean Class', 'Bean Name',
-                        contextTable( c )]
+                        table ]
         }
 
         tables

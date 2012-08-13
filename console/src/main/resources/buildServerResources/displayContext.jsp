@@ -12,16 +12,16 @@
     <c:set var="dataTable"   value="${ table[ 3 ] }"/>
 
     <tr>
-        <td colspan="2" class="title"><h2 class="title">${ title }</h2></td>
+        <td colspan="2" class="title"><h2 class="title">${ title }</h2></td> <%-- No "<c:out>" is used, may contain markup --%>
     </tr>
     <tr>
-        <th>${ leftHeader  }</th>
-        <th>${ rightHeader }</th>
+        <th><c:out value="${ leftHeader  }"/></th>
+        <th><c:out value="${ rightHeader }"/></th>
     </tr>
     <c:forEach items="${ dataTable.keySet() }" var="key">
     <tr>
-        <td><code>${ key }</code></td>
-        <td><code>${ dataTable.get( key ) }</code></td>
+        <td><code>${ key }</code></td> <%-- No "<c:out>" is used, may contain markup --%>
+        <td><code><c:out value="${ dataTable.get( key ) }"/></code></td>
     </tr>
     </c:forEach>
 </c:forEach>
