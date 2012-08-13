@@ -57,7 +57,7 @@ final class ContextReportHelper extends BuildServerAdapter
         {
             final table = contextTable( c )
             tables << [ "${ c == context ? 'Plugin' : 'Parent' } Spring Context - ${ table.size() } bean${ table.size() == 1 ? '' : 's' }<p/>" +
-                        "<code style='font-size: 82%'>${ context.toString() }</code>",
+                        "<code style='font-size: 82%'>${ c.toString() }</code>",
                         'Bean Class', 'Bean Name',
                         table ]
         }
