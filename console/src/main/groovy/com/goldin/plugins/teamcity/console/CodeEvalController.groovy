@@ -7,6 +7,7 @@ import jetbrains.buildServer.web.util.SessionUser
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.web.servlet.ModelAndView
 
@@ -21,8 +22,8 @@ final class CodeEvalController extends BaseController
 {
     static final String MAPPING = '/consoleCodeEval.html'
 
-    private final ApplicationContext  context
-    private final ContextReportHelper reportHelper
+    @Autowired private ApplicationContext  context
+    @Autowired private ContextReportHelper reportHelper
 
 
     /**
@@ -38,15 +39,10 @@ final class CodeEvalController extends BaseController
                                                                                              forbiddenProperties,
                                                                                              forbiddenConstants )
     CodeEvalController ( SBuildServer         server,
-                         WebControllerManager manager,
-                         ApplicationContext   context,
-                         ContextReportHelper  reportHelper )
+                         WebControllerManager manager )
     {
         super( server )
-
         manager.registerController( MAPPING, this )
-        this.context      = context
-        this.reportHelper = reportHelper
     }
 
 

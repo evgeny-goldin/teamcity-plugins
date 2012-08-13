@@ -3,6 +3,7 @@ package com.goldin.plugins.teamcity.console
 import jetbrains.buildServer.serverSide.BuildServerAdapter
 import jetbrains.buildServer.serverSide.SBuildServer
 import jetbrains.buildServer.serverSide.ServerPaths
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
 import java.lang.reflect.Method
@@ -13,35 +14,27 @@ import java.lang.reflect.Method
  */
 final class ContextReportHelper extends BuildServerAdapter
 {
-    final Set<String> apiClasses =
-        ContextReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
-        readLines()*.trim().grep().toSet().asImmutable()
+    final Set<String> apiClasses = ContextReportHelper.getResource( '/open-api-classes.txt' ).getText( 'UTF-8' ).
+                                   readLines()*.trim().grep().toSet().asImmutable()
 
 
-    private final SBuildServer       server
-    private final ServerPaths        paths
-    private final ApplicationContext context
-                  List<List<?>>      contextReport // Initialized upon TeamCity startup
+    @Autowired private SBuildServer       server
+    @Autowired private ServerPaths        paths
+    @Autowired private ApplicationContext context
+
+    List<List<?>> contextReport // Initialized upon TeamCity serverStartup()
 
 
-    ContextReportHelper ( SBuildServer       server,
-                          ServerPaths        paths,
-                          ApplicationContext context )
+    ContextReportHelper ( SBuildServer server )
     {
-        assert server && paths
-
-        this.server  = server
-        this.paths   = paths
-        this.context = context
-
-        this.server.addListener( this )
+        server.addListener( this )
     }
 
 
     @Override
     void serverStartup()
     {
-        contextReport = createContextReport()
+        contextReport = createContextReport().asImmutable()
     }
 
 

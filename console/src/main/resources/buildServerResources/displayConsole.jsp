@@ -51,8 +51,8 @@
 # - "server"  - server Spring bean,      instance of type jetbrains.buildServer.serverSide.SBuildServer
 
 # Helper methods available in script context:
-# - c( 'className' )         - ClassLoader.loadClass( 'className' ) wrapper, allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead
-# - b( 'name' / c( 'type' )) - attempts to retrieve Spring bean or beans specified in all contexts
+# - c( 'className' ) - ClassLoader.loadClass( 'className' ) wrapper, allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead
+# - b( 'beanName' / c( 'beanClass' )) - attempts to retrieve Spring bean or beans specified in all contexts
 
 # Examples:
 # request.request.dump()
@@ -63,8 +63,7 @@
 # server.history.getEntries( true ).join( '\n' )
 # assert server == context.getBean( 'buildServer' )
 # c( 'web.util.SessionUser' ).getUser( request ).associatedUser.descriptiveName
-# b( c( 'serverSide.SBuildServer' )).properties
-# b( 'buildServer'                 ).dump()
+# b( 'buildServer' ).properties
 # b( c( 'web.openapi.SimplePageExtension' )).values()
 
 </textarea>

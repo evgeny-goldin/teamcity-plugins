@@ -17,8 +17,7 @@ final class ConsoleExtension extends SimpleCustomTab
     ConsoleExtension ( PagePlaces         pagePlaces,
                        PluginDescriptor   descriptor )
     {
-        super( pagePlaces, PlaceId.ADMIN_SERVER_DIAGNOSTIC_TAB, descriptor.getParameterValue( 'name' ),
-               'displayConsole.jsp', 'Console' )
+        super( pagePlaces, PlaceId.ADMIN_SERVER_DIAGNOSTIC_TAB, descriptor.getParameterValue( 'name' ), 'displayConsole.jsp', 'Console' )
         register()
     }
 
@@ -31,6 +30,6 @@ final class ConsoleExtension extends SimpleCustomTab
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
     {
         model << [ action   : CodeEvalController.MAPPING,
-                   idPrefix : ConsoleExtension.name.replace( '.', '_' ) ]
+                   idPrefix : this.class.name.replace( '.', '_' ) ]
     }
 }
