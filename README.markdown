@@ -7,9 +7,9 @@ TeamCity Plugins
 
 * Run `gradlew` to build the plugins.
 
-* Run `gradlew cpz` to build and copy plugins plugins to ".BuildServer/plugins".
+* Run `gradlew cpz` to build and copy plugins to ".BuildServer/plugins".
 
-* Run `gradlew cps -DTeamCityApp=<TC directory>` to copy plugin static resources (jsp, js, and css files).
+* Run `gradlew cps -DTeamCityApp=<TC directory>` to copy plugins static resources (jsp, js, and css files).
 
     `<TC directory>` is a directory where TC web application is located, such as "~/TeamCity/webapps/bs". It should contain a "plugins/yourPlugin" directory with your plugin static resources.
 
