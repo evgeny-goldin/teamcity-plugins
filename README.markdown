@@ -9,32 +9,21 @@ TeamCity Plugins
 
     gradlew idea
 
-
  To build plugins:
 ---------------------------------------------------------
 
     gradlew
-    gradlew clean build
 
-
- To deploy plugins to standalone TC server:
+ To build and copy plugins plugins to ".BuildServer/plugins":
 ---------------------------------------------------------
 
-Make sure TC server is not running!
+    gradlew cpz
 
-    gradlew deploy -DteamCityDir=<TC directory>
-
-
-`<TC directory>` is directory where standalone TC server is running.
-
-
-
- To copy static resources (jsp, js, css files) to standalone TC server:
+ To copy static resources (jsp, js, and css files):
 ---------------------------------------------------------
 
-Make sure `".BuildServer/config/internal.properties"` contains `"teamcity.development.mode=true"` _(see [wiki](http://confluence.jetbrains.net/display/TCD65/Development+Environment) for more details)_
+Make sure ".BuildServer/config/internal.properties" contains `"teamcity.development.mode=true"`, see [wiki](http://confluence.jetbrains.net/display/TCD7/Development+Environment) for more details.
 
-    gradlew copy -DteamCityDir=<TC directory>
+    gradlew cps -DTeamCityApp=<TC directory>
 
-
-`<TC directory>` is directory where standalone TC server is running.
+`<TC directory>` is a directory where TC web application is located, such as "~/TeamCity/webapps/bs". It should contain a "plugins/yourPlugin" directory with your plugin static resources.
