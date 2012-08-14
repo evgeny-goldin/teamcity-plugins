@@ -4,21 +4,20 @@
 <%-- ConsoleExtension#fillModel() --%>
 <jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
-<c:url var="evalAction"       value="${ action }"/>
-<c:url var="resources"        value="${ teamcityPluginResourcesPath }"/>
+<c:url var="evalAction"   value="${ action }"/>
+<c:url var="resources"    value="${ teamcityPluginResourcesPath }"/>
 
-<c:set var="evalCodeId"       value="${ idPrefix }_evalCode"/>
-<c:set var="evalCodeFunction" value="${ idPrefix }_evalCodeFunction"/>
-<c:set var="evalLinkId"       value="${ idPrefix }_evalLink"/>
-<c:set var="evalResultId"     value="${ idPrefix }_evalResult"/>
-<c:set var="timeId"           value="${ idPrefix }_time"/>
-<c:set var="progressId"       value="${ idPrefix }_progress"/>
+<c:set var="evalCodeId"   value="${ idPrefix }_evalCode"/>
+<c:set var="evalLinkId"   value="${ idPrefix }_evalLink"/>
+<c:set var="evalResultId" value="${ idPrefix }_evalResult"/>
+<c:set var="timeId"       value="${ idPrefix }_time"/>
+<c:set var="progressId"   value="${ idPrefix }_progress"/>
 
 <script type="text/javascript" src="${ resources }js/jquery.hotkeys.js"></script>
 <script type="text/javascript">
     ( function( j ){
-        //noinspection NestedFunctionJS
-        function ${ evalCodeFunction }()
+
+        function evaluate()
         {
             var time = new Date().getTime();
             j( '#${ timeId }' ).html( j( '#${ progressId }' ).html());
@@ -37,8 +36,8 @@
 
         j( function()
         {
-            j( '#${ evalCodeId }' ).focus().bind ( 'keydown', 'alt+r', ${ evalCodeFunction } ); // https://github.com/jeresig/jquery.hotkeys
-            j( '#${ evalLinkId }' ).click( ${ evalCodeFunction } )
+            j( '#${ evalCodeId }' ).focus().bind ( 'keydown', 'alt+r', evaluate ); // https://github.com/jeresig/jquery.hotkeys
+            j( '#${ evalLinkId }' ).click( evaluate )
         });
     })( jQuery );
 </script>
