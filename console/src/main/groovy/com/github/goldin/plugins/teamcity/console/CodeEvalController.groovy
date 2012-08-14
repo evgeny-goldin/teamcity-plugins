@@ -27,7 +27,7 @@ final class CodeEvalController extends BaseController
 
 
     /**
-     * Classes, methods, properties and constants that are not allowed to be used when evaluating the code.
+     * Classes, methods, and properties that are not allowed to be used when evaluating the code.
      */
 
     private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader, Thread, ThreadGroup ] as Set
