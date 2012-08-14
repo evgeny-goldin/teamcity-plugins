@@ -30,14 +30,12 @@ final class CodeEvalController extends BaseController
      * Classes, methods, properties and constants that are not allowed to be used when evaluating the code.
      */
 
-    private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader ] as Set
-    private final Set<String>           forbiddenMethods      = [ 'getClassLoader', 'loadClass', 'forName', 'sleep' ] as Set
+    private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader, Thread, ThreadGroup ] as Set
+    private final Set<String>           forbiddenMethods      = [ 'exit', 'load', 'gc', 'getClassLoader', 'loadClass', 'forName', 'sleep', 'start', 'stop' ] as Set
     private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
-    private final Set<String>           forbiddenConstants    = forbiddenClasses*.name
     private final CompilerConfiguration compilerConfiguration = createCompilerConfiguration( forbiddenClasses,
                                                                                              forbiddenMethods,
-                                                                                             forbiddenProperties,
-                                                                                             forbiddenConstants )
+                                                                                             forbiddenProperties )
     CodeEvalController ( SBuildServer         server,
                          WebControllerManager manager )
     {
@@ -227,16 +225,15 @@ final class CodeEvalController extends BaseController
      * @param forbiddenClasses    fully-qualified name of classes that are not allowed to be used
      * @param forbiddenMethods    name of methods that are not allowed to be used
      * @param forbiddenProperties name of object properties that are not allowed to be used
-     * @param forbiddenConstants  name of constants that are not allowed to be used
      * @return {@link CompilerConfiguration} instance secured from running forbidden code
      */
     private CompilerConfiguration createCompilerConfiguration ( Set<Class>  forbiddenClasses,
                                                                 Set<String> forbiddenMethods,
-                                                                Set<String> forbiddenProperties,
-                                                                Set<String> forbiddenConstants )
+                                                                Set<String> forbiddenProperties )
     {
-        final is         = { Closure c -> tryIt( false, c )}
-        final customizer = new SecureASTCustomizer()
+        final forbiddenConstants = ( forbiddenClasses*.name + forbiddenMethods + forbiddenProperties ) as Set
+        final is                 = { Closure c -> tryIt( false, c )} // Attempts to evaluate the closure and return its value
+        final customizer         = new SecureASTCustomizer()
         customizer.addExpressionCheckers({
             Expression e ->
 

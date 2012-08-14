@@ -48,25 +48,22 @@
         <form action="#">
 <textarea name="${ evalCodeId }" id="${ evalCodeId }" style="width: 100%" rows="15">
 # This a Groovy console where you can evaluate your code in TeamCity environment.
-# Type your script and click "Evaluate" or press "Alt + R" or "Tab" + "Enter".
-# Lines starting with '#' are ignored.
+# Click "Evaluate" or press "Alt + R" or "Tab" + "Enter" to run the script. Lines starting with '#' are ignored.
 # Use o.properties and o.dump() to see internal details of any object - see examples below.
 
-# Variables available in script context:
+# Variables and helper methods available in script context:
 # - "request" - current HTTP request,    instance of type javax.servlet.http.HttpServletRequest
 # - "context" - plugin's Spring context, instance of type org.springframework.context.ApplicationContext
 # - "server"  - server Spring bean,      instance of type jetbrains.buildServer.serverSide.SBuildServer
-
-# Helper methods available in script context:
 # - c( 'className' ) - ClassLoader.loadClass( 'className' ) wrapper, allows to omit 'jetbrains.buildServer.' from the class name or use 'j.b.' instead
 # - b( 'beanName' / c( 'beanClass' )) - attempts to retrieve Spring bean or beans specified in all contexts
 
 # Examples:
+# server
 # [ request, context, server ]
 # request.request.dump()
 # new String( request.request.postData )
 # request.headerNames.collect{ [ it, request.getHeader( it )] }
-# server
 # server.projectManager.activeProjects
 # server.history.getEntries( true ).join( '\n' )
 # assert server == context.getBean( 'buildServer' )
