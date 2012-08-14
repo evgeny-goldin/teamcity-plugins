@@ -35,9 +35,9 @@
         }
 
         j( function()
-        {
-            j( '#${ evalCodeId }' ).focus().bind ( 'keydown', 'alt+r', evaluate ); // https://github.com/jeresig/jquery.hotkeys
-            j( '#${ evalLinkId }' ).click( evaluate )
+        {   // https://github.com/jeresig/jquery.hotkeys
+            j( '#${ evalCodeId }' ).bind ( 'keydown', 'alt+r', evaluate ).focus();
+            j( '#${ evalLinkId }' ).click( evaluate );
         });
     })( jQuery );
 </script>
