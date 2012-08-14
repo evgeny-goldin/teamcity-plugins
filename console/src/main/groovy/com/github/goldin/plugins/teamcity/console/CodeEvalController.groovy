@@ -30,8 +30,10 @@ final class CodeEvalController extends BaseController
      * Classes, methods, and properties that are not allowed to be used when evaluating the code.
      */
 
-    private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader, Thread, ThreadGroup ] as Set
-    private final Set<String>           forbiddenMethods      = [ 'exit', 'load', 'gc', 'getClassLoader', 'loadClass', 'forName', 'sleep', 'start', 'stop' ] as Set
+    private final Set<Class>            forbiddenClasses      = [ System, Runtime, Class, ClassLoader, URLClassLoader,
+                                                                  Thread, ThreadGroup ] as Set
+    private final Set<String>           forbiddenMethods      = [ 'exit', 'load', 'gc', 'getClassLoader', 'loadClass',
+                                                                  'forName', 'sleep', 'start', 'stop' ] as Set
     private final Set<String>           forbiddenProperties   = [ 'classLoader' ] as Set
     private final CompilerConfiguration compilerConfiguration = createCompilerConfiguration( forbiddenClasses,
                                                                                              forbiddenMethods,
