@@ -4,28 +4,54 @@
 <%-- ConsoleExtension#fillModel() --%>
 <jsp:useBean id="action" scope="request" type="java.lang.String"/>
 
-<c:url var="evalAction"   value="${ action }"/>
-<c:url var="resources"    value="${ teamcityPluginResourcesPath }"/>
+<c:url var="evalAction"     value="${ action }"/>
+<c:url var="resources"      value="${ teamcityPluginResourcesPath }"/>
 
-<c:set var="evalCodeId"   value="${ idPrefix }_evalCode"/>
-<c:set var="evalLinkId"   value="${ idPrefix }_evalLink"/>
-<c:set var="evalResultId" value="${ idPrefix }_evalResult"/>
-<c:set var="timeId"       value="${ idPrefix }_time"/>
-<c:set var="progressId"   value="${ idPrefix }_progress"/>
+<c:set var="evalCodeId"     value="${ idPrefix }_evalCode"/>
+<c:set var="evalLinkId"     value="${ idPrefix }_evalLink"/>
+<c:set var="evalResultId"   value="${ idPrefix }_evalResult"/>
+<c:set var="timeId"         value="${ idPrefix }_time"/>
+<c:set var="progressId"     value="${ idPrefix }_progress"/>
+<c:set var="invisibleClass" value="${ idPrefix }_invisible"/>
+
+
+<style type="text/css">
+    .${ invisibleClass } { visibility: hidden; }
+</style>
+
 
 <script type="text/javascript" src="${ resources }js/jquery.hotkeys.js"></script>
 <script type="text/javascript">
     ( function( j ){
 
+        function unbindListeners()
+        {
+            j( '#${ evalCodeId }' ).unbind( 'keydown' );
+            j( '#${ evalLinkId }' ).unbind( 'click'   );
+        }
+
+        function bindListeners()
+        {
+            j( '#${ evalCodeId }' ).bind ( 'keydown', 'alt+r', evaluate ).focus();
+            j( '#${ evalLinkId }' ).click( evaluate );
+        }
+
         function evaluate()
         {
             var time = new Date().getTime();
-            j( '#${ timeId }' ).html( j( '#${ progressId }' ).html());
+
+            unbindListeners();
+
+            j( '#${ timeId }'     ).html    ( j( '#${ progressId }' ).html());
+            j( '#${ evalLinkId }' ).addClass( '${ invisibleClass }' );
+
             j.ajax({ url      : "${ evalAction }", // Goes to CodeEvalController
                      type     : 'POST',
                      data     : { code: j( '#${ evalCodeId }' ).val() },
                      dataType : 'text',
                      complete : function(){
+                         bindListeners();
+                         j( '#${ evalLinkId }' ).removeClass( '${ invisibleClass }' );
                          j( '#${ timeId }'     ).html( '<code>[' + ( new Date().getTime() - time ) + '] ms</code>' );
                          j( '#${ evalCodeId }' ).focus();
                      },
@@ -34,11 +60,8 @@
                    });
         }
 
-        j( function()
-        {   // https://github.com/jeresig/jquery.hotkeys
-            j( '#${ evalCodeId }' ).bind ( 'keydown', 'alt+r', evaluate ).focus();
-            j( '#${ evalLinkId }' ).click( evaluate );
-        });
+        j( bindListeners );
+
     })( jQuery );
 </script>
 
