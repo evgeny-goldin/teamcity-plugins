@@ -3,6 +3,6 @@
              xmlns              = "http://www.zeroturnaround.com"
              xsi:schemaLocation = "http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
     <classpath>
-        <dir name="${project.root}/out/production/console"/>
+        <dir name="${project.root}\out\production\console"/>
     </classpath>
 </application>
