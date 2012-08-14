@@ -13,5 +13,5 @@ TeamCity Plugins
 
     `<TC directory>` is a directory where TC web application is located, such as "~/TeamCity/webapps/bs". It should contain a "plugins/yourPlugin" directory with your plugin static resources.
 
-    Make sure ".BuildServer/config/internal.properties" contains `"teamcity.development.mode=true"`, see [wiki](http://confluence.jetbrains.net/display/TCD7/Development+Environment) for more details.
+    Make sure "~/.BuildServer/config/internal.properties" contains `"teamcity.development.mode=true"`, see [wiki](http://confluence.jetbrains.net/display/TCD7/Development+Environment) for more details.
 
