@@ -3,6 +3,8 @@ TeamCity Plugins
 
 * [Documentation](http://evgeny-goldin.com/wiki/TeamCity_Console)
 
+* [Download](http://evgenyg.artifactoryonline.com/evgenyg/plugins-releases-local/com/github/goldin/teamcity/)
+
 * <a href="http://evgeny-goldin.org/teamcity/viewType.html?buildTypeId=bt57&tab=buildTypeStatusDiv&guest=1"><img src="http://evgeny-goldin.org/teamcity/app/rest/builds/buildType:(id:bt57)/statusIcon"/></a>
 
 * Run `gradlew idea` to generate IDEA files.
