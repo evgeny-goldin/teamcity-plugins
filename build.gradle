@@ -18,7 +18,7 @@ apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/src/main
 
 
 idea.project {
-    jdkName = '1.6'
+    jdkName = '1.7'
     ipr.withXml { provider -> provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git' }
 }
 
@@ -30,6 +30,7 @@ idea.module {
             appendNode( 'excludeFolder', [ url : 'file://$MODULE_DIR$/gradle' ])
             appendNode( 'excludeFolder', [ url : 'file://$MODULE_DIR$/out'    ])
         }
+        provider.node.component.first().appendNode( 'orderEntry', [ type : 'library', name : 'Groovy', level: 'application' ])
     }
 }
 
@@ -136,4 +137,4 @@ project( ':console' ) {
 }
 
 
-task wrapper( type: Wrapper ) { gradleVersion = '1.1' }
+task wrapper( type: Wrapper ) { gradleVersion = '1.2' }
