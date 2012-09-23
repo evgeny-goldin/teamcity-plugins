@@ -43,7 +43,7 @@ subprojects {
     apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/teamcity.gradle'
 
     group                = 'com.github.goldin.teamcity'
-    version              = '0.2'
+    version              = '0.3-SNAPSHOT'
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
