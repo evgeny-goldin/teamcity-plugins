@@ -3,7 +3,9 @@ apply plugin: 'idea'
 
 buildscript {
     repositories { mavenRepo url: 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }
-    dependencies { classpath 'com.github.goldin.plugins.gradle:teamcity:0.2-SNAPSHOT'  }
+    dependencies { classpath 'com.github.goldin.plugins.gradle:teamcity:0.2-SNAPSHOT',
+                             'com.github.goldin.plugins.gradle:about:0.2-SNAPSHOT',
+                             'com.github.goldin.plugins.gradle:duplicates:0.2-SNAPSHOT' }
 }
 
 
@@ -30,7 +32,7 @@ idea.module {
 }
 
 
-defaultTasks 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'install'
+defaultTasks 'duplicates', 'clean', 'codenarc', 'build', 'assembleTeamcityPlugin', 'about', 'install'
 
 
 subprojects {
@@ -40,6 +42,8 @@ subprojects {
     apply plugin: 'groovy'
     apply plugin: 'idea'
     apply plugin: 'maven'
+    apply plugin: 'about'
+    apply plugin: 'duplicates'
     apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/teamcity.gradle'
 
     group                = 'com.github.goldin.teamcity'
@@ -51,11 +55,23 @@ subprojects {
 
     configurations { compile { extendsFrom teamcityServer }}
 
+    about {
+        directory        = new File( buildDir, 'teamcity' )
+        include          = '*.zip'
+        dumpDependencies = true
+        prefix           = '/'
+    }
+
+    duplicates {
+        configurations = [ 'runtime' ]
+        verbose        = true
+    }
+
     dependencies   {
         groovy      localGroovy()
         compile     ( "org.gcontracts:gcontracts-core:1.2.5" ) { exclude group: 'junit' }
         compile     'commons-logging:commons-logging-api:1.1'
-        testCompile ( "org.spockframework:spock-core:0.6-groovy-1.8" )       { exclude group: 'org.codehaus.groovy'  }
+        testCompile ( "org.spockframework:spock-core:0.6-groovy-1.8" ) { exclude group: 'org.codehaus.groovy'  }
         testCompile "org.spockframework:spock-spring:0.6-groovy-1.8",
                     "org.springframework:spring-test:3.0.5.RELEASE",
                     "org.apache.ant:ant:1.8.4",
