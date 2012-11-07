@@ -57,10 +57,10 @@ subprojects {
     configurations { compile { extendsFrom teamcityServer }}
 
     about {
-        directory        = new File( buildDir, 'teamcity' )
-        include          = '*.zip'
-        dumpDependencies = true
-        prefix           = '/'
+        directory           = new File( buildDir, 'teamcity' )
+        include             = '*.zip'
+        includeDependencies = [ 'compile', 'runtime' ]
+        prefix              = '/'
     }
 
     duplicates {
