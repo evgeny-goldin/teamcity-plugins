@@ -146,4 +146,4 @@ project( ':console' ) {
 }
 
 
-task wrapper( type: Wrapper ) { gradleVersion = '1.2' }
+task wrapper( type: Wrapper ) { gradleVersion = '1.3' }
