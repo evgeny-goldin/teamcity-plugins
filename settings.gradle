@@ -1,3 +1,3 @@
 rootProject.name = 'teamcity-plugins'
-include 'messenger', 'console'
+include 'console', 'gradle-matrix-runner'
 

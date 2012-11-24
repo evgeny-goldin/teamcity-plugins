@@ -39,7 +39,7 @@ subprojects {
 
     Project p ->
 
-    apply plugin: 'groovy'
+    apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven'
     apply plugin: 'about'
@@ -51,7 +51,7 @@ subprojects {
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
-    repositories   { mavenCentral() }
+    repositories { maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }}
 
     configurations { compile { extendsFrom teamcityServer }}
 
@@ -63,19 +63,6 @@ subprojects {
     duplicates {
         configurations = [ 'runtime' ]
         verbose        = true
-    }
-
-    dependencies   {
-        groovy      localGroovy()
-        compile     ( "org.gcontracts:gcontracts-core:1.2.5" ) { exclude group: 'junit' }
-        compile     'commons-logging:commons-logging-api:1.1'
-        testCompile ( "org.spockframework:spock-core:0.6-groovy-1.8" ) { exclude group: 'org.codehaus.groovy'  }
-        testCompile "org.spockframework:spock-spring:0.6-groovy-1.8",
-                    "org.springframework:spring-test:3.0.5.RELEASE",
-                    "org.apache.ant:ant:1.8.4",
-                    "junit:junit:4.10",
-                    "log4j:log4j:1.2.17",
-                    'com.google.guava:guava:13.0'
     }
 
 
@@ -130,18 +117,35 @@ subprojects {
 }
 
 
-project( ':messenger' ) {
+project( ':console' ) {
+
+    apply plugin: 'groovy'
+
+    dependencies {
+        groovy      'org.codehaus.groovy:groovy-all:2.0.5'
+        compile     ( 'org.gcontracts:gcontracts-core:1.2.10' ) { exclude group: 'junit' }
+        compile     'commons-logging:commons-logging-api:1.1'
+    }
+
     assembleTeamcityPluginConfig {
-        displayName 'Messenger Plugin'
-        description 'Plugin for sending messages between TeamCity users'
+        displayName 'Console Plugin'
+        description 'Plugin allowing to evaluate various code snippets in TeamCity environment'
     }
 }
 
 
-project( ':console' ) {
+project( ':gradle-matrix-runner' ) {
+
+    apply plugin: 'scala'
+
+    dependencies {
+        scalaTools 'org.scala-lang:scala-compiler:2.10.0-RC3'
+        compile    'org.scala-lang:scala-library:2.10.0-RC3'
+    }
+
     assembleTeamcityPluginConfig {
-        displayName 'Console Plugin'
-        description 'Plugin allowing to evaluate various code snippets in TeamCity environment'
+        displayName 'Gradle Matrix Runner Plugin'
+        description 'Plugin allowing to build Gradle projects using matrix paramaters'
     }
 }
 
