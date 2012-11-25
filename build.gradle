@@ -2,7 +2,7 @@ apply plugin: 'idea'
 
 
 buildscript {
-    repositories { maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }}
+    repositories { mavenLocal(); maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }}
     dependencies { classpath 'com.github.goldin.plugins.gradle:teamcity:0.2-SNAPSHOT',
                              'com.github.goldin.plugins.gradle:about:0.2-SNAPSHOT',
                              'com.github.goldin.plugins.gradle:duplicates:0.2-SNAPSHOT' }
@@ -39,7 +39,7 @@ subprojects {
 
     Project p ->
 
-    apply plugin: 'java'
+    apply plugin: 'groovy'
     apply plugin: 'idea'
     apply plugin: 'maven'
     apply plugin: 'about'
@@ -63,6 +63,12 @@ subprojects {
     duplicates {
         configurations = [ 'runtime' ]
         verbose        = true
+    }
+
+    dependencies {
+        groovy  'org.codehaus.groovy:groovy-all:2.0.5'
+        compile ( 'org.gcontracts:gcontracts-core:1.2.10' ) { exclude group: 'junit' }
+        compile 'commons-logging:commons-logging-api:1.1'
     }
 
 
@@ -118,15 +124,6 @@ subprojects {
 
 
 project( ':console' ) {
-
-    apply plugin: 'groovy'
-
-    dependencies {
-        groovy      'org.codehaus.groovy:groovy-all:2.0.5'
-        compile     ( 'org.gcontracts:gcontracts-core:1.2.10' ) { exclude group: 'junit' }
-        compile     'commons-logging:commons-logging-api:1.1'
-    }
-
     assembleTeamcityPluginConfig {
         displayName 'Console Plugin'
         description 'Plugin allowing to evaluate various code snippets in TeamCity environment'
@@ -134,18 +131,10 @@ project( ':console' ) {
 }
 
 
-project( ':gradle-matrix-runner' ) {
-
-    apply plugin: 'scala'
-
-    dependencies {
-        scalaTools 'org.scala-lang:scala-compiler:2.10.0-RC3'
-        compile    'org.scala-lang:scala-library:2.10.0-RC3'
-    }
-
+project( ':matrix-runner' ) {
     assembleTeamcityPluginConfig {
-        displayName 'Gradle Matrix Runner Plugin'
-        description 'Plugin allowing to build Gradle projects using matrix paramaters'
+        displayName 'Matrix Runner Plugin'
+        description 'Plugin allowing to build other projects using matrix parameters'
     }
 }
 
