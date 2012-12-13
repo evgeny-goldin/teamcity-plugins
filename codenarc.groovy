@@ -15,6 +15,10 @@ ruleset {
         JavaIoPackageAccess      ( enabled : false )
         VariableName             ( enabled : false )
         FactoryMethodName        ( enabled : false )
+        SpaceBeforeOpeningBrace  ( enabled : false )
+        SpaceBeforeClosingBrace  ( enabled : false )
+        SpaceAfterIf             ( enabled : false )
+
         LineLength               ( length  : 160   )
         MethodName               ( regex   : /[a-z][\w\s'\(\)]*/ ) // Spock method names
     }
