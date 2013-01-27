@@ -2,17 +2,21 @@ apply plugin: 'idea'
 
 
 buildscript {
+
+    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.2.1-SNAPSHOT'
+    println "> Using plugins version [$version]"
+
     repositories { mavenLocal(); maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }}
-    dependencies { classpath 'com.github.goldin.plugins.gradle:teamcity:0.2-SNAPSHOT',
-                             'com.github.goldin.plugins.gradle:about:0.2-SNAPSHOT',
-                             'com.github.goldin.plugins.gradle:duplicates:0.2-SNAPSHOT' }
+    dependencies { classpath "com.github.goldin.plugins.gradle:teamcity:$version",
+                             "com.github.goldin.plugins.gradle:about:$version",
+                             "com.github.goldin.plugins.gradle:duplicates:$version" }
 }
 
 
 ext.codenarcRuleSetFiles = [ 'codenarc.groovy' ]
 ext.codenarcSources      = project.subprojects*.name.collect{[ "$it/src/main/groovy", "$it/src/test/groovy" ]}.flatten()
 apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'
-
+apply from: 'https://raw.github.com/evgeny-goldin/scripts/master/src/main/gradle/wrapper.gradle'
 
 idea.project {
     jdkName = '1.7'
@@ -66,7 +70,7 @@ subprojects {
     }
 
     dependencies {
-        groovy  'org.codehaus.groovy:groovy-all:2.0.5'
+        groovy  'org.codehaus.groovy:groovy-all:2.1.0'
         compile ( 'org.gcontracts:gcontracts-core:1.2.10' ) { exclude group: 'junit' }
         compile 'commons-logging:commons-logging-api:1.1'
     }
@@ -137,6 +141,3 @@ project( ':matrix-runner' ) {
         description 'Plugin allowing to build other projects using matrix parameters'
     }
 }
-
-
-task wrapper( type: Wrapper ) { gradleVersion = '1.3' }
