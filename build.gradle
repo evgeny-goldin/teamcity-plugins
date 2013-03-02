@@ -3,7 +3,7 @@ apply plugin: 'idea'
 
 buildscript {
 
-    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.2.1-SNAPSHOT'
+    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.2.2-SNAPSHOT'
     println "> Using plugins version [$version]"
 
     repositories { mavenLocal(); maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }}
