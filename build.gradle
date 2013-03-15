@@ -20,8 +20,8 @@ buildscript {
 
 ext.codenarcRuleSetFiles = [ 'codenarc.groovy' ]
 ext.codenarcSources      = project.subprojects*.name.collect{[ "$it/src/main/groovy", "$it/src/test/groovy" ]}.flatten()
-apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/codenarc/CodeNarc.gradle'
-apply from: 'https://raw.github.com/evgeny-goldin/scripts/master/src/main/gradle/wrapper.gradle'
+apply from: 'http://evgenyg.artifactoryonline.com/evgenyg/libs-releases-local/CodeNarc.gradle'
+apply from: 'http://evgenyg.artifactoryonline.com/evgenyg/libs-releases-local/wrapper.gradle'
 
 idea.project {
     jdkName = '1.7'
