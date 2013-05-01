@@ -76,7 +76,8 @@ subprojects {
 
     dependencies {
         compile ( 'org.gcontracts:gcontracts-core:1.2.12' ) { exclude group: 'junit' }
-        compile 'commons-logging:commons-logging-api:1.1'
+        compile localGroovy(),
+                'commons-logging:commons-logging-api:1.1'
     }
 
 
