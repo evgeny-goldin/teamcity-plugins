@@ -3,15 +3,15 @@ apply plugin: 'idea'
 
 buildscript {
 
-    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.3-SNAPSHOT'
+    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.3.1-SNAPSHOT'
     println "> Using plugins version [$version]"
 
-    repositories { 
+    repositories {
         mavenLocal()
-        maven { url 'http://jcenter.bintray.com' }
-        maven { url 'http://dl.bintray.com/content/evgenyg/BuildTools' }
-        maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }
+        jcenter()
+        maven { url 'http://evgenyg.artifactoryonline.com/evgenyg/plugins-snapshots-local/' }
     }
+
     dependencies { classpath "com.github.goldin.plugins.gradle:teamcity:$version",
                              "com.github.goldin.plugins.gradle:about:$version",
                              "com.github.goldin.plugins.gradle:duplicates:$version" }
