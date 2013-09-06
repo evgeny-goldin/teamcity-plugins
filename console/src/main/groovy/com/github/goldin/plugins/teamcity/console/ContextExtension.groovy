@@ -1,13 +1,8 @@
 package com.github.goldin.plugins.teamcity.console
 
-import jetbrains.buildServer.web.openapi.CustomTab
-import jetbrains.buildServer.web.openapi.PagePlaces
-import jetbrains.buildServer.web.openapi.PlaceId
-import jetbrains.buildServer.web.openapi.PluginDescriptor
-import jetbrains.buildServer.web.openapi.SimplePageExtension
+import jetbrains.buildServer.web.openapi.*
 import jetbrains.buildServer.web.util.SessionUser
 import org.springframework.beans.factory.annotation.Autowired
-
 import javax.servlet.http.HttpServletRequest
 
 
@@ -15,7 +10,8 @@ import javax.servlet.http.HttpServletRequest
  * Adds "Context" tab to Administration => Diagnostics.
  */
 final class ContextExtension extends SimplePageExtension implements CustomTab
-{   /**
+{
+    /**
      * Extending SimpleCustomTab (as with ConsoleExtension) will not allow using a tab title ("context")
      * that is different from plugin name ("console") - TeamCity throws
      * ServletException: File "/plugins/context/displayContext.jsp" not found
@@ -36,10 +32,11 @@ final class ContextExtension extends SimplePageExtension implements CustomTab
         register()
     }
 
-
     @Override
     boolean isAvailable ( HttpServletRequest request ){ SessionUser.getUser( request )?.systemAdministratorRoleGranted }
 
+    @Override
+    String getTabTitle ( HttpServletRequest httpServletRequest ){ tabTitle }
 
     @Override
     void fillModel ( Map<String , Object> model, HttpServletRequest request )
