@@ -53,10 +53,9 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'about'
     apply plugin: 'duplicates'
-    apply from: 'https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/teamcity.gradle'
+    apply from:   'https://raw.github.com/evgeny-goldin/gradle-plugins/master/teamcity/teamcity.gradle'
 
     group                = 'com.github.goldin.teamcity'
-    version              = '0.3-SNAPSHOT'
     sourceCompatibility  = 1.6
     targetCompatibility  = 1.6
 
@@ -136,13 +135,5 @@ project( ':console' ) {
     assembleTeamcityPluginConfig {
         displayName 'Console Plugin'
         description 'Plugin allowing to evaluate various code snippets in TeamCity environment'
-    }
-}
-
-
-project( ':matrix-runner' ) {
-    assembleTeamcityPluginConfig {
-        displayName 'Matrix Runner Plugin'
-        description 'Plugin allowing to build other projects using matrix parameters'
     }
 }
