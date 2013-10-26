@@ -3,7 +3,7 @@ apply plugin: 'idea'
 
 buildscript {
 
-    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.3.1-SNAPSHOT'
+    final version = project.hasProperty( 'pluginsVersion' ) ? project.pluginsVersion : '0.3.2-SNAPSHOT'
     println "> Using plugins version [$version]"
 
     repositories {
